@@ -1,0 +1,35 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# loco | loco user interface
+#-------------------------------------------------------------------------------
+
+set -eu
+
+# source functions file
+if ! source ./src/functions.sh; then
+  echo "Unable to source ./src/functions.sh" >&2
+  exit 1
+fi
+
+# assign globals
+utils::GLOBALS_set
+
+# set options, build and source the cli file
+cli::set_options
+cli::build
+cli::call "$@"
+
+# lock globals
+utils::GLOBALS_lock
+
+# init debug message
+msg::debug "loco.sh...Verbose mode"
+
+# check if first start, else display start messsage
+utils::check_if_start
+
+# check if first root, otherwise ask password
+utils::check_if_root "$@"
+
+# call the main function
+main "$@"

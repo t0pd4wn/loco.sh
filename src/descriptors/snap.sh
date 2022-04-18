@@ -1,0 +1,6 @@
+msg::debug "snap manager"
+PACKAGE_MANAGER="snap"
+install="install"
+remove="remove"
+update="update"
+upgrade="upgrade"

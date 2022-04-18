@@ -1,0 +1,6 @@
+msg::debug "apt manager"
+PACKAGE_MANAGER="apt"
+install="--yes install"
+remove="--yes remove"
+update="--yes update"
+upgrade="--yes upgrade"
