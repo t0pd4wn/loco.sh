@@ -16,8 +16,8 @@ retrieve_public_archive(){
   local branch_name="gh-main"
   local release_url="https://github.com/t0pd4wn/loco.sh/raw/"${branch_name}"/dist/loco-dist.zip"
   # download archive
-  if ! wget -nc -P ~/ "${release_url}"; then
-    curl --create-dirs -LO --output-dir ~/ "${release_url}"
+  if ! wget --content-disposition -nc -P ~/ "${release_url}"; then
+    curl --create-dirs -JLO --output-dir ~/ "${release_url}"
   fi
   loco::extract_and_run "$@"
 }
@@ -34,13 +34,13 @@ retrieve_private_archive(){
   local branch_name="gh-main"
   local git_server="https://gitlab.com"
   local project_ID="1234"
-  local secret_key="ABC-123"
+  local secret_key="ABC-1234"
   # # # # end of modifications
   local private_header="PRIVATE-TOKEN: ${secret_key}"
   local release_url="${git_server}/api/v4/projects/${project_ID}/repository/files/dist%2Floco-dist.zip/raw?ref=${branch_name}"
   # download archive
-  if ! wget --header="${private_header}" -nc -P ~/ "${release_url}"; then
-    curl --header="${private_header}" --create-dirs -LO --output-dir ~/ "${release_url}"
+  if ! wget --content-disposition --header="${private_header}" -nc -P ~/ "${release_url}"; then
+    curl --header "${private_header}" --create-dirs -JLO --output-dir ~/ "${release_url}"
   fi
   loco::extract_and_run "$@"
 }

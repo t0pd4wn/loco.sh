@@ -309,7 +309,8 @@ Options can be set directly into ```/src/loco.conf```.
 ### Make ```loco``` your own
 The first point you need to keep in mind is security. SSH and GPG keys shall not be shared over the public internet, as should not servers configurations. To make ```loco``` your own, you first need to fork it over a private repository, or your own ```git``` server. Then:
 - for Gitlab.com or private Gitlab instances
-1. Retrieve your API [private token]
+1. Retrieve your [API private token]
+<!-- https://gitlab.com/-/profile/personal_access_tokens -->
 2. Retrieve the [project ID]
 3. Update ```./src/utils/install``` with your information:
 ```bash
@@ -328,18 +329,18 @@ local secret_key="ABC-123"
   ```bash
   retrieve_private_archive "$@"
   ```
-5. Optional: [build a release](#build-a-release).
+5. [build a release](#build-a-release)
 6. Git add, commit and push to your ```gitlab``` server.
 7. You can now install ```loco``` with this url pattern:
 
 Using wget:
 ```bash
-bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=gh-main)
+bash <(wget --content-disposition --header="PRIVATE-TOKEN: [secret key]" -qO- https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name])
 ```
 
 Using curl:
 ```bash
-bash <(curl --header="PRIVATE-TOKEN: [private token]" -L https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=gh-main)
+bash <(curl --header "PRIVATE-TOKEN: [secret key]" -JLO https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name])
 ```
 
 ### Build a release
