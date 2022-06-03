@@ -53,7 +53,7 @@ loco::background_manager(){
 
   # if action is remove
   elif [[ "${ACTION}" == "remove" ]]; then
-    if [[ "{$LOCO_OSTYPE}" == "ubuntu" ]]; then
+    if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
       # works for 21.x, 22.x
       ubuntu_default="warty-final-ubuntu.png"
       ubuntu_path=/usr/share/backgrounds/

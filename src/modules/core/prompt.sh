@@ -30,29 +30,29 @@ prompt::build(){
     file_basename=$(basename "${FILE}")
     prompt_option=$(echo $file_basename | cut -f 1 -d '.')
     prompt_option_name="$(tr '[:lower:]' '[:upper:]' <<< ${prompt_option:0:1})${prompt_option:1}"
-    prompt_options+="${prompt_option_name} "
-    argCases+="$prompt_index) printf -v ""${local_GLOBAL}"" '%s' "${prompt_option}";;\n"
+    prompt_options+="'""${prompt_option_name}""' "
+    argCases+="$prompt_index) printf -v ""${local_GLOBAL}"" '%s' '"${prompt_option}"';;\n"
   done
   # build prompt file
-  echo "title=\"$(msg::say "${local_prompt_message}")\"" > "${prompt_path}"
-  echo "prompt=\"$(msg::print "Pick an option : ")\"" >> "${prompt_path}"
-  echo "options=("$prompt_options")" >> "${prompt_path}"
-  echo "echo \$title" >> "${prompt_path}"
-  echo "PS3=\$prompt" >> "${prompt_path}"
-  echo "select opt in "'"${options[@]}"'" "Quit"; do " >> "${prompt_path}"
-  echo "case "\$REPLY" in" >> "${prompt_path}"
-  echo -e "$argCases" >> "${prompt_path}"
+  utils::echo "title=\"$(msg::say "${local_prompt_message}")\"" > "${prompt_path}"
+  utils::echo "prompt=\"$(msg::print "Pick an option : ")\"" >> "${prompt_path}"
+  utils::echo "options=("$prompt_options")" >> "${prompt_path}"
+  utils::echo "echo \$title" >> "${prompt_path}"
+  utils::echo "PS3=\$prompt" >> "${prompt_path}"
+  utils::echo "select opt in "'"${options[@]}"'" "Quit"; do " >> "${prompt_path}"
+  utils::echo "case "\$REPLY" in" >> "${prompt_path}"
+  utils::echo "$argCases" >> "${prompt_path}"
 
   if [[ "${is_required}" == true ]]; then
-    echo "$((prompt_index+1))) echo "Goodbye!"; exit;;" >> "${prompt_path}"
+    utils::echo "$((prompt_index+1))) echo "Goodbye!"; exit;;" >> "${prompt_path}"
   elif [[ "${is_required}" == false ]]; then
-    echo "$((prompt_index+1))) echo "No choice is good."; ;;" >> "${prompt_path}"
+    utils::echo "$((prompt_index+1))) echo "No choice is good."; ;;" >> "${prompt_path}"
   fi
   
-  echo "*) echo "Invalid option. Try another one.";continue;;" >> "${prompt_path}"
-  echo "esac" >> "${prompt_path}"
-  echo "break" >> "${prompt_path}"
-  echo "done" >> "${prompt_path}"
+  utils::echo "*) echo "Invalid option. Try another one.";continue;;" >> "${prompt_path}"
+  utils::echo "esac" >> "${prompt_path}"
+  utils::echo "break" >> "${prompt_path}"
+  utils::echo "done" >> "${prompt_path}"
 }
 
 #######################################
