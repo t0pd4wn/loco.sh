@@ -1,6 +1,6 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager, it can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal style, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more OS platforms, and *actions* which run workflows on top of the *profiles*.
+***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal style, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
 
 ***Loco.sh*** can be useful to :
 
@@ -15,7 +15,7 @@
 - **loco-vim** : provides a fully configured ```vim``` (removes nvim if installed) ; supports MacOSx and Ubuntu
 <!-- - **loco-nvim** : same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 - **loco-zsh-p10k** : a fully configured ```zsh``` with ```p10K``` ; supports MacOSx and Ubuntu
-- **loco-term** : default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
+- **loco-term** : a custom themed terminal
 - **loco-vim-zsh-p10k-term** : all examples made into one profile
 <!-- - **loco-webdev** : a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -40,7 +40,7 @@ For example, you can launch a verbose installation like this :
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh) -a install -V
 ```
 
-Once installed, you can simply interact with loco like this ```./loco```.
+Once installed, you can simply interact with loco like this : ```./loco```.
 
 ### Manually
 
@@ -215,16 +215,16 @@ local secret_key="ABC-123"
 # # # # end of modifications
 ```
 4. modify function call in ```./src/utils/loco_installation.sh``` from 
-```bash
-retrieve_public_archive "$@"
-``` 
-to 
-```bash
-retrieve_private_archive "$@"
-```
-Optional : build a release.
-5. Git add, commit and push to your ```gitlab``` server.
-6. You can now install ```loco``` with this url pattern :
+  ```bash
+  retrieve_public_archive "$@"
+  ``` 
+  to 
+  ```bash
+  retrieve_private_archive "$@"
+  ```
+5. Optional : [build a release](#build-a-release).
+6. Git add, commit and push to your ```gitlab``` server.
+7. You can now install ```loco``` with this url pattern :
 ```bash
 bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
 The first point you need to keep in mind is security. SSH or GPG keys for example are quite unwelcomed on the public internet, as could be servers configurations. To make ```loco``` your own, you first need to fork it over a private repository. Then :
