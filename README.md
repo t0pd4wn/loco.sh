@@ -200,6 +200,7 @@ Options can be set directly into ```/src/loco.conf```.
 ## Other
 
 ### Make ```loco``` your own
+<<<<<<< HEAD
 The first point you need to keep in mind is security. SSH and GPG keys shall not be shared over the public internet, as should not servers configurations. To make ```loco``` your own, you first need to fork it over a private repository, or your own ```git``` server. Then :
 - for Gitlab.com or private Gitlab instances
 1. Retrieve your API [private token]
@@ -226,6 +227,14 @@ Optional : build a release.
 6. You can now install ```loco``` with this url pattern :
 ```bash
 bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
+The first point you need to keep in mind is security. SSH or GPG keys for example are quite unwelcomed on the public internet, as could be servers configurations. To make ```loco``` your own, you first need to fork it over a private repository. Then :
+- for Gitlab.com
+1. Retrieve your API [private token]
+2. Retrieve the [project ID]
+3. Update ```./src/utils/loco_installation.sh``` with your private repo url
+4. You can now install loco with this url :
+```bash
+bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://gitlab.com/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
 ```
 
 ### Build a release
