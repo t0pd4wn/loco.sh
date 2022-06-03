@@ -13,13 +13,13 @@
 #   ./src/temp/cli.sh
 #######################################
 cli::build(){
-  local cli_file="./src/temp/cli.sh"
+  local cli_file=./src/temp/cli.sh
   local joined_parameters
   local joined_descriptions
   # build file
   joined_parameters=$(IFS=; echo "${CLI_OPT_PARAMETERS[*]}");
   joined_descriptions=$(IFS=; echo "${CLI_OPT_DESCRIPTIONS[*]}");
-  echo "while getopts """${joined_parameters}""" flag" >> "${cli_file}"
+  echo "while getopts ${joined_parameters} flag" > "${cli_file}"
   echo "do" >> "${cli_file}"
   echo "case "'"${flag}"'" in" >> "${cli_file}"
   echo -e "${joined_descriptions}" >> "${cli_file}"              

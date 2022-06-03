@@ -43,7 +43,7 @@ For example, you can launch a verbose profile installation like this :
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -V
 ```
 
-Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif file) :
+Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif) :
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -p "loco-vim-zsh-p10K-term" -Y
 ```
@@ -71,7 +71,7 @@ cd [repository]
 
 ## Profiles
 
-*Profiles* are made of a YAML file, dotfiles, scripts and other assets.
+*Profiles* are made of a YAML file, dotfiles, scripts and other assets. They are all optional and independant from each others.
 
 - folder structure : ```./profiles/``` 
 
@@ -79,7 +79,7 @@ cd [repository]
 .
 └── profiles
 	└── [profile]
-		├── profile.yaml # profile description (needed)
+		├── profile.yaml # profile description (optional)
 		├── custom.sh # custom functions (optional)
 		├── assets #stores specific files (optional)
 		│	├── fonts # fonts in this folder will be installed (optional)
