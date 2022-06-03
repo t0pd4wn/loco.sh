@@ -359,8 +359,10 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - cli / yaml: implement 'none' values
 - yaml: better yaml values management (use normative array?)
 - packagers: test and implement cask packages
-- actions: add upgrade, init, save
+- actions: add init, save
+- actions: improve upgrade (add diff)
 - profiles: add devops, data-scientist...
+- profiles: check for current user discrepancies
 - remove action shall not rely on the base profile (but on watermark)
 - actions: improve backup workflow
 - code: absolute path variable ?++
