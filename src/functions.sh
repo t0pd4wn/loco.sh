@@ -31,8 +31,8 @@ main(){
   # source action script
   utils::source ./src/actions/"${ACTION}".sh
 
-  # play recorded commands
-  cmd::play
+  # display recorded commands script
+  cmd::msg
 
   # display end message
   msg::end

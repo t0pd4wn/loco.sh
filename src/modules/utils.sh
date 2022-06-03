@@ -85,7 +85,7 @@ utils::clean_temp(){
 utils::cp(){
   local from="${1-}"
   local to="${2-}"
-  if ! cmd::run_as_user "cp -r "${from}" "${to}""; then
+  if ! cmd::run_as_user "cp -Rr "${from}" "${to}""; then
     echo "Unable to copy ${from} in ${to}" >&2
   fi
 }

@@ -6,7 +6,7 @@
 #################
 # all OS
 #################
-install_generic_exit(){
+install_exit(){
   # download vundle
   # utils::remove "/home/${CURRENT_USER}/.vim/bundle/Vundle.vim"
   cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
@@ -19,7 +19,7 @@ install_generic_exit(){
   cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
 } 
 
-remove_generic_exit(){
+remove_exit(){
   # launch bash, could be automated further
   msg::record 'type `bash` to reset your prompt'
 

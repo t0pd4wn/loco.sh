@@ -115,7 +115,8 @@ loco::dotfiles_manager(){
           msg::debug "No corresponding file"
           else 
           msg::debug "${dotfile}" " is backup'd"
-          cp -R /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
+          utils::cp /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
+          # cp -R /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
           # remove existing file 
           utils::remove "/home/""${CURRENT_USER}"/"${dotfile}"
         fi
@@ -126,7 +127,8 @@ loco::dotfiles_manager(){
           ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
         else
           msg::debug "Detached"
-          cp -R "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
+          utils::cp "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
+          # cp -R "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
         fi
       done
       msg::print "${CURRENT_USER}" " dotfiles were backup'd here :"
@@ -360,10 +362,11 @@ loco::meta_package_manager(){
         msg::print "No " "$1" " package manager descriptor found"
       else
         # if a file, source it
-        if ! source "${packager_path}"; then
-          echo "Can not source ${packager_path}" >&2
-          exit 1
-        fi
+        utils::source "${packager_path}"
+        # if ! source "${packager_path}"; then
+        #   echo "Can not source ${packager_path}" >&2
+        #   exit 1
+        # fi
         # expand variable value 
         PACKAGE_ACTION=${!PACKAGE_ACTION}   
         # update the package manager
@@ -436,15 +439,16 @@ loco::term_conf_set(){
 
   # check if a terminal configuration is present
   if [[ ! -f "${local_path}" ]]; then
+    local_path=./src/temp/"${PROFILE}"_terminal.conf
+    distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf
     msg::print "No terminal configuration file found"
     local colors_theme="${style_colors_theme-}".conf
     local font_name="${style_fonts_name-Monospace}"
-    local font_size="${style_fonts_size-11}"  
+    local font_size="${style_fonts_size-12}"  
     msg::debug "${style}"
     msg::debug "${style_colors}"
     msg::debug "${colors_theme}"
     if [[ ! -z "${colors_theme}" ]]; then
-      #statements
       msg::debug "${colors_theme}"
       utils::echo "[/]" > "${local_path}"
       cat ./src/themes/"${colors_theme}" >> "${local_path}"
@@ -453,9 +457,10 @@ loco::term_conf_set(){
       utils::echo "use-theme-colors=false" >> "${local_path}"
       utils::echo "use-theme-transparency=false" >> "${local_path}"
       utils::echo "use-transparent-background=true" >> "${local_path}"
+      utils::echo "bold-color-same-as-fg=false" >> "${local_path}"
       utils::echo "visible-name='\''loco-profile'\''" >> "${local_path}"
       loco::term_conf_action "${gnome_path}" "${gnome_UUID}" "${distro_path}"
-    fi  
+    fi
   else
     loco::term_conf_action "${gnome_path}" "${gnome_UUID}" "${distro_path}"
   fi
@@ -463,6 +468,9 @@ loco::term_conf_set(){
 
 #######################################
 # Print the dconf configuration command
+# note : scheme to dump profile
+# dconf list /org/gnome/terminal/legacy/profiles:/
+# dconf dump /org/gnome/terminal/legacy/profiles:/:[profile id]
 #   $1 // dconf gnome path
 #   $2 // dconf gnome UUID
 #   $3 // terminal.conf file
@@ -489,26 +497,26 @@ loco::term_conf_action(){
 #   ACTION
 #   LOCO_DIST
 #######################################
-loco::term_colors_set(){
-  # check if current loco is a remote installation
-  if [[ "${LOCO_DIST}" == true ]]; then local dist_path=loco-dist/; fi
-  local local_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
-  local distro_path=./"${dist_path-}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
-  local gnome_path="/org/gnome/terminal/legacy/profiles:/"
-  local gnome_UUID="b1dcc9dd-5262-4d8d-a863-c897e6d979b9"
+# loco::term_colors_set(){
+#   # check if current loco is a remote installation
+#   if [[ "${LOCO_DIST}" == true ]]; then local dist_path=loco-dist/; fi
+#   local local_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+#   local distro_path=./"${dist_path-}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+#   local gnome_path="/org/gnome/terminal/legacy/profiles:/"
+#   local gnome_UUID="b1dcc9dd-5262-4d8d-a863-c897e6d979b9"
 
-  # check if a terminal configuration is present
-  if [[ ! -f "${local_path}" ]]; then
-    msg::print "No terminal configuration file found"
-  else
-    # if yes, print command to install / remove it
-    if [[ "${ACTION}" == "install" ]]; then
-      cmd::record "dconf load "${gnome_path}":"${gnome_UUID}"/ < ""${distro_path}"
-    elif [[ "${ACTION}" == "remove" ]]; then
-      cmd::record "dconf reset -f "${gnome_path}""
-    fi
-  fi
-}
+#   # check if a terminal configuration is present
+#   if [[ ! -f "${local_path}" ]]; then
+#     msg::print "No terminal configuration file found"
+#   else
+#     # if yes, print command to install / remove it
+#     if [[ "${ACTION}" == "install" ]]; then
+#       cmd::record "dconf load "${gnome_path}":"${gnome_UUID}"/ < ""${distro_path}"
+#     elif [[ "${ACTION}" == "remove" ]]; then
+#       cmd::record "dconf reset -f "${gnome_path}""
+#     fi
+#   fi
+# }
 
 #######################################
 # Check for watermark presence
@@ -539,8 +547,8 @@ loco::watermark_check(){
         ACTION="remove"
         utils::source ./src/actions/"${ACTION}".sh
         # switch back to installation
-        # remove temp loco_finish.sh
-        utils::remove "./src/temp/loco_finish.sh"
+        # remove temp finish.sh
+        utils::remove "./src/temp/finish.sh"
         ACTION="install"
         PROFILE="${current_profile}"
       ;;

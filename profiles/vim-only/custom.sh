@@ -6,7 +6,7 @@
 #################
 # all OS
 #################
-install_generic_exit(){
+install_exit(){
   # download vundle
   sudo rm -fR /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
   cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"

@@ -12,13 +12,13 @@
 - **developers**, who need to manage various environments and machines, with the same look and feel
 - **regular users**, who can easily manage their configuration files
 
-***Loco.sh*** comes with 5 example profiles:
+***Loco.sh*** comes with 5 example profiles, except for ```default``` they all come with a custom font :
 
 - **default**: default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
-- **loco-vim**: provides a fully configured ```vim``` (removes nvim if installed) ; supports MacOSx and Ubuntu
-- **loco-zsh-p10k**: a fully configured ```zsh``` with ```p10K``` ; supports MacOSx and Ubuntu
-- **loco-term**: a custom themed terminal ; supports Ubuntu
-- **loco-vim-zsh-p10k-term**: all examples made into one profile
+- **full**: all *profiles* made into one
+- **vim-only**: fully configured ```vim``` (removes nvim if installed)
+- **shell-only**: fully configured ```zsh``` with ```p10K```
+- **term-only**: custom themed terminal
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -37,12 +37,12 @@ bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3w
 
 #### Ubuntu (wget)
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install.sh)
 ```
 
 #### MacOSx (curl)
 ```bash
-bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh)
+bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install.sh)
 ```
 
 You can pass options like this:
@@ -234,7 +234,7 @@ The first point you need to keep in mind is security. SSH and GPG keys shall not
 - for Gitlab.com or private Gitlab instances
 1. Retrieve your API [private token]
 2. Retrieve the [project ID]
-3. Update ```./src/utils/installation.sh``` with your information:
+3. Update ```./src/utils/install.sh``` with your information:
 ```bash
 # modify below with your infos #
 local branch_name="gh-main"
@@ -243,7 +243,7 @@ local project_ID="1234"
 local secret_key="ABC-123"
 # # # # end of modifications
 ```
-4. modify function call in ```./src/utils/installation.sh``` from 
+4. modify function call in ```./src/utils/install.sh``` from 
   ```bash
   retrieve_public_archive "$@"
   ``` 
@@ -257,12 +257,12 @@ local secret_key="ABC-123"
 
 Using wget:
 ```bash
-bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstallation.sh/raw?ref=gh-main)
+bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall.sh/raw?ref=gh-main)
 ```
 
 Using curl:
 ```bash
-bash <(curl --header="PRIVATE-TOKEN: [private token]" -L https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstallation.sh/raw?ref=gh-main)
+bash <(curl --header="PRIVATE-TOKEN: [private token]" -L https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall.sh/raw?ref=gh-main)
 ```
 
 ### Build a release

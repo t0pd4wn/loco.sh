@@ -1,6 +1,6 @@
 style:
   colors:
-    theme: monokai
+    theme: monokai-light
   fonts:
     name: MesloLGS NF
     size: 12

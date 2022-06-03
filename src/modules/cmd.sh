@@ -6,7 +6,7 @@
 #######################################
 cmd::record(){
   local command="$@"
-  local script_path="./src/temp/loco_finish.sh"
+  local script_path="./src/temp/finish.sh"
   if [[ ! -f "${script_path}" ]]; then
     echo "${command}" > "${script_path}"
     chmod +x "${script_path}"
@@ -21,15 +21,15 @@ cmd::record(){
 # Arguments:
 #   $1 // a command
 #######################################
-cmd::play(){
+cmd::msg(){
   # check if current loco is remote installation
   local dist_path=""
   if [[ "${LOCO_DIST}" == true ]]; then
     dist_path="loco-dist/"
   fi
-  local script_path="./src/temp/loco_finish.sh"
+  local script_path="./src/temp/finish.sh"
   if [[ -f "${script_path}" ]]; then
-    msg::record 'type `./'"${dist_path}"'src/temp/loco_finish.sh` to finish installation'
+    msg::record 'type `./'"${dist_path}"'src/temp/finish.sh` to finish installation'
   fi
 }
 
