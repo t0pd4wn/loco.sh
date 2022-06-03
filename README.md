@@ -200,26 +200,38 @@ Options can be set directly into ```/src/loco.conf```.
 ## Other
 
 ### Make ```loco``` your own
-The first point you need to keep in mind is security. SSH and GPG keys shall not be shared over the public internet, as could be servers configurations. To make ```loco``` your own, you first need to fork it over a private repository, or your own ```git``` server. Then :
+The first point you need to keep in mind is security. SSH and GPG keys shall not be shared over the public internet, as should not servers configurations. To make ```loco``` your own, you first need to fork it over a private repository, or your own ```git``` server. Then :
 - for Gitlab.com or private Gitlab instances
 1. Retrieve your API [private token]
 2. Retrieve the [project ID]
-3. Update ```./src/utils/loco_installation.sh``` with your [private repo url]
+3. Update ```./src/utils/loco_installation.sh``` with your information :
 ```bash
-bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
+# modify below with your infos #
+local branch_name="gh-main"
+local git_server="https://gitlab.com"
+local project_ID="1234"
+local secret_key="ABC-123"
+# # # # end of modifications
 ```
-
-
-4. You can now install loco with this url :
+4. modify function call in ```./src/utils/loco_installation.sh``` from 
+```bash
+retrieve_public_archive "$@"
+``` 
+to 
+```bash
+retrieve_private_archive "$@"
+```
+Optional : build a release.
+5. Git add, commit and push to your ```gitlab``` server.
+6. You can now install ```loco``` with this url pattern :
 ```bash
 bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
 ```
 
 ### Build a release
-As its complicated to archive correctly ```git sub-modules``` in *profiles*, loco.sh provides a release archive in ```/dist/```. To update it, launch ```./src/utils/loco_build_release.sh```.
+As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/utils/loco_build_release.sh```.
 
 ## Backlog
-
 - enforce best practices
 - add actions : upgrade, init, save
 - add profiles : devops, data-scientist...

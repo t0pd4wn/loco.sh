@@ -58,4 +58,3 @@ remove_ubuntu_custom_exit(){
   # launch bash, could be automated further
   msg::record 'type `bash` to init your zsh prompt'
 }
-

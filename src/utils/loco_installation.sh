@@ -10,7 +10,7 @@ set -eu
 # Arguments
 #   ./loco "$@" ones
 # Output:
-#   ~/loco.sh-dist
+#   ~/loco-dist
 #######################################
 retrieve_public_archive(){
   local branch_name="gh-main"
