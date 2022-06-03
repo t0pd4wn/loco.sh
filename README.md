@@ -251,23 +251,18 @@ When you install ```loco``` a watermark file ```~/.loco``` is installed. It stor
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Backlog
-- test and implement cask packages
-- enforce best practices
-- first/last/after
-- add actions : upgrade, init, save
-- add profiles : devops, data-scientist...
+- packagers : test and implement cask packages
+- code : first/last/after
+- actions : add upgrade, init, save
+- profiles : add devops, data-scientist...
 - remove action shall not rely on the base profile
-- improve bash modules structure
-- improve backup workflow
-- absolute path variable ?+
-- display prompts options as table rows
-- add term styles
-- write architecture documentation
-- run_as_user ?
-- more YAML logic (parse .yaml files)
+- code :improve bash modules structure
+- actions : improve backup workflow
+- code : absolute path variable ?+
+- UI : display prompts options as table rows
+- actions : add dynamic term styles
 - Ghost mode leaving no assets prior to action
-- install multiple profiles for one user (update watermark)
-- document retrieving profiles form private source
+- profiles : install multiple profiles for one user (update watermark)
 
 ## Thanks
 

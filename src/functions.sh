@@ -780,6 +780,8 @@ loco::startup(){
 
 #######################################
 # Build terminal style file.
+# note : Setting dconf for a specific user thorugh terminal,
+# can only be achieved with root rights (su, not sudo).
 # GLOBALS
 #   PROFILES
 #   PROFILES_DIR
@@ -790,8 +792,6 @@ loco::startup(){
 #   ./src/temp/loco-term-reset.sh
 #######################################
 loco::term_conf_set(){
-  # note : Apparently, it is possible to set dconf for a specific user.
-  # This can be achieved with root rights (su, not sudo)
   # check if current loco is remote installation
   local dist_path=""
   if [[ "${LOCO_DIST}" == true ]]; then
@@ -805,19 +805,11 @@ loco::term_conf_set(){
     if [[ "${ACTION}" == "install" ]]; then
       local term_path="./"${dist_path}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf"
       cmd::record 'dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < '"${term_path}"
-      # echo 'dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < '"${term_path}" > ./src/temp/loco-term.sh
-      # chmod +x ./src/temp/loco-term.sh
-      # msg::record 'type `./'"${dist_path}"'src/temp/loco-term.sh` to set your terminal style' 
-
     elif [[ "${ACTION}" == "remove" ]]; then
       cmd::record 'dconf reset -f /org/gnome/terminal/legacy/profiles:/'
-      # cmd::record 'dconf reset -f /org/gnome/terminal/legacy/profiles:/' > ./src/temp/loco-term-reset.sh
-      # chmod +x ./src/temp/loco-term-reset.sh
-      # msg::record 'type `./'"${dist_path}"'src/temp/loco-term-reset.sh` to reset terminal'
     fi
   fi
 }
-
 
 #######################################
 # Build and source the profiles yaml.
