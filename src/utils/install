@@ -34,7 +34,7 @@ retrieve_private_archive(){
   local branch_name="gh-main"
   local git_server="https://gitlab.com"
   local project_ID="1234"
-  local secret_key="ABC-1234"
+  local secret_key="ABC-123"
   # # # # end of modifications
   local private_header="PRIVATE-TOKEN: ${secret_key}"
   local release_url="${git_server}/api/v4/projects/${project_ID}/repository/files/dist%2Floco-dist.zip/raw?ref=${branch_name}"

@@ -36,7 +36,7 @@ loco::background_manager(){
       img_basename=$(basename "${url_file_path}")
       # clean file name from URI encoded characters
       img_clean_name=$( utils::decode_URI "${img_basename}" )
-      final_path="${ab_path}"/src/backgrounds/"${img_clean_name}" 
+      final_path="${ab_path}"/src/backgrounds/"${img_clean_name}"
 
     # or, if a background file is present in /assets/
     elif [[ -f "${profile_file_path}" ]]; then
@@ -54,6 +54,7 @@ loco::background_manager(){
   # if action is remove
   elif [[ "${ACTION}" == "remove" ]]; then
     if [[ "{$LOCO_OSTYPE}" == "ubuntu" ]]; then
+      # works for 21.x, 22.x
       ubuntu_default="warty-final-ubuntu.png"
       ubuntu_path=/usr/share/backgrounds/
       final_path="${ubuntu_path}""${ubuntu_default}"
@@ -77,8 +78,8 @@ loco::set_background(){
   local background_path="${@-}"
   msg::debug "${background_path}"
   local gsettings_opts="org.gnome.desktop.background picture-uri"
-  cmd::record "gsettings set "${gsettings_opts}" "${background_path}""
+  cmd::record "gsettings set" "${gsettings_opts}" "'""${background_path}""'"
   if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
-    cmd::record "gsettings set "${gsettings_opts}"-dark "${background_path}""
+    cmd::record "gsettings set" "${gsettings_opts}""-dark ""'""${background_path}""'"
   fi
 }

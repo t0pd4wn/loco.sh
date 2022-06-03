@@ -200,14 +200,14 @@ To create an action, simply duplicate one available in ```/src/actions/``` and s
 ### Add a background
 
 *Backrounds* can be set through four methods :
-1. ```-B``` option : an url can be provided to set a background
+1. ```-B``` option: an url can be provided to set a background
 2. profile yaml: an url can be provided to set a background
 
 ```yaml
 style:
   background: [background url]
 ```
-3. profile asset : a file can be provided to set a background
+3. profile asset: a file can be provided to set a background
 
 ```bash
 .
@@ -217,7 +217,7 @@ style:
       └── background.[image extension] # background image (optional)
 ```
 
-4. prompt : a prompt will be launched to set a background from the ones available in ```/src/backgrounds/```
+4. prompt: a prompt will be launched to set a background from the ones available in ```/src/backgrounds/```
 
 ```bash
 .
@@ -335,12 +335,12 @@ local secret_key="ABC-123"
 
 Using wget:
 ```bash
-bash <(wget --content-disposition --header="PRIVATE-TOKEN: [secret key]" -qO- https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name])
+bash <(wget --content-disposition --header="PRIVATE-TOKEN: [secret key]" -qO- "https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name]")
 ```
 
 Using curl:
 ```bash
-bash <(curl --header "PRIVATE-TOKEN: [secret key]" -JLO https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name])
+bash <(curl --header "PRIVATE-TOKEN: [secret key]" -JLO "https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name]")
 ```
 
 ### Build a release
@@ -353,6 +353,7 @@ When you install ```loco``` a watermark file ```~/.loco``` is installed. It stor
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Backlog
+- ask password twice ?
 - better package managers abstraction
 - cli: display modes (yes, detached...)
 - cli / yaml: implement 'none' values
