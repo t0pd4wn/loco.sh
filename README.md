@@ -53,7 +53,7 @@ bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3l
 
 For example, you can launch a verbose profile installation like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -V
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B [image url]
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif):
@@ -245,7 +245,7 @@ palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]',
 | PROFILE | p | Define the loco profile | string | default, loco-vim, loco-nvim, loco-full | - |
 | THEME | t | Define the loco color theme | string | monokai, monokai-light, nord, nord-light | - |
 | BACKGROUND | b | Define the user background (from /src/backgrounds) | string | filenames fom available /src/backgrounds/ | - |
-| BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |
+| BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |s
 | CURRENT_USER | u | Define the current user name (default: \`$USER\`) | string | [user defined] | $USER |
 | PROFILES_DIR | t | Define path for profiles directories | string |  [user defined] | "profiles" |
 | INSTANCES_DIR | i | Define path for profiles instances | string | [user defined] | "instances" |
