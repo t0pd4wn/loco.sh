@@ -37,23 +37,25 @@ install_ubuntu_custom_entry(){
 
 install_ubuntu_custom_exit(){
   # download vundle
-<<<<<<< HEAD
   sudo rm -fR /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
-=======
-  sudo rm -R /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
->>>>>>> c49ca10 (Dev)
-  su "${CURRENT_USER}" -c "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
+  cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
+
   # install vundle plugins
-  su "${CURRENT_USER}" -c "vim +PluginInstall +qall"
+  cmd::run_as_user "vim +PluginInstall +qall"
   # install powerlevel10K
-<<<<<<< HEAD
   sudo rm -fR /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k
-=======
-  sudo rm -R /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k
->>>>>>> c49ca10 (Dev)
-  su "${CURRENT_USER}" -c "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
+  cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
   # launch zsh, could be automated further
   msg::record 'type `zsh` to init your zsh prompt'
+  # set ubuntu 22.04 dock style
+  if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-position BOTTOM"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 48"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock autohide false"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock intellihide true"
+  fi
 }
 
 remove_ubuntu_custom_entry(){
@@ -65,4 +67,12 @@ remove_ubuntu_custom_entry(){
 remove_ubuntu_custom_exit(){
   # launch bash, could be automated further
   msg::record 'type `bash` to init your zsh prompt'
+  if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-position LEFT"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 48"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock autohide false"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false"
+  fi
 }

@@ -11,11 +11,12 @@
 #   $@ just in case
 #######################################
 main(){
-  # startup checks
+  # launch startup checks and utils
   loco::startup "$@"
-  # action script
+  # source action script
   source ./src/actions/"${ACTION}".sh
   # end
+  cmd::play
   msg::end
   trap 'loco::custom_last' 0
   exit $?
@@ -274,6 +275,49 @@ cli::set_options(){
 }
 
 #######################################
+# Register commands to a file
+# Globals:
+# Arguments:
+#   $1 // a command
+#######################################
+cmd::record(){
+  local command="$@"
+  local script_path="./src/temp/loco_finish.sh"
+  if [[ ! -f "${script_path}" ]]; then
+    echo "${command}" > "${script_path}"
+    chmod +x "${script_path}"
+  else 
+    echo "${command}" >> "${script_path}"
+  fi
+}
+
+#######################################
+# Display the cmd file message
+# Globals:
+# Arguments:
+#   $1 // a command
+#######################################
+cmd::play(){
+  local script_path="./src/temp/loco_finish.sh"
+  if [[ -f "${script_path}" ]]; then
+    msg::record 'type `./src/temp/loco_finish.sh` to finish installation'
+  fi
+}
+
+#######################################
+# Runs a command as current user
+# Globals:
+# Argumsnts:
+#   $1 // a command
+#######################################
+cmd::run_as_user(){
+  local command="$@"
+  msg::debug "${command}"
+  su "${CURRENT_USER}" -c "${command}"
+}
+
+
+#######################################
 # Build a prompt shell file
 # Arguments:
 #   $1 // action 
@@ -408,17 +452,19 @@ loco::dotfiles_manager(){
     case ${USER_ANSWER:0:1} in
     y|Y )
     # install PROFILE dotfiles
+    local dotfiles_path="./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles"
+    local dotfiles_backup_list="./src/temp/loco_dotfiles_backup_list"
+
     if [[ "${ACTION}" == "install" ]]; then
       msg::print "${EMOJI_YES} Yes, use " "${PROFILE}" " dotfiles"
-        msg::print "Preparing your dotfiles backup"
-        INSTANCE_PATH="${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
-        mkdir -p ./"$INSTANCE_PATH"
+      msg::print "Preparing your dotfiles backup"
+      INSTANCE_PATH="${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
+      mkdir -p ./"$INSTANCE_PATH"
 
-      local dotfiles_path="./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles"
       if [[ -d "${dotfiles_path}" ]]; then
         # list profiles dotfiles and keep a list (shall be dumped to .loco)
-        ls -a "${dotfiles_path}" > ./src/temp/loco.dotfiles.backup.list
-        sed -i -e '1,2d' ./src/temp/loco.dotfiles.backup.list 
+        ls -a "${dotfiles_path}" > "${dotfiles_backup_list}"
+        sed -i -e '1,2d' "${dotfiles_backup_list}"
         
         msg::print "${CURRENT_USER}" " dotfiles are getting backup'd"
         mkdir -p ./"$INSTANCE_PATH"/dotfiles-backup
@@ -431,7 +477,7 @@ loco::dotfiles_manager(){
             else 
             cp -R /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup
           fi
-        done < ./src/temp/loco.dotfiles.backup.list       
+        done < "${dotfiles_backup_list}"   
 
         msg::print "${CURRENT_USER}" " dotfiles were backup'd here :"
         msg::print "/"$INSTANCE_PATH"/dotfiles-backup"  
@@ -448,17 +494,16 @@ loco::dotfiles_manager(){
             rm -fR /home/"${CURRENT_USER}"/"${dotfile}"
             cp -R "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
           fi
-        done < ./src/temp/loco.dotfiles.backup.list
+        done < "${dotfiles_backup_list}"
       fi
     # remove PROFILE dotfiles
     elif [[ "${ACTION}" == "remove" ]]; then
-      local dotfiles_path="./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles"
       if [[ -d "${dotfiles_path}" ]]; then
         msg::print "${EMOJI_YES} Yes, remove " "${PROFILE}" " dotfiles"   
         msg::print "Removing " "${PROFILE}" " dotfiles"
         # implement get_dir_list??
-        ls -a ./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles > ./src/temp/loco.dotfiles.backup.list
-        sed -i -e '1,2d' ./src/temp/loco.dotfiles.backup.list
+        ls -a ./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles > "${dotfiles_backup_list}"
+        sed -i -e '1,2d' "${dotfiles_backup_list}"
         while read dotfile || [ -n "$dotfile" ] ; do 
         # unset -eu
         set +eu
@@ -469,7 +514,7 @@ loco::dotfiles_manager(){
         # fi
         # set back -eu
         set -eu
-        done < ./src/temp/loco.dotfiles.backup.list   
+        done < "${dotfiles_backup_list}"  
         msg::print "Restoring " "${CURRENT_USER}" " dotfiles"
         cp -R ./"$INSTANCE_PATH"/dotfiles-backup/. /home/"${CURRENT_USER}"/ 
       fi
@@ -493,6 +538,7 @@ loco::dotfiles_manager(){
 loco::fonts_manager(){
   local font
   local yaml_fonts="${styles_fonts-}"
+  local fonts_path=/home/"${CURRENT_USER}"/.fonts
   # check for yaml fonts
   if [[ -z "${yaml_fonts}" ]]; then
     msg::print "No YAML fonts found"
@@ -503,7 +549,8 @@ loco::fonts_manager(){
       font=${!i}
       if [[ "${ACTION}" == "install" ]]; then
         # install yaml fonts
-        wget -nc -P /usr/share/fonts/truetype/ "${font}"
+        mkdir -p "${fonts_path}"
+        wget -nc -P "${fonts_path}" "${font}"
       elif [[ "${ACTION}" == "remove" ]]; then
         # remove yaml fonts
         IFS='/' read -r -a font_path <<< "${font}"
@@ -512,7 +559,7 @@ loco::fonts_manager(){
         # get clean system path
         local font_name_clean=$(printf "%b\n" "${font_name//%/\\x}")
         msg::debug "${font_name_clean}"
-        sudo rm /usr/share/fonts/truetype/"${font_name_clean}"
+        sudo rm "${fonts_path}"/"${font_name_clean}"
       fi
     done
   fi
@@ -522,7 +569,7 @@ loco::fonts_manager(){
     # install local fonts
     if [[ "${ACTION}" == "install" ]]; then 
       local fonts_path=/home/"${CURRENT_USER}"/.fonts
-      mkdir -p fonts_path
+      mkdir -p "${fonts_path}"
       sudo cp -r ./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/* "${fonts_path}"
     # remove local fonts
     elif [[ "${ACTION}" == "remove" ]]; then
@@ -702,6 +749,9 @@ loco::meta_package_manager(){
 #   $@ just in case
 #######################################
 loco::startup(){
+  # remove temp files
+  utils::clean_temp
+
   # detect and check if OS is supported
   utils::check_operating_system  
 
@@ -712,9 +762,6 @@ loco::startup(){
   if ! source "${CONFIG_PATH}"; then
       echo "Unable to source "${CONFIG_PATH}"" >&2
   fi
-
-  #check if root, otherwise ask for password
-  # check_if_root
 
   # print the warning message
   msg::warning
@@ -753,14 +800,16 @@ loco::term_conf_set(){
   else
     if [[ "${ACTION}" == "install" ]]; then
       local term_path="./"${dist_path}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf"
-      echo 'dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < '"${term_path}" > ./src/temp/loco-term.sh
-      chmod +x ./src/temp/loco-term.sh
-      msg::record 'type `./'"${dist_path}"'src/temp/loco-term.sh` to set your terminal style' 
+      cmd::record 'dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < '"${term_path}"
+      # echo 'dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < '"${term_path}" > ./src/temp/loco-term.sh
+      # chmod +x ./src/temp/loco-term.sh
+      # msg::record 'type `./'"${dist_path}"'src/temp/loco-term.sh` to set your terminal style' 
 
     elif [[ "${ACTION}" == "remove" ]]; then
-      echo 'dconf reset -f /org/gnome/terminal/legacy/profiles:/' > ./src/temp/loco-term-reset.sh
-      chmod +x ./src/temp/loco-term-reset.sh
-      msg::record 'type `./'"${dist_path}"'src/temp/loco-term-reset.sh` to reset terminal'
+      cmd::record 'dconf reset -f /org/gnome/terminal/legacy/profiles:/'
+      # cmd::record 'dconf reset -f /org/gnome/terminal/legacy/profiles:/' > ./src/temp/loco-term-reset.sh
+      # chmod +x ./src/temp/loco-term-reset.sh
+      # msg::record 'type `./'"${dist_path}"'src/temp/loco-term-reset.sh` to reset terminal'
     fi
   fi
 }
@@ -1030,8 +1079,9 @@ utils::source_parse_yaml(){
 #   LOCO_OSTYPE
 #######################################
 utils::check_operating_system(){
+  msg::debug "$OSTYPE"
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-          #echo "Linux"
+    #echo "Linux"
     LOCO_OSTYPE="ubuntu"
   elif [[ "$OSTYPE" == "darwin"* ]]; then
     #echo "MacOs"
@@ -1144,4 +1194,13 @@ utils::GLOBALS_lock(){
 #######################################
 utils::timestamp(){
   date +"%Y-%m-%d_%H-%M-%S" # current time
+}
+
+#######################################
+# Removes temp files.
+#######################################
+utils::clean_temp(){
+  if ! sudo rm -r ./src/temp/*; then
+    echo "Unable to remove temp files" >&2
+  fi
 }
