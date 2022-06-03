@@ -53,6 +53,7 @@ retrieve_private_archive(){
 loco::extract_and_run(){
   # unzip archive
   unzip -oqq ~/loco-dist.zip -d ~/loco-dist
+
   # remove archive
   rm ~/loco-dist.zip
   # navigate to folder

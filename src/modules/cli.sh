@@ -21,6 +21,8 @@ cli::build(){
   # build file
   joined_parameters=$(IFS=; echo "${CLI_OPT_PARAMETERS[*]}");
   joined_descriptions=$(IFS=; echo "${CLI_OPT_DESCRIPTIONS[*]}");
+  # create temp folder
+  mkdir -p "./src/temp"
   utils::echo "while getopts ${joined_parameters} flag" > "${cli_file}"
   utils::echo "do" >> "${cli_file}"
   utils::echo "case "'"${flag}"'" in" >> "${cli_file}"
