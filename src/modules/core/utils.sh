@@ -199,11 +199,26 @@ utils::list(){
 utils::mac_has_brew(){
   # install homebrew if on macos
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
-    if $(command -v brew) > /dev/null 2>&1; then
+    # if $(command -v brew) > /dev/null 2>&1; then
+    #   echo -e "\U1f335 Homebrew is installed."
+    # else
+      
+    # fi
+
+    if [[ $(command -v brew) == "" ]]; then
+      echo "\U1f335 Homebrew needs to be installed."
+      echo "\U1f335 Your password will be asked several times."
       PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-      loco::meta_action
+      loco::meta_action "${PACKAGE_ACTION_CMD}"
+    else
+      echo "\U1f335 Homebrew is installed."
     fi
   fi
+
+
+
+
+
 }
 
 #######################################
@@ -216,11 +231,11 @@ utils::mac_has_brew(){
 utils::mac_has_bash(){
   # install bash 4+ if on macos
   if [[ $(bash -c 'echo ${BASH_VERSINFO[0]}') -eq 3 ]];  then
-    echo "bash 3"
-      PACKAGE_MANAGER="brew"
-      PACKAGE_ACTION="install"
-      PACKAGE="bash"
-      loco::meta_action
+    echo -e "\U1f335 Bash 4+ will be installed."
+    PACKAGE_ACTION_CMD='brew install bash'
+    loco::meta_action
+  else
+    echo -e "\U1f335 Bash ${BASH_VERSINFO[0]} is installed."
   fi
 }
 
