@@ -16,7 +16,9 @@ retrieve_public_archive(){
   local branch_name="gh-main"
   local release_url="https://github.com/t0pd4wn/loco.sh/raw/"${branch_name}"/dist/loco-dist.zip"
   # download archive
-  wget -nc -P ~/ "${release_url}"
+  if ! wget -nc -P ~/ "${release_url}"; then
+    curl --create-dirs -LO --output-dir ~/ "${release_url}"
+  fi
   loco::extract_and_run "$@"
 }
 
@@ -37,7 +39,9 @@ retrieve_private_archive(){
   local private_header="PRIVATE-TOKEN: ${secret_key}"
   local release_url="${git_server}/api/v4/projects/${project_ID}/repository/files/dist%2Floco-dist.zip/raw?ref=${branch_name}"
   # download archive
-  wget --header="${private_header}" -nc -P ~/ "${release_url}"
+  if ! wget --header="${private_header}" -nc -P ~/ "${release_url}"; then
+    curl --header="${private_header}" --create-dirs -LO --output-dir ~/ "${release_url}"
+  fi
   loco::extract_and_run "$@"
 }
 

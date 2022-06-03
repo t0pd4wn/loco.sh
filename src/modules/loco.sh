@@ -36,7 +36,7 @@ loco::custom_function(){
   if [[ $(type -t "${custom_function}") == function ]]; then
     "${custom_function}"
   else
-    msg::debug "No "${custom_function}" custom function found."
+    msg::debug "No "${custom_function}" function found."
   fi
 }
 
@@ -104,7 +104,7 @@ loco::dotfiles_manager(){
       msg::print "${EMOJI_YES} Yes, use " "${PROFILE}" " dotfiles"
       msg::print "Preparing your dotfiles backup"
       INSTANCE_PATH="${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
-      mkdir -p ./"$INSTANCE_PATH/dotfiles-backup"
+      utils::mkdir ./"$INSTANCE_PATH/dotfiles-backup"
       local current_path=$(pwd) 
       msg::debug $current_path
 
@@ -171,7 +171,7 @@ loco::dotfiles_manager(){
 #######################################
 loco::fonts_manager(){
   local font
-  local yaml_fonts="${styles_fonts-}"
+  local yaml_fonts="${style_fonts_urls-}"
   local assets_fonts=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/
   local fonts_path=/home/"${CURRENT_USER}"/.fonts
   # check for yaml fonts
@@ -186,7 +186,7 @@ loco::fonts_manager(){
       # install yaml fonts
       if [[ "${ACTION}" == "install" ]]; then
         utils::mkdir "${fonts_path}"
-        utils::wget "${fonts_path}" "${font}"
+        utils::get_url "${fonts_path}" "${font}"
         # refresh fonts cache
         cmd::run_as_user "fc-cache -fr ""${fonts_path}"
 
@@ -207,7 +207,7 @@ loco::fonts_manager(){
 
   # check for /assets/fonts/ fonts
   if [[ -z "$(ls -A "${assets_fonts}" 2>/dev/null)" ]]; then
-    msg::print "No /assets/fonts/ fonts found."
+    msg::print "No fonts found in /assets/fonts/."
   else
 
     # install local fonts
@@ -437,6 +437,69 @@ loco::term_conf_set(){
   # check if a terminal configuration is present
   if [[ ! -f "${local_path}" ]]; then
     msg::print "No terminal configuration file found"
+    local colors_theme="${style_colors_theme-}".conf
+    local font_name="${style_fonts_name-Monospace}"
+    local font_size="${style_fonts_size-11}"  
+    msg::debug "${style}"
+    msg::debug "${style_colors}"
+    msg::debug "${colors_theme}"
+    if [[ ! -z "${colors_theme}" ]]; then
+      #statements
+      msg::debug "${colors_theme}"
+      utils::echo "[/]" > "${local_path}"
+      cat ./src/themes/"${colors_theme}" >> "${local_path}"
+      utils::echo "\nfont='\''"${font_name}" "${font_size}"'\''" >> "${local_path}"
+      utils::echo "use-system-font=false" >> "${local_path}"
+      utils::echo "use-theme-colors=false" >> "${local_path}"
+      utils::echo "use-theme-transparency=false" >> "${local_path}"
+      utils::echo "use-transparent-background=true" >> "${local_path}"
+      utils::echo "visible-name='\''loco-profile'\''" >> "${local_path}"
+      loco::term_conf_action "${gnome_path}" "${gnome_UUID}" "${distro_path}"
+    fi  
+  else
+    loco::term_conf_action "${gnome_path}" "${gnome_UUID}" "${distro_path}"
+  fi
+}
+
+#######################################
+# Print the dconf configuration command
+#   $1 // dconf gnome path
+#   $2 // dconf gnome UUID
+#   $3 // terminal.conf file
+#######################################
+loco::term_conf_action(){
+  local gnome_path="${1-}"
+  local gnome_UUID="${2-}"
+  local distro_path="${3-}"
+    # if yes, print command to install / remove it
+  if [[ "${ACTION}" == "install" ]]; then
+    cmd::record "dconf load "${gnome_path}":"${gnome_UUID}"/ < ""${distro_path}"
+  elif [[ "${ACTION}" == "remove" ]]; then
+    cmd::record "dconf reset -f "${gnome_path}""
+  fi
+}
+
+#######################################
+# Build terminal style file.
+# note : Setting dconf for a specific user thorugh terminal,
+# can only be achieved with root rights (su, not sudo).
+# GLOBALS:
+#   PROFILES
+#   PROFILES_DIR
+#   ACTION
+#   LOCO_DIST
+#######################################
+loco::term_colors_set(){
+  # check if current loco is a remote installation
+  if [[ "${LOCO_DIST}" == true ]]; then local dist_path=loco-dist/; fi
+  local local_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+  local distro_path=./"${dist_path-}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+  local gnome_path="/org/gnome/terminal/legacy/profiles:/"
+  local gnome_UUID="b1dcc9dd-5262-4d8d-a863-c897e6d979b9"
+
+  # check if a terminal configuration is present
+  if [[ ! -f "${local_path}" ]]; then
+    msg::print "No terminal configuration file found"
   else
     # if yes, print command to install / remove it
     if [[ "${ACTION}" == "install" ]]; then
@@ -511,13 +574,10 @@ loco::watermark_set(){
     msg::say "Removing " "watermark"
     rm /home/${CURRENT_USER}/.loco
   elif [[ "${WATERMARK}" == true ]]; then
-    echo '#loco.sh instance infos...' > /home/"${CURRENT_USER}"/.loco
-    echo 'CURRENT_USER='${CURRENT_USER} >> /home/"${CURRENT_USER}"/.loco
-    echo 'PROFILE='${PROFILE} >> /home/"${CURRENT_USER}"/.loco
-    echo 'INSTANCE_PATH='${INSTANCE_PATH-} >> /home/"${CURRENT_USER}"/.loco
-    if (( $? != 0 )); then
-      echo "Unable to source "${CONFIG_PATH}"" >&2
-    fi
+    utils::echo '#loco.sh instance infos...' > /home/"${CURRENT_USER}"/.loco
+    utils::echo 'CURRENT_USER='${CURRENT_USER} >> /home/"${CURRENT_USER}"/.loco
+    utils::echo 'PROFILE='${PROFILE} >> /home/"${CURRENT_USER}"/.loco
+    utils::echo 'INSTANCE_PATH='${INSTANCE_PATH-} >> /home/"${CURRENT_USER}"/.loco
   fi
 }
 

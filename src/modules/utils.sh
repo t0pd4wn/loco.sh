@@ -91,6 +91,19 @@ utils::cp(){
 }
 
 #######################################
+# Echo a message
+# Arguments:
+#   $1 # from
+#   $2 # to
+#######################################
+utils::echo(){
+  local message="${@-}"
+  if ! cmd::run_as_user "echo -e '"${message}"'"; then
+    echo "Unable to echo -e ${message}" >&2
+  fi
+}
+
+#######################################
 # Set GLOBALS
 #######################################
 utils::GLOBALS_set(){
@@ -228,13 +241,13 @@ utils::timestamp(){
 # Download and source the parse_yaml script.
 #######################################
 utils::yaml_source_parser(){
-  # wget parse_yaml "https://github.com/mrbaseman/parse_yaml"
+  # get parse_yaml "https://github.com/mrbaseman/parse_yaml"
   local script_url="https://raw.githubusercontent.com/mrbaseman/parse_yaml/master/src/parse_yaml.sh"
-  utils::wget "./src/temp/" "${script_url}"
+  utils::get_url "./src/temp/" "${script_url}"
 
   # source file
   utils::source ./src/temp/parse_yaml.sh
-
+  
   # commented out because /src/temp/ is full rm'd at each start
   # if true, keep a copy locally
   # local cache_flag=false
@@ -275,7 +288,7 @@ utils::yaml_read(){
 }
 
 #######################################
-# Wget a file in a folder.
+# Wget a file in a folder. (deprecated in favor to utils::get_url)
 # Arguments:
 #   $1 // a path
 #   $2 // an url
@@ -286,5 +299,23 @@ utils::wget(){
   if ! cmd::run_as_user "wget -nc -q -P " "${path}" "${url}"; then
     msg::debug "Unable to wget ${url}"
     echo "Unable to wget ${url}" >&2
+  fi
+}
+
+#######################################
+# Get a file from an URL into a folder.
+# Arguments:
+#   $1 // a folder path
+#   $2 // an url
+#######################################
+utils::get_url(){
+  local path="${1-}"
+  local url="${2-}"
+  if eval 'command -v wget' > /dev/null 2>&1; then
+    msg::debug "wget is used"
+    cmd::run_as_user "wget -nc -q -P " "${path}" "${url}"
+  else
+    msg::debug "curl is used"
+    cmd::run_as_user "curl --create-dirs -C - -LOs --output-dir " "${path}" "${url}"
   fi
 }

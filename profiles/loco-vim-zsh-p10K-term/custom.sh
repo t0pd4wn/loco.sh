@@ -8,20 +8,23 @@
 #################
 install_generic_exit(){
   # download vundle
-  utils::remove "/home/${CURRENT_USER}/.vim/bundle/Vundle.vim"
+  # utils::remove "/home/${CURRENT_USER}/.vim/bundle/Vundle.vim"
   cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
 
   # install vundle plugins
   cmd::run_as_user "vim +PluginInstall +qall"
 
   # install powerlevel10K
-  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
+  # utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
   cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
 } 
 
 remove_generic_exit(){
   # launch bash, could be automated further
   msg::record 'type `bash` to reset your prompt'
+
+  # remove vim bundles
+  utils::remove "/home/${CURRENT_USER}/.vim/bundle/*"
 
   # remove powerlevel10K
   utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
