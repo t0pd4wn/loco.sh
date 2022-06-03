@@ -64,6 +64,8 @@ utils::check_operating_system(){
   else 
     _exit "Operating System not supported."
   fi 
+  LOCO_OS_VERSION=$(lsb_release -r -s)
+  msg::debug "${LOCO_OS_VERSION}"
 }
 
 #######################################
@@ -138,6 +140,7 @@ utils::GLOBALS_lock(){
   # readonly ACTION
   # readonly PROFILE
   # readonly THEME
+  readonly BACKGROUND_URL
   readonly PROFILES_DIR
   readonly INSTANCES_DIR
   readonly CONFIG_PATH
