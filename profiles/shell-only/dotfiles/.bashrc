@@ -2,8 +2,5 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 
 # linux configuration
-# no terminal sound
-bind 'set bell-style none'
-
 # set zsh as default shell
 zsh
