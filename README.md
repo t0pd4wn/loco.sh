@@ -251,6 +251,7 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 - add profiles : devops, data-scientist...
 - remove action shall not rely on the base profile
 - improve bash modules structure
+- improve backup workflow
 - absolute path variable ?
 - display prompts options as table rows
 - add term styles
