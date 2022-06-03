@@ -45,6 +45,7 @@ bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/u
 bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install)
 ```
 
+##### Options
 You can pass options like this:
 ```bash
 bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options]
@@ -184,6 +185,34 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 To create an action, simply duplicate one available in ```/src/actions/``` and start editing it as you please.
 
 *Actions* can be set through the ```-a``` option.
+
+## Themes
+
+*Themes* are terminal color themes.
+
+```bash
+.
+└── src
+  └── themes #stores actions scripts
+    ├── monokai.conf # a classic monokai theme
+    ├── monokai-light.conf # a light monokai theme
+    ├── nord.conf # nord theme from articicestudio
+    └── nord-light.conf # custom light nord theme
+```
+
+### Add a theme
+
+To create a theme, simply duplicate one available in ```/src/themes/``` and start editing it as you please.
+
+```bash
+background-color='[color code]'
+background-transparency-percent=0
+bold-color='[color code]'
+foreground-color='[color code]'
+palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]', '[color code 4]', '[color code 5]', '[color code 6]', '[color code 7]', '[color code 8]', '[color code 9]', '[color code 10]', '[color code 11]', '[color code 12]', '[color code 13]', '[color code 14]', '[color code 15]']
+```
+
+*Themes* can be set through the ```-t``` option.
 
 ## Instances
 
