@@ -28,8 +28,6 @@ utils::source "${CONFIG_PATH}"
 # lock globals
 utils::GLOBALS_lock
 
-echo "debug?"
-
 # init debug message
 msg::debug "Verbose mode"
 

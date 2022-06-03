@@ -14,7 +14,6 @@ utils::check_if_start(){
   # check if first start (stores $USER without sudo)
   if [ -f "./src/temp/conf_is_start" ]; then
     # program is started
-    msg::debug "before remove"
     utils::remove ./src/temp/conf_is_start
   else
     msg::start
@@ -183,9 +182,7 @@ utils::list(){
   shopt -s nullglob
   # iterate over aguments paths
   for element_path in "${list_path}"/.??* "${list_path}"/*; do
-    msg::debug "${element_path}"
     element_name=${element_path##*/}
-    msg::debug "${element_name}"
     list_name+=("${element_name}")
   done
   shopt -u nullglob
@@ -206,7 +203,6 @@ utils::mac_has_brew(){
       PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
       loco::meta_action
     fi
-
   fi
 }
 
@@ -218,7 +214,7 @@ utils::mac_has_brew(){
 #   PACKAGE_MANAGER
 #######################################
 utils::mac_has_bash(){
-  # install homebrew if on macos
+  # install bash 4+ if on macos
   if [[ $(bash -c 'echo ${BASH_VERSINFO[0]}') -eq 3 ]];  then
     echo "bash 3"
       PACKAGE_MANAGER="brew"
