@@ -40,6 +40,11 @@ For example, you can launch a verbose profile installation like this :
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -V
 ```
 
+Or be *loco* and directly install a profile with the ```-Y``` flag on (as showcased in the gif file) :
+```bash
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -p "loco-vim-zsh-p10K-term" -Y
+```
+
 Once installed, you can simply interact with loco like this : 
 ```bash
 cd ~/loco-dist
