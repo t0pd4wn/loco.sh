@@ -3,7 +3,7 @@
 # functions.sh | functions
 #-------------------------------------------------------------------------------
 
-# source the bash modules
+# source the core modules
 # source the utils module
 if ! source ./src/modules/core/utils.sh; then
   echo "Can not source ./src/modules/utils.sh" >&2

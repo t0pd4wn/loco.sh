@@ -103,6 +103,19 @@ utils::echo(){
 }
 
 #######################################
+# Echo a message
+# Arguments:
+#   $1 # from
+#   $2 # to
+#######################################
+utils::decode_URI(){
+  local string="${@-}"
+  if ! echo ''"${string}"'' | perl -pe 's/\%(\w\w)/chr hex $1/ge'; then
+    _error "Unable to decode ${string}"
+  fi
+}
+
+#######################################
 # Set GLOBALS
 #######################################
 utils::GLOBALS_set(){

@@ -101,6 +101,8 @@ cli::print_version(){
 # Register cli options
 # GLOBALS:
 #   ACTION
+#   BACKGROUND
+#   BACKGROUND_URL
 #   PROFILE
 #   CURRENT_USER
 #   PROFILES_DIR

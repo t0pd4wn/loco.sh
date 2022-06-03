@@ -26,7 +26,7 @@ loco::term_conf_set(){
     local_path=./src/temp/"${PROFILE}"_terminal.conf
     distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf
     msg::print "No terminal configuration file found"
-    local colors_theme="${style_colors_theme-"${THEME}"}"
+    local colors_theme="${style_colors_theme:-"${THEME}"}"
     local colors_theme_file=./src/themes/"${colors_theme}".conf
     local font_name="${style_fonts_name-Monospace}"
     local font_size="${style_fonts_size-11}"

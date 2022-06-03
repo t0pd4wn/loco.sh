@@ -10,6 +10,9 @@ loco::watermark_check
 # read and source "${PROFILE}" yaml file
 loco::yaml_profile
 
+# reset background to OS default
+loco::background_manager
+
 # unlink "${PROFILE}" .dotfiles to $USER
 loco::dotfiles_manager "Replace your dotfiles with " "${CURRENT_USER}" " ones (y/n)?"
 
