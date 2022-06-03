@@ -298,9 +298,14 @@ cmd::record(){
 #   $1 // a command
 #######################################
 cmd::play(){
+  # check if current loco is remote installation
+  local dist_path=""
+  if [[ "${LOCO_DIST}" == true ]]; then
+    dist_path="loco-dist/"
+  fi
   local script_path="./src/temp/loco_finish.sh"
   if [[ -f "${script_path}" ]]; then
-    msg::record 'type `./src/temp/loco_finish.sh` to finish installation'
+    msg::record 'type `./'"${dist_path}"'src/temp/loco_finish.sh` to finish installation'
   fi
 }
 
@@ -788,9 +793,8 @@ loco::term_conf_set(){
   # note : Apparently, it is possible to set dconf for a specific user.
   # This can be achieved with root rights (su, not sudo)
   # check if current loco is remote installation
-  local is_dist="${LOCO_DIST}"
   local dist_path=""
-  if [[ "${is_dist}" == true ]]; then
+  if [[ "${LOCO_DIST}" == true ]]; then
     dist_path="loco-dist/"
   fi
   # create path

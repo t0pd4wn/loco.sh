@@ -1,6 +1,6 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal style, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
+***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
 
 ***Loco.sh*** can be useful to :
 
@@ -35,7 +35,7 @@ You can pass options like this :
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) [options]
 ```
 
-For example, you can launch a verbose installation like this :
+For example, you can launch a verbose profile installation like this :
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -V
 ```
