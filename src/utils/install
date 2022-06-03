@@ -60,9 +60,18 @@ loco::extract_and_run(){
   rm ~/loco-dist.zip
   # navigate to folder
   cd ~/loco-dist
-  # set GLOBAL
+  # source utils
+  source ~/loco-dist/src/modules/core/utils.sh
+  # check operating system
+  echo "checking OS"
+  utils::check_operating_system
+  # clean files with correct bash path ?
   # launch loco
-  ./loco "$@" -J
+  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    /usr/local/bin/bash ./loco "$@" -J
+  else
+    ./loco "$@" -J
+  fi
 }
 
 retrieve_public_archive "$@"

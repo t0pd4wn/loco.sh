@@ -55,6 +55,7 @@ loco::watermark_check(){
 loco::watermark_action_install(){
   # keep a copy of current GLOBALs values
   local current_profile="${PROFILE-}"
+  msg::debug ${current_profile}
   local current_user="${CURRENT_USER-}"
   local current_path="${INSTANCE_PATH-}"
   # keep a copy of current messages
@@ -72,6 +73,8 @@ loco::watermark_action_install(){
     utils::cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
     # source the $ACTION.sh file
     utils::source ./src/actions/"${ACTION}".sh
+    # clean the yaml variables
+    # todo : correct yaml file sourcing
     # remove the newly created finish.sh
     utils::remove "./src/temp/finish.sh"
     # put the copy back

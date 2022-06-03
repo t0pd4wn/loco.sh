@@ -46,7 +46,7 @@ prompt::build(){
   if [[ "${is_required}" == true ]]; then
     utils::echo "$((prompt_index+1))) echo "Goodbye!"; exit;;" >> "${prompt_path}"
   elif [[ "${is_required}" == false ]]; then
-    utils::echo "$((prompt_index+1))) echo "No choice is good."; ;;" >> "${prompt_path}"
+    utils::echo "$((prompt_index+1))) echo "No choice is also good."; ;;" >> "${prompt_path}"
   fi
   
   utils::echo "*) echo "Invalid option. Try another one.";continue;;" >> "${prompt_path}"
