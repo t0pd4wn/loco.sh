@@ -2,13 +2,19 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 
 # count number of times .bashrc is sourced
-startup_count(){
-  if [[ -z "${BASH_START_STATUS-}" ]]; then
-    # if not, set a global flag
-    export BASH_START_STATUS=1
-  elif [[ "${BASH_START_STATUS}" == 1 ]]; then
-    BASH_START_STATUS=2
-    readonly BASH_START_STATUS
+startup_status(){
+  if [[ -z "${BASH_START_STATUS}" ]]; then
+    # if not, set a global flag at startup
+    export BASH_START_STATUS=true
+    # remove lock file
+    rm -rf /home/"${USER}"/.is_started
+  elif [[ ! -z "${BASH_START_STATUS}" ]]; then
+    # if the global flag is set, creates a lock file
+    if [[ ! -f /home/"${USER}"/.is_started ]]; then
+      touch /home/"${USER}"/.is_started
+      # launch startup function once
+      system_startup
+    fi
   fi
 }
 
@@ -18,13 +24,8 @@ system_startup(){
   # add some startup commands below
 }
 
-if [[ "${BASH_START_STATUS-}" -ne 2 ]]; then
-  startup_count
-fi
-
-if [[ "${BASH_START_STATUS}" == 2 ]]; then
-  system_startup
-fi
+# launch count
+startup_status
 
 # set zsh as default shell
 zsh
