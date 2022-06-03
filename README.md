@@ -95,7 +95,8 @@ cd [repository]
 		├── profile.yaml # profile description (optional)
 		├── custom.sh # custom functions (optional)
 		├── assets #stores specific files (optional)
-		│	├── fonts # fonts in this folder will be installed (optional)
+		│	├── background.[image extension] # background image (optional)
+    │ ├── fonts # fonts in this folder will be installed (optional)
 		│	└── terminal.conf # user terminal configuration (optional, ubuntu only)
 		└── dotfiles # dotfiles in this folder will be symlinked or hard copied (optional)
 
@@ -191,6 +192,41 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 To create an action, simply duplicate one available in ```/src/actions/``` and start editing it as you please.
 
 *Actions* can be set through the ```-a``` option.
+
+## Backgrounds
+
+*Backrounds* are user background images.
+
+### Add a background
+
+*Backrounds* can be set through four methods :
+1. ```-B``` option : an url can be provided to set a background
+2. profile yaml: an url can be provided to set a background
+
+```yaml
+style:
+  background: [background url]
+```
+3. profile asset : a file can be provided to set a background
+
+```bash
+.
+└── profiles
+  └── [profile]
+    └── assets #stores specific files (optional)
+      └── background.[image extension] # background image (optional)
+```
+
+4. prompt : a prompt will be launched to set a background from the ones available in ```/src/backgrounds/```
+
+```bash
+.
+└── src
+  └── backgrounds #stores actions scripts
+    └── [background images]
+```
+
+If more than one method is set the priority goes from 1. to 4.
 
 ## Themes
 
@@ -323,11 +359,10 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - packagers: test and implement cask packages
 - actions: add upgrade, init, save
 - profiles: add devops, data-scientist...
-- remove action shall not rely on the base profile
+- remove action shall not rely on the base profile (but on watermark)
 - actions: improve backup workflow
 - code: absolute path variable ?+
 - UI: display prompts options as table rows
-- actions: add dynamic term styles
 - Ghost mode leaving no assets prior to action
 - profiles: install multiple profiles for one user (update watermark)
 
