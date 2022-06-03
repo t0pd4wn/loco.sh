@@ -128,6 +128,8 @@ cli::print_version(){
 #   VERSION
 #   VERBOSE
 #   LOCO_YES
+#   ROOT_YES
+#   LOCO_DIST
 #######################################
 cli::set_options(){
   declare -A action_opt_array
@@ -434,9 +436,7 @@ loco::dotfiles_manager(){
         msg::print "${CURRENT_USER}" " dotfiles were backup'd here :"
         msg::print "/"$INSTANCE_PATH"/dotfiles-backup"  
         local current_path=$(pwd) 
-        while read dotfile || [[ -n "${dotfile}" ]] ; do      
-      
-
+        while read dotfile || [[ -n "${dotfile}" ]] ; do
           msg::debug "${LOCO_YES}"
           msg::debug "${DETACHED}"
           if [[ "${DETACHED}" == false ]]; then
