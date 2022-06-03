@@ -11,11 +11,16 @@ set -eu
 #   dist/loco-dist.zip
 #######################################
 build_release(){
-	zip -FS -r ./dist/loco-dist.zip . -x '*.DS_Store*' \
+	if ! sudo rm -r ./src/temp/*; then
+		echo "Can not remove temp files" >&2
+	fi
+	zip -FS -r ./dist/loco-dist.zip . \
+	-x '*.DS_Store*' \
 	-x '/.git*' \
-	-x '/src/temp/*' \
 	-x '/instances/*' \
 	-x '/dist/*'
 }
 
 build_release
+
+set +eu
