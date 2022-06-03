@@ -17,7 +17,7 @@
 - **default** : default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
 - **loco-vim** : provides a fully configured ```vim``` (removes nvim if installed) ; supports MacOSx and Ubuntu
 - **loco-zsh-p10k** : a fully configured ```zsh``` with ```p10K``` ; supports MacOSx and Ubuntu
-- **loco-term** : a custom themed terminal ; supports Ubuntuw
+- **loco-term** : a custom themed terminal ; supports Ubuntu
 - **loco-vim-zsh-p10k-term** : all examples made into one profile
 <!-- - **loco-nvim** : same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev** : a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
