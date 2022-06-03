@@ -333,7 +333,6 @@ loco::custom_action(){
     local action="$1"
     local custom_function="${ACTION}_${LOCO_OSTYPE}_custom_${action}"
     if [[ $(type -t "${custom_function}") == function ]]; then
-      echo 'function ?'
       "${custom_function}"
     else
       msg::debug "No ${action} custom function found."

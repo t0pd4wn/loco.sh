@@ -38,6 +38,8 @@ For example, you can launch a verbose installation like this :
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh) -a install -V
 ```
 
+Once installed, you can simply interact with loco like this ```./loco```.
+
 ### Manually
 
 ```bash
@@ -195,6 +197,17 @@ Options can be set directly into ```/src/loco.conf```.
 
 ## Other
 
+### Make ```loco``` your own
+The first point you need to keep in mind is security. SSH or GPG keys for example are quite unwelcomed on the public internet, as could be servers configurations. To make ```loco``` your own, you first need to fork it over a private repository. Then :
+- for Gitlab.com
+1. Retrieve your API [private token]
+2. Retrieve the [project ID]
+3. Update ```./src/utils/loco_installation.sh``` with your private repo url
+4. You can now install loco with this url :
+```bash
+bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://gitlab.com/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
+```
+
 ### Build a release
 As its complicated to archive correctly ```git sub-modules``` in *profiles*, loco.sh provides a release archive in ```/dist/```. To update it, launch ```./src/utils/loco_build_release.sh```.
 
@@ -208,6 +221,7 @@ As its complicated to archive correctly ```git sub-modules``` in *profiles*, loc
 - display prompts options as table rows
 - add term styles
 - write architecture documentation
+- run_as_user ?
 - more YAML logic (parse .yaml files)
 - Ghost mode leaving no assets prior to action
 - install multiple profiles for one user (update watermark)

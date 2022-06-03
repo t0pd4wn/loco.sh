@@ -37,6 +37,7 @@ install_ubuntu_custom_entry(){
 
 install_ubuntu_custom_exit(){
   # download vundle
+  sudo rm -fR /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
   su "${CURRENT_USER}" -c "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
   # install vundle plugins
   su "${CURRENT_USER}" -c "vim +PluginInstall +qall"

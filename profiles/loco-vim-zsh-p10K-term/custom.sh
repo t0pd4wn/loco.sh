@@ -37,10 +37,12 @@ install_ubuntu_custom_entry(){
 
 install_ubuntu_custom_exit(){
   # download vundle
+  sudo rm -fR /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
   su "${CURRENT_USER}" -c "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
   # install vundle plugins
   su "${CURRENT_USER}" -c "vim +PluginInstall +qall"
   # install powerlevel10K
+  sudo rm -fR /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k
   su "${CURRENT_USER}" -c "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
   # launch zsh, could be automated further
   msg::record 'type `zsh` to init your zsh prompt'

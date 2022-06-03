@@ -23,7 +23,7 @@ function retrieve_archive(){
   # navigate to folder
   cd ~/loco-dist
   # launch loco
-  exec ./loco "$@"
+  ./loco "$@"
 }
 
 retrieve_archive "$@"
