@@ -11,13 +11,19 @@
 # Arguments:
 #   ACTION
 #   PROFILE
-#   styles_fonts ? global
 # Output:
 #   /home/$USER/.fonts/[fonts]
 #######################################
 loco::fonts_manager(){
   local font
-  local yaml_fonts="${style_fonts_urls-}"
+  local yaml_fonts
+  local yaml_fonts=$(utils::yaml_get_values '.style.fonts.urls.[]')
+  declare -a yaml_fonts_array
+  yaml_fonts_array=("${yaml_fonts}")
+
+  msg::debug "${yaml_fonts_array[@]}"
+  msg::debug "${yaml_fonts_array[0]}"
+
   local assets_fonts=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/
   local fonts_path=/home/"${CURRENT_USER}"/.fonts
 
@@ -26,9 +32,10 @@ loco::fonts_manager(){
     msg::print "No YAML fonts found."
   else 
     msg::say "YAML " "fonts" " processed."
-    IFS=' ' read -r -a fonts_array <<< "${yaml_fonts}"  
-    for i in "${fonts_array[@]}"; do
-      font=${!i}
+    # IFS=' ' read -r -a fonts_array <<< "${yaml_fonts}"
+
+    for i in "${yaml_fonts_array[@]}"; do
+      font=${i}
       # install yaml fonts
       if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
         loco::fonts_action_install_yaml "${fonts_path}" "${font}"

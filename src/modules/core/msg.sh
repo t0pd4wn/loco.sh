@@ -18,7 +18,7 @@ msg::debug(){
     local b=$(tput bold)
     local n=$(tput sgr0)
     declare -a message
-    message=("${b}""...debug : ""${n}")
+    message=("${b}""...debug :""${n}")
     message+=("Function: " "${b}""${FUNCNAME[1]}""${n}")
     message+=("Line: ""${b}""${BASH_LINENO[0]}""${n}")
     message+=("Message: ""${b}""$@""${n}")

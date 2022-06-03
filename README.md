@@ -360,11 +360,12 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - yaml: better yaml values management (use normative array?)
 - packagers: test and implement cask packages
 - actions: add init, save
-- actions: improve upgrade (add diff)
+- actions: improve update (add yaml diff)
+- actions: improve backup workflow
+- options : add a "none" option
 - profiles: add devops, data-scientist...
 - profiles: check for current user discrepancies
 - remove action shall not rely on the base profile (but on watermark)
-- actions: improve backup workflow
 - code: absolute path variable ?++
 - UI: display prompts options as table rows
 - Ghost mode leaving no assets prior to action

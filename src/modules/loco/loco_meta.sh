@@ -105,44 +105,48 @@ loco::meta_package(){
 loco::meta_package_manager(){
   msg::debug "meta_package_manager ..."
   # assign the $1 package managers
-  local packagers="packages_"$1
-  packagers="${!packagers-}"
+  # local packagers="packages_"$1
+  local packagers
+  local packages
+  declare -a packagers_array
+  declare -a packages_array
+  packagers=$(utils::yaml_get_keys ".packages.${1-}")
+
   # check if packagers are declared
   if [[ -z "${packagers}" ]]; then
     msg::print "No " "$1" " package managers found"
   else
     # begin to assign values recursively from descriptors
     IFS=' ' read -r -a packagers_array <<< "${packagers}"
-    for i in "${packagers_array[@]}"; do  
+    for i in "${packagers_array[@]}"; do
 
       # prepare variables from package manager descriptor
       PACKAGE_ACTION="${ACTION}"
 
-      # parse to identify package manager name
-      IFS='_' read -r -a local_packager_name <<< "${i}" 
-      local packager_path="./src/descriptors/${local_packager_name[-1]}.sh"
+      local packager_path="./src/descriptors/${i}.sh"
       # check for descriptor file
       if [[ ! -f  "${packager_path}" ]]; then
         msg::print "No " "$1" " package manager descriptor found"
+      
+      # if there is a descriptor file
       else
-        # if a file, source it
         utils::source "${packager_path}"
-        # if ! source "${packager_path}"; then
-        #   echo "Can not source ${packager_path}" >&2
-        #   exit 1
-        # fi
+
         # expand variable value 
         PACKAGE_ACTION=${!PACKAGE_ACTION}   
         # update the package manager
         ${PACKAGE_MANAGER} ${update}
 
-        # parse to get packages names
-        local packages=${!i}
-        IFS=' ' read -r -a packages_array <<< "${packages}"   
+        # parse yaml to get packages names
+        local packages_selector=".packages."${1}"."${i}".[]"
+        packages=$(utils::yaml_get_values "${packages_selector}")
+        msg::debug "${packages}"
+
+        packages_array=($packages)
 
         # send packages names to metaPackage
         for i in "${packages_array[@]}"; do
-          PACKAGE=${!i}
+          PACKAGE="${i}"
           loco::meta_package "${PACKAGE}" "${PACKAGE_MANAGER_TEST_CMD}" ;
         done
       fi

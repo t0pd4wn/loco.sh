@@ -43,7 +43,7 @@ loco::custom_exit
 loco::watermark_unset
 
 # prepare term reset script
-loco::term_conf_set
+loco::term_conf_manager
 
 # record a reset terminal command in loco_finish.sh
 cmd::record "reset && exit"
