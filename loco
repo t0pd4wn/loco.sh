@@ -11,6 +11,9 @@ if ! source ./src/functions.sh; then
   exit 1
 fi
 
+# detect and check if OS is supported
+utils::check_operating_system
+
 # set globals
 utils::GLOBALS_set
 
@@ -24,6 +27,8 @@ utils::source "${CONFIG_PATH}"
 
 # lock globals
 utils::GLOBALS_lock
+
+echo "debug?"
 
 # init debug message
 msg::debug "Verbose mode"

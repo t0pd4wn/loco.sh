@@ -60,12 +60,16 @@ utils::check_operating_system(){
   msg::debug "$OSTYPE"
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     LOCO_OSTYPE="ubuntu"
+    LOCO_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
   elif [[ "$OSTYPE" == "darwin"* ]]; then
     LOCO_OSTYPE="macos" 
+    utils::mac_has_brew
+    utils::mac_has_bash
+    # get version information, then grep version line, cut full semver, cut main version "e.g 12"
+    LOCO_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
   else 
     _exit "Operating System not supported."
   fi 
-  LOCO_OS_VERSION=$(lsb_release -r -s)
   msg::debug "${LOCO_OS_VERSION}"
 }
 
@@ -185,6 +189,43 @@ utils::list(){
     list_name+=("${element_name}")
   done
   shopt -u nullglob
+}
+
+#######################################
+# for macOS check if brew is installed or install it
+# GLOBALS:
+#   PACKAGE_ACTION_CMD
+#   PACKAGE_MANAGER
+#   PACKAGE_ACTION
+#   PACKAGE
+#######################################
+utils::mac_has_brew(){
+  # install homebrew if on macos
+  if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
+    if $(command -v brew) > /dev/null 2>&1; then
+      PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+      loco::meta_action
+    fi
+
+  fi
+}
+
+#######################################
+# for macOS check if bash 4.* is installed or install it
+# GLOBALS:
+#   ACTION
+#   PACKAGE
+#   PACKAGE_MANAGER
+#######################################
+utils::mac_has_bash(){
+  # install homebrew if on macos
+  if [[ $(bash -c 'echo ${BASH_VERSINFO[0]}') -eq 3 ]];  then
+    echo "bash 3"
+      PACKAGE_MANAGER="brew"
+      PACKAGE_ACTION="install"
+      PACKAGE="bash"
+      loco::meta_action
+  fi
 }
 
 #######################################

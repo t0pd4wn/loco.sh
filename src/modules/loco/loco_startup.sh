@@ -19,9 +19,6 @@ loco::startup(){
   # set system clock
   utils::set_clock
 
-  # detect and check if OS is supported
-  utils::check_operating_system  
-
   # externally source the yaml parser 
   # https://github.com/mrbaseman/parse_yaml
   utils::yaml_source_parser
@@ -34,7 +31,7 @@ loco::startup(){
 }
 
 #######################################
-# check if brew is installed or install it
+# for macOS check if brew is installed or install it
 # GLOBALS:
 #   PACKAGE_ACTION_CMD
 #   PACKAGE_MANAGER
@@ -44,8 +41,27 @@ loco::startup(){
 loco::mac_has_brew(){
   # install homebrew if on macos
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
+    echo "macos"
       PACKAGE="brew"
       PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
       loco::meta_package "${PACKAGE}" "${PACKAGE_ACTION_CMD}"
+  fi
+}
+
+#######################################
+# for macOS check if bash 4.* is installed or install it
+# GLOBALS:
+#   ACTION
+#   PACKAGE
+#   PACKAGE_MANAGER
+#######################################
+loco::mac_has_bash(){
+  # install homebrew if on macos
+  if [[ $(bash -c 'echo ${BASH_VERSINFO[0]}') -eq 3 ]];  then
+    echo "bash 3"
+      PACKAGE_MANAGER="brew"
+      PACKAGE_ACTION="install"
+      PACKAGE="bash"
+      loco::meta_action
   fi
 }
