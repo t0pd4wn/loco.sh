@@ -36,24 +36,24 @@ loco::meta_action(){
 #######################################
 loco::meta_package(){
   msg::debug "metaPackage ..."
-  msg::debug ${PACKAGE_MANAGER}
-  msg::debug ${PACKAGE_MANAGER_TEST_CMD} 
-  msg::debug ${PACKAGE_ACTION}
-  msg::debug ${PACKAGE_ACTION_CMD}
-  msg::debug ${PACKAGE}
+  msg::debug ${PACKAGE_MANAGER-}
+  msg::debug ${PACKAGE_MANAGER_TEST_CMD-}
+  msg::debug ${PACKAGE_ACTION-}
+  msg::debug ${PACKAGE_ACTION_CMD-}
+  msg::debug ${PACKAGE-}
   local local_package_test_cmd
 
   #if no action is defined default to "${ACTION}"
-  if [[ -z "${PACKAGE_ACTION}" ]]; then
+  if [[ -z "${PACKAGE_ACTION-}" ]]; then
     msg::debug "No package action"
-    PACKAGE_ACTION="${ACTION}"
+    PACKAGE_ACTION="${ACTION-}"
     msg::debug $PACKAGE_ACTION
   fi
 
   #check for test command options
-  if [[ -z "${PACKAGE_TEST_CMD}" ]]; then
+  if [[ -z "${PACKAGE_TEST_CMD-}" ]]; then
       msg::debug "No local test cmd"
-    if [[ -z ${PACKAGE_MANAGER_TEST_CMD} ]]; then 
+    if [[ -z ${PACKAGE_MANAGER_TEST_CMD-} ]]; then 
       msg::debug "No packager test cmd"
       # using the default testing command
       local_package_test_cmd='command -v $PACKAGE'
@@ -72,16 +72,16 @@ loco::meta_package(){
   # check for package status (installed/uninstalled) and act accordingly
   if eval "${local_package_test_cmd}" > /dev/null 2>&1; then
     msg::debug "${local_package_test_cmd}"
-    msg::print "" "${PACKAGE_MANAGER} ${PACKAGE}" " is installed."
+    msg::print "" "${PACKAGE_MANAGER-} ${PACKAGE-}" " is installed."
     # remove package
-    if [[ "${ACTION}" == "remove" ]]; then
+    if [[ "${ACTION-}" == "remove" ]]; then
       msg::say "Removing " "${PACKAGE_MANAGER} ${PACKAGE}"
       loco::meta_action
     fi
   else
-    msg::print "" "${PACKAGE}" " is not installed."
+    msg::print "" "${PACKAGE-}" " is not installed."
     # install package
-    if [[ "${ACTION}" == "install" ]]; then
+    if [[ "${ACTION-}" == "install" ]]; then
       msg::say "Installing " "${PACKAGE_MANAGER} ${PACKAGE}"
       loco::meta_action
     fi

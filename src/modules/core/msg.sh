@@ -14,7 +14,7 @@
 #   $@ # a message, a variable...
 #######################################
 msg::debug(){
-  if [[ "${VERBOSE}" == true ]]; then
+  if [[ "${VERBOSE-}" == true ]]; then
     local b=$(tput bold)
     local n=$(tput sgr0)
     declare -a message
