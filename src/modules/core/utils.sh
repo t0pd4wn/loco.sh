@@ -14,6 +14,7 @@ utils::check_if_start(){
   # check if first start (stores $USER without sudo)
   if [ -f "./src/temp/conf_is_start" ]; then
     # program is started
+    msg::debug "before remove"
     utils::remove ./src/temp/conf_is_start
   else
     msg::start
@@ -208,8 +209,8 @@ utils::remove(){
   # unset eu due to rm exits
   set +eu
   # try two different expansions 
-  if ! sudo rm -fR ${path}; then
-    if ! sudo rm -R "$path"; then
+  if ! rm -fR ${path}; then
+    if ! rm -R "$path"; then
       msg::debug "Unable to remove $path"
       _error "Unable to remove $path"
       else 
