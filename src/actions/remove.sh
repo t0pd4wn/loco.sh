@@ -40,7 +40,7 @@ msg::say "Executing exit function"
 loco::custom_exit
 
 # remove watermark
-loco::watermark_set
+loco::watermark_unset
 
 # prepare term reset script
 loco::term_conf_set

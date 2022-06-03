@@ -28,7 +28,8 @@ loco::background_manager(){
   local ubuntu_path
 
   # if action is install
-  if [[ "${ACTION}" == "install" ]]; then
+  if [[ "${ACTION}" == "install" || "update" ]]; then
+    msg::debug "update"
     # if a background url option is set through -B or profile.yaml
     if [[ ! -z "${url_file_path}" ]]; then
       msg::debug "Background url option found."
