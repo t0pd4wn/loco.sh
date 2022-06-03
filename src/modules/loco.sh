@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------------------
 
 #######################################
-# Execute custom functions
+# Prepare custom functions execution
 # GLOBALS:
 #   ACTION
 #   LOCO_OSTYPE
@@ -16,15 +16,27 @@
 loco::custom_action(){
   local custom_function_path="./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh"
   if [[ -f "${custom_function_path}" ]]; then
-    local action="$1"
-    local custom_function="${ACTION}_${LOCO_OSTYPE}_custom_${action}"
-    if [[ $(type -t "${custom_function}") == function ]]; then
-      "${custom_function}"
-    else
-      msg::debug "No ${action} custom function found."
-    fi
+    local step="${1-}"
+    local generic_function="${ACTION}_generic_${step}"
+    local os_specific_function="${ACTION}_${LOCO_OSTYPE}_${step}"
+    loco::custom_function "${generic_function}"
+    loco::custom_function "${os_specific_function}"
   else
     msg::debug "No custom.sh file found." 
+  fi
+}
+
+#######################################
+# Execute custom functions
+# Arguments:
+#   $1 # a function name
+#######################################
+loco::custom_function(){
+  local custom_function=${1-}
+  if [[ $(type -t "${custom_function}") == function ]]; then
+    "${custom_function}"
+  else
+    msg::debug "No "${custom_function}" custom function found."
   fi
 }
 

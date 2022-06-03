@@ -4,9 +4,33 @@
 #-------------------------------------------------------------------------------
 
 #################
+# all OS
+#################
+install_generic_exit(){
+  # download vundle
+  utils::remove "/home/${CURRENT_USER}/.vim/bundle/Vundle.vim"
+  cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
+
+  # install vundle plugins
+  cmd::run_as_user "vim +PluginInstall +qall"
+
+  # install powerlevel10K
+  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
+  cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
+} 
+
+remove_generic_exit(){
+  # launch bash, could be automated further
+  msg::record 'type `bash` to reset your prompt'
+
+  # remove powerlevel10K
+  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
+}
+
+#################
 # macos related
 #################
-install_macos_custom_entry(){
+install_macos_entry(){
   # install homebrew if on macos
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
       PACKAGE="brew"
@@ -18,18 +42,7 @@ install_macos_custom_entry(){
 #################
 # ubuntu related
 #################
-install_ubuntu_custom_exit(){
-  # download vundle
-  utils::remove "/home/${CURRENT_USER}/.vim/bundle/Vundle.vim"
-  cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
-
-  # install vundle plugins
-  cmd::run_as_user "vim +PluginInstall +qall"
-
-  # install powerlevel10K
-  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
-  cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
-
+install_ubuntu_exit(){
   # set ubuntu 22.04 custom dock style
   if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false"
@@ -41,13 +54,7 @@ install_ubuntu_custom_exit(){
   fi
 }
 
-remove_ubuntu_custom_exit(){
-  # launch bash, could be automated further
-  msg::record 'type `bash` to reset your prompt'
-
-  # remove powerlevel10K
-  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
-
+remove_ubuntu_exit(){
   # set ubuntu 22.04 default dock style
   if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true"

@@ -3,8 +3,21 @@
 # custom.sh | custom user scripts
 #-------------------------------------------------------------------------------
 
+#################
+# all OS
+#################
+install_generic_exit(){
+  # download vundle
+  sudo rm -fR /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
+  cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
+  # install vundle plugins
+  cmd::run_as_user "vim +PluginInstall +qall"
+}
+
+#################
 # macos related
-install_macos_custom_entry(){
+#################
+install_macos_entry(){
   # install homebrew if on macos
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
       PACKAGE="brew"
@@ -13,8 +26,10 @@ install_macos_custom_entry(){
   fi
 }
 
+#################
 # ubuntu related
-install_ubuntu_custom_entry(){
+#################
+install_ubuntu_entry(){
   # note : as ubuntu 21.04 neovim is not installed as default
   # removes neovim if present
   # if eval 'command -v nvim' > /dev/null 2>&1; then
@@ -35,15 +50,7 @@ install_ubuntu_custom_entry(){
   # fi
 }
 
-install_ubuntu_custom_exit(){
-  # download vundle
-  sudo rm -fR /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
-  cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
-  # install vundle plugins
-  cmd::run_as_user "vim +PluginInstall +qall"
-}
-
-remove_ubuntu_custom_entry(){
+remove_ubuntu_entry(){
   # note : as ubuntu 21.04 neovim is not installed as default
   # reinstalls neovim
   # sudo apt --yes install neovim

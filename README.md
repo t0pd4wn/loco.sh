@@ -120,18 +120,23 @@ packages :
 # custom.sh | custom user scripts
 #-------------------------------------------------------------------------------
 
+# example for an all OS entry function 
+install_generic_entry(){
+    # insert commands below
+}
+
 # function name pattern
-[action]_[os_type]_custom_[entry/exit/last](){
+[action]_[os_type]_[entry/exit/last](){
     # insert commands below
 }
 
 # example for a macOS installation entry function 
-install_macos_custom_entry(){
+install_macos_entry(){
     # insert commands below
 }
 
 # example for a Ubuntu removal exit function 
-remove_ubuntu_custom_exit(){
+remove_ubuntu_exit(){
     # insert commands below
 }
 ```
