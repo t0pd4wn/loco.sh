@@ -240,7 +240,24 @@ loco::fonts_manager(){
 }
 
 #######################################
-# meta action: apply the defined cmd over the package
+# check if brew is installed or install it
+# GLOBALS:
+#   PACKAGE_ACTION_CMD
+#   PACKAGE_MANAGER
+#   PACKAGE_ACTION
+#   PACKAGE
+#######################################
+loco::mac_has_brew(){
+  # install homebrew if on macos
+  if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
+      PACKAGE="brew"
+      PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+      loco::meta_package "${PACKAGE}" "${PACKAGE_ACTION_CMD}"
+  fi
+}
+
+#######################################
+# apply the defined cmd over the package
 # GLOBALS:
 #   PACKAGE_ACTION_CMD
 #   PACKAGE_MANAGER

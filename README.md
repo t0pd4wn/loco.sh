@@ -279,7 +279,7 @@ If for some reasons, you don't have access to these files, simply remove the ```
 
 ## Backlog
 - cli: display modes (yes, detached...)
-- yaml: better yaml values management (normative array?)
+- yaml: better yaml values management (use normative array?)
 - packagers: test and implement cask packages
 - actions: add upgrade, init, save
 - profiles: add devops, data-scientist...

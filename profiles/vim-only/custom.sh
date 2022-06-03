@@ -8,22 +8,10 @@
 #################
 install_exit(){
   # download vundle
-  sudo rm -fR /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
+  utils::remove /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim
   cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
   # install vundle plugins
   cmd::run_as_user "vim +PluginInstall +qall"
-}
-
-#################
-# macos related
-#################
-install_macos_entry(){
-  # install homebrew if on macos
-  if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
-      PACKAGE="brew"
-      PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-      loco::meta_package "${PACKAGE}" "${PACKAGE_ACTION_CMD}"
-  fi
 }
 
 #################

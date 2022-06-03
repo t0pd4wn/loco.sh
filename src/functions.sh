@@ -39,8 +39,7 @@ main(){
 
   # trap custom last function
   if ! trap 'loco::custom_last' 0; then
-    echo "Can not trap loco::custom_last" >&2
-    exit 1
+    _error "Can not trap loco::custom_last"
   fi
 
   # end script
