@@ -45,5 +45,5 @@ loco::watermark_set
 # prepare term reset script
 loco::term_conf_set
 
-#record a reset terminal command in loco_finish.sh
+# record a reset terminal command in loco_finish.sh
 cmd::record "reset && exit"

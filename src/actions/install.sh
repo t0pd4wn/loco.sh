@@ -37,7 +37,7 @@ loco::meta_package_manager "${LOCO_OSTYPE}"
 msg::say "Installing " "generic" " packages"
 loco::meta_package_manager "generic"
 
-# #link "${PROFILE}" .dotfiles to $USER
+# link "${PROFILE}" .dotfiles to $USER
 loco::dotfiles_manager "Replace your dotfiles with " "${PROFILE}" " ones (y/n)?"
 
 # install fonts to system

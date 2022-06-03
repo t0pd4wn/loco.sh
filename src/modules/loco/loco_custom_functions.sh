@@ -75,6 +75,6 @@ loco::custom_last(){
 loco::custom_source(){
   utils::source ./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh
   if [ $? -ne 0 ]; then
-    msg::print "No custom.sh file found."
+    msg::print "Can not source custom.sh file."
   fi
 }
