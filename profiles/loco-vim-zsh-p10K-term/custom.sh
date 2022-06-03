@@ -46,7 +46,6 @@ install_ubuntu_custom_exit(){
   sudo rm -fR /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k
   cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
   # launch zsh, could be automated further
-  msg::record 'type `zsh` to init your zsh prompt'
   # set ubuntu 22.04 dock style
   if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false"

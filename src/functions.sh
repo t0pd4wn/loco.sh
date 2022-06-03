@@ -15,7 +15,6 @@ main(){
   loco::startup "$@"
   # source action script
   source ./src/actions/"${ACTION}".sh
-  # end
   cmd::play
   msg::end
   trap 'loco::custom_last' 0
@@ -533,6 +532,7 @@ loco::dotfiles_manager(){
 
 #######################################
 # Manages fonts installation and removal
+# Ref : https://www.linuxshelltips.com/export-import-gnome-terminal-profile/
 # Arguments:
 #   ACTION
 #   PROFILE
@@ -556,6 +556,17 @@ loco::fonts_manager(){
         # install yaml fonts
         mkdir -p "${fonts_path}"
         wget -nc -P "${fonts_path}" "${font}"
+        # wget -nc -P /usr/share/fonts/truetype/ "${font}"
+        # refresh fonts cache
+        # fc-cache -fr
+        cmd::run_as_user "fc-cache -fr ""${fonts_path}"
+        # /home/box/.local/share/fonts/MesloLGS NF Regular.ttf: MesloLGS NF:style=Regular
+        # wget -nc -P /usr/share/fonts/truetype/ "${font}"
+        # fc-cache /usr/share/fonts/truetype/
+        # this is a hack to force fonts cache refresh on ubuntu 22.04
+        # cp -R "${fonts_path}" /usr/share/fonts/truetype/
+        # touch /usr/share/fonts/truetype/cache_bump
+        # rm /usr/share/fonts/truetype/cache_bump
       elif [[ "${ACTION}" == "remove" ]]; then
         # remove yaml fonts
         IFS='/' read -r -a font_path <<< "${font}"
@@ -760,7 +771,8 @@ loco::startup(){
   # detect and check if OS is supported
   utils::check_operating_system  
 
-  # externally source the yaml parser "https://github.com/mrbaseman/parse_yaml"
+  # externally source the yaml parser 
+  # https://github.com/mrbaseman/parse_yaml
   utils::source_parse_yaml
 
   # load default or user conf
@@ -872,6 +884,8 @@ else
       ACTION="remove"
       source ./src/actions/"${ACTION}".sh
       # switch back to installation
+      # remove temp loco_finish.sh
+      utils::remove "./src/temp/loco_finish.sh"
       ACTION="install"
     ;;
     * )
@@ -1169,6 +1183,9 @@ utils::GLOBALS_set(){
   readonly EMOJI_NO="\U1F44E"
 }
 
+#######################################
+# Lock GLOBALS
+#######################################
 utils::GLOBALS_lock(){
   # can be selected later
   # readonly CURRENT_USER
@@ -1183,6 +1200,16 @@ utils::GLOBALS_lock(){
   readonly LOCO_YES
   readonly VERBOSE
   readonly VERSION
+}
+
+#######################################
+# Remove file(s) or folder(s).
+#######################################
+utils::remove(){
+  local path="$@"
+  if ! sudo rm -fR "${path}"; then
+    echo "Unable to remove ${path}" >&2
+  fi
 }
 
 #######################################

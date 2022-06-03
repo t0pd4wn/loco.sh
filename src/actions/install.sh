@@ -50,3 +50,6 @@ loco::custom_exit
 #install watermark
 msg::say "Installing " "watermark"
 loco::watermark_set
+
+#record a closing terminal command in loco_finish.sh
+cmd::record 'kill -9 $PPID'

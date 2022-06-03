@@ -6,11 +6,9 @@ packages :
     brew :
       - git
       - vim
-      - tree
       - zsh
   ubuntu :
     apt :
       - git
       - vim
-      - tree
       - zsh
