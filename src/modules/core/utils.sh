@@ -76,7 +76,8 @@ utils::check_operating_system(){
 # Removes temp files.
 #######################################
 utils::clean_temp(){
-  utils::remove "./src/temp/*"
+  echo "remove temp"
+  utils::remove './src/temp/'
 }
 
 #######################################
@@ -107,10 +108,22 @@ utils::echo(){
 }
 
 #######################################
-# Echo a message
+# Escape special characters in a path
 # Arguments:
-#   $1 # from
-#   $2 # to
+#   $1 # a path with special characters
+#######################################
+utils::escape_string(){
+  local string="${@-}"
+  if ! printf %q "${string}"; then
+    _error "Unable to escape ${string}"
+  fi
+}
+
+
+#######################################
+# Decode an URI to a path
+# Arguments:
+#   $1 # an URI
 #######################################
 utils::decode_URI(){
   local string="${@-}"
@@ -214,11 +227,6 @@ utils::mac_has_brew(){
       echo "\U1f335 Homebrew is installed."
     fi
   fi
-
-
-
-
-
 }
 
 #######################################
@@ -252,25 +260,55 @@ utils::mkdir(){
 }
 
 #######################################
-# Remove file(s) or folder(s).
+# Remove a file
+# Arguments:
+#   $1 // a file path
+#######################################
+utils::remove_file(){
+  local path="${@-}"
+
+  # try three different expansions 
+  if ! rm -R "${path}"; then
+    if ! rm -R $path; then
+      if ! rm -R "$path"; then
+        msg::debug "Unable to remove $path"
+        _error "Unable to remove $path"
+      else 
+        msg::debug "Managed to remove "$path" (3)"
+      fi
+    else
+      msg::debug "Managed to remove $path (2)"
+    fi
+  else 
+    msg::debug "Managed to remove "${path}" (1)"
+  fi
+}
+
+#######################################
+# Remove a path
 # Arguments:
 #   $1 // a path
 #######################################
 utils::remove(){
   local path="${@-}"
-  # unset eu due to rm exits
-  set +eu
-  # try two different expansions 
-  if ! rm -fR ${path}; then
-    if ! rm -R "$path"; then
-      msg::debug "Unable to remove $path"
-      _error "Unable to remove $path"
+  declare -a clean_path
+  clean_path=($(echo $path))
+
+  # try three different expansions 
+  if ! rm -Rr "${clean_path[@]}"; then
+    if ! rm -Rr $clean_path; then
+      if ! rm -Rr "$clean_path"; then
+        msg::debug "Unable to remove $clean_path"
+        _error "Unable to remove $clean_path"
       else 
-      msg::debug "REMOVED"
+        msg::debug "Managed to remove "$clean_path" (3)"
+      fi
+    else
+      msg::debug "Managed to remove $clean_path (2)"
     fi
+  else 
+    msg::debug "Managed to remove "${clean_path[@]}" (1)"
   fi
-  # re-set eu
-  set -eu
 }
 
 #######################################

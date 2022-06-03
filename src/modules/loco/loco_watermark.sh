@@ -21,7 +21,6 @@ loco::watermark_check(){
   # keep a copy of current messages
   local recorded_messages=("${MSG_ARRAY[@]-}")
 
-
   # if no .loco file is found
   if [[ ! -f /home/"${CURRENT_USER}"/.loco ]]; then
     msg::print "No " "previous instance" " found."
