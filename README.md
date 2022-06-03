@@ -51,9 +51,9 @@ You can pass options like this:
 bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options]
 ```
 
-For example, you can launch a verbose profile installation like this:
+For example, you can launch an installation with a custom background like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B [image url]
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B "[image url]"
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif):
