@@ -3,6 +3,7 @@
 # remove.sh | remove procedure
 #-------------------------------------------------------------------------------
 
+# check watermark information
 msg::say "Checking " "${CURRENT_USER}" " watermark"
 loco::watermark_check
 

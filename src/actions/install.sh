@@ -3,12 +3,13 @@
 # install.sh | install procedure
 #-------------------------------------------------------------------------------
 
-# build and source the profiles prompt file, if there is no -p option
-if [ -z "${PROFILE}" ]; then
-	prompt::build "PROFILE" "./profiles" "Choose a profile :"
-	prompt::call "PROFILE"
-fi
+# prompt profiles
+loco::prompt_profile
 
+# prompt themes
+loco::prompt_theme
+
+# check watermark information
 msg::say "Checking " "${CURRENT_USER}" " watermark"
 loco::watermark_check
 

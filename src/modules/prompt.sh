@@ -16,6 +16,7 @@ prompt::build(){
   local local_GLOBAL="${1-}"
   local local_dir="${2-}"
   local local_prompt_message="${3-}"
+  local is_required="${4-}"
   local file_basename
   local prompt_index
   local prompt_option
@@ -41,7 +42,13 @@ prompt::build(){
   echo "select opt in "'"${options[@]}"'" "Quit"; do " >> "${prompt_path}"
   echo "case "\$REPLY" in" >> "${prompt_path}"
   echo -e "$argCases" >> "${prompt_path}"
-  echo "$((prompt_index+1))) echo "Goodbye!"; exit;;" >> "${prompt_path}"
+
+  if [[ "${is_required}" == true ]]; then
+    echo "$((prompt_index+1))) echo "Goodbye!"; exit;;" >> "${prompt_path}"
+  elif [[ "${is_required}" == false ]]; then
+    echo "$((prompt_index+1))) echo "No choice is good."; ;;" >> "${prompt_path}"
+  fi
+  
   echo "*) echo "Invalid option. Try another one.";continue;;" >> "${prompt_path}"
   echo "esac" >> "${prompt_path}"
   echo "break" >> "${prompt_path}"

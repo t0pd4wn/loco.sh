@@ -387,6 +387,43 @@ loco::meta_package_manager(){
 }
 
 #######################################
+# Call the actions prompt
+# Globals:
+#   ACTION
+#######################################
+loco::prompt_profile(){
+  if [ -z "${ACTION}" ]; then
+    prompt::build "ACTION" "./src/themes" "Choose an action :" true
+    prompt::call "ACTION"
+  fi
+}
+
+#######################################
+# Call the profiles prompt
+# Globals:
+#   PROFILE
+#######################################
+loco::prompt_profile(){
+  if [ -z "${PROFILE}" ]; then
+    prompt::build "PROFILE" "./src/themes" "Choose a profile :" true
+    prompt::call "PROFILE"
+  fi
+}
+
+#######################################
+# Call the themes prompt
+# Globals:
+#   style_colors_theme
+#   THEME
+#######################################
+loco::prompt_theme(){
+  if [ -z "${style_colors_theme-"${THEME}"}" ]; then
+    prompt::build "THEME" "./src/themes" "Choose a color theme :" false
+    prompt::call "THEME"
+  fi
+}
+
+#######################################
 # Call the startup functions.
 # Globals:
 #   CONFIG_PATH
@@ -437,21 +474,24 @@ loco::term_conf_set(){
   local gnome_path="/org/gnome/terminal/legacy/profiles:/"
   local gnome_UUID="b1dcc9dd-5262-4d8d-a863-c897e6d979b9"
 
-  # check if a terminal configuration is present
+  # check if a terminal configuration is present, if not prepare one
   if [[ ! -f "${local_path}" ]]; then
     local_path=./src/temp/"${PROFILE}"_terminal.conf
     distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf
     msg::print "No terminal configuration file found"
-    local colors_theme="${style_colors_theme-}".conf
+    local colors_theme="${style_colors_theme-"${THEME}"}"
+    local colors_theme_file=./src/themes/"${colors_theme}".conf
     local font_name="${style_fonts_name-Monospace}"
     local font_size="${style_fonts_size-11}"
-    msg::debug "${style}"
-    msg::debug "${style_colors}"
-    msg::debug "${colors_theme}"
+    msg::debug "${style-}"
+    msg::debug "${style_colors-}"
+    msg::debug "${colors_theme-}"
+
+    # if there is a colors theme set, build the conf file
     if [[ ! -z "${colors_theme}" ]]; then
       msg::debug "${colors_theme}"
       utils::echo "[/]" > "${local_path}"
-      cat ./src/themes/"${colors_theme}" >> "${local_path}"
+      cat "${colors_theme_file}" >> "${local_path}"
       utils::echo "\nfont='\''"${font_name}" "${font_size}"'\''" >> "${local_path}"
       utils::echo "use-system-font=false" >> "${local_path}"
       utils::echo "use-theme-colors=false" >> "${local_path}"

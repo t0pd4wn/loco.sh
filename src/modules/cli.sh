@@ -172,6 +172,16 @@ cli::set_options(){
   )
   cli::define_option config_path_opt_array
 
+  declare -A theme_opt_array
+  config_path_opt_array=(
+    [GLOBAL]="THEME"
+    [option]="t:"
+    [description]="Define the selected theme"
+    [default]=""
+    [CMD]=""
+  )
+  cli::define_option config_path_opt_array
+
   declare -A watermark_opt_array
   watermark_opt_array=(
     [GLOBAL]="WATERMARK"

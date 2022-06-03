@@ -140,6 +140,7 @@ utils::GLOBALS_lock(){
   # can be defined at runtime
   # readonly ACTION
   # readonly PROFILE
+  # readonly THEME
   readonly PROFILES_DIR
   readonly INSTANCES_DIR
   readonly CONFIG_PATH

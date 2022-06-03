@@ -32,7 +32,7 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, MacOSx)
 ```bash
-bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) -a install -p "loco-vim-zsh-p10K-term" -Y
+bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ)
 ```
 
 #### Ubuntu (wget)
@@ -47,17 +47,17 @@ bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/uti
 
 You can pass options like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3wakWuy) [options]
+bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) [options]
 ```
 
 For example, you can launch a verbose profile installation like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3wakWuy) -a install -V
+bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) -a install -V
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif):
 ```bash
-bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3wakWuy) -a install -p "full" -Y
+bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) -a install -p "full" -Y
 ```
 
 Once installed, you can simply interact with loco like this: 
@@ -278,7 +278,8 @@ When you install ```loco``` a watermark file ```~/.loco``` is installed. It stor
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Backlog
-- cli : display modes (yes, detached...)
+- cli: display modes (yes, detached...)
+- yaml: better yaml values management (normative array?)
 - packagers: test and implement cask packages
 - actions: add upgrade, init, save
 - profiles: add devops, data-scientist...
