@@ -7,7 +7,7 @@ msg::say "Checking " "${CURRENT_USER}" " watermark"
 loco::watermark_check
 
 # read and source "${PROFILE}" yaml file
-loco::yaml_read
+loco::yaml_profile
 
 # unlink "${PROFILE}" .dotfiles to $USER
 loco::dotfiles_manager "Replace your dotfiles with " "${CURRENT_USER}" " ones (y/n)?"
@@ -42,4 +42,4 @@ loco::watermark_set
 loco::term_conf_set
 
 #record a reset terminal command in loco_finish.sh
-cmd::record "reset"
+cmd::record "reset && exit"

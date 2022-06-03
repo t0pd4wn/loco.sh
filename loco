@@ -11,25 +11,28 @@ if ! source ./src/functions.sh; then
   exit 1
 fi
 
-# assign globals
+# set globals
 utils::GLOBALS_set
 
 # set options, build and source the cli file
 cli::set_options
 cli::build
-cli::call "$@"
+cli::call "${@-}"
+
+# load default or user conf
+utils::source "${CONFIG_PATH}"
 
 # lock globals
 utils::GLOBALS_lock
 
 # init debug message
-msg::debug "loco.sh...Verbose mode"
+msg::debug "Verbose mode"
 
 # check if first start, else display start messsage
 utils::check_if_start
 
-# check if first root, otherwise ask password
-utils::check_if_root "$@"
+# check if first root, otherwise ask password and restart
+utils::check_if_root "${@-}"
 
 # call the main function
-main "$@"
+main "${@-}"

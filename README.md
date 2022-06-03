@@ -261,7 +261,6 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - actions : add upgrade, init, save
 - profiles : add devops, data-scientist...
 - remove action shall not rely on the base profile
-- code :improve bash modules structure
 - actions : improve backup workflow
 - code : absolute path variable ?+
 - UI : display prompts options as table rows

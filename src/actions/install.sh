@@ -16,7 +16,7 @@ msg::say "Installing " "${PROFILE}" " profile"
 
 # read and source "${PROFILE}" yaml file
 msg::say "Reading " "${PROFILE}" " YAML"
-loco::yaml_read
+loco::yaml_profile
 
 # install custom "${PROFILE}" entry function
 msg::say "Installing " "${LOCO_OSTYPE}" " entry function"

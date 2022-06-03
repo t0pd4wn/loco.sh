@@ -18,12 +18,9 @@ install_ubuntu_custom_exit(){
   # install powerlevel10K
   sudo rm -fR /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k
   cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
-  # launch zsh, could be automated further
-  msg::record 'type `zsh` to init your zsh prompt'
-  msg::record 'type `p10k configure` to reset your p10k prompt'
 }
 
 remove_ubuntu_custom_exit(){
   # launch bash, could be automated further
-  msg::record 'type `bash` to init your zsh prompt'
+  msg::record 'type `bash` to reset your prompt'
 }
