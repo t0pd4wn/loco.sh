@@ -3,7 +3,7 @@
 ***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
 
 *One-liner installation example :*
-![Loco.sh demo](dist/loco_demo_0.2.gif)
+![Loco.sh demo](dist/loco_demo_0.3.gif)
 
 ***Loco.sh*** can be useful to :
 
