@@ -19,6 +19,7 @@ loco::background_manager(){
   local file_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*')
   local yaml_file_path="${style_background-}"
   local local_files_path=./src/backgrounds/
+  local img_name
   local final_path
 
   # if no background file is present in /assets/
@@ -42,7 +43,9 @@ loco::background_manager(){
     # 2. if a background file is present in the yaml file
     else
       msg::debug "Yaml background url found."
-      final_path="${yaml_file_path}"
+      utils::get_url "./src/backgrounds" "${yaml_file_path}"
+      img_name=$(basename "${yaml_file_path}")
+      final_path=$(find "${ab_path}""/src/backgrounds" -name "${img_name}")
     fi
 
   # 1. if a background file is present in /assets/
