@@ -11,7 +11,7 @@ set -eu
 #   dist/loco-dist.zip
 #######################################
 build_release(){
-	if ! sudo rm -r ./src/temp/*; then
+	if ! sudo rm -fr ./src/temp/*; then
 		echo "Can not remove temp files" >&2
 	fi
 	zip -FS -r ./dist/loco-dist.zip . \

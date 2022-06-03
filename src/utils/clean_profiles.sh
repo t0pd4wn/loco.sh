@@ -9,7 +9,7 @@ set -eu
 # Remove files from profiles folders
 #######################################
 clean_profiles(){
-	sudo rm -r profiles/*/dotfiles/.vim/bundle/*
+	sudo rm -fr profiles/*/dotfiles/.vim/bundle/*
 }
 
 clean_profiles

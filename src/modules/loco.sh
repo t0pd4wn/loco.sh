@@ -17,7 +17,7 @@ loco::custom_action(){
   local custom_function_path="./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh"
   if [[ -f "${custom_function_path}" ]]; then
     local step="${1-}"
-    local generic_function="${ACTION}_generic_${step}"
+    local generic_function="${ACTION}_${step}"
     local os_specific_function="${ACTION}_${LOCO_OSTYPE}_${step}"
     loco::custom_function "${generic_function}"
     loco::custom_function "${os_specific_function}"
@@ -444,7 +444,7 @@ loco::term_conf_set(){
     msg::print "No terminal configuration file found"
     local colors_theme="${style_colors_theme-}".conf
     local font_name="${style_fonts_name-Monospace}"
-    local font_size="${style_fonts_size-12}"  
+    local font_size="${style_fonts_size-11}"
     msg::debug "${style}"
     msg::debug "${style_colors}"
     msg::debug "${colors_theme}"

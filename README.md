@@ -15,9 +15,9 @@
 ***Loco.sh*** comes with 5 example profiles, except for ```default``` they all come with a custom font :
 
 - **default**: default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
-- **full**: all *profiles* made into one
+- **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K``` (master)
 - **vim-only**: fully configured ```vim``` (removes nvim if installed)
-- **shell-only**: fully configured ```zsh``` with ```p10K```
+- **shell-only**: fully configured ```zsh``` with ```p10K``` (lean)
 - **term-only**: custom themed terminal
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
@@ -32,7 +32,7 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, MacOSx)
 ```bash
-bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3wakWuy) -a install -p "loco-vim-zsh-p10K-term" -Y
+bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) -a install -p "loco-vim-zsh-p10K-term" -Y
 ```
 
 #### Ubuntu (wget)
@@ -57,7 +57,7 @@ bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3w
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif):
 ```bash
-bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3wakWuy) -a install -p "loco-vim-zsh-p10K-term" -Y
+bash <(wget -qO- https://bit.ly/3wakWuy 2>/dev/null || curl -L https://bit.ly/3wakWuy) -a install -p "full" -Y
 ```
 
 Once installed, you can simply interact with loco like this: 
@@ -132,23 +132,27 @@ packages:
 # custom.sh | custom user scripts
 #-------------------------------------------------------------------------------
 
-# example for an all OS entry function 
-install_generic_entry(){
+# function name pattern - All OS
+[action]_[entry/exit/last](){
+    # insert commands below
+
+}# example for an all OS entry function 
+install_entry(){
     # insert commands below
 }
 
-# function name pattern
+# function name pattern - OS specific
 [action]_[os_type]_[entry/exit/last](){
     # insert commands below
 }
 
 # example for a macOS installation entry function 
-install_macos_entry(){
+install_macos_exit(){
     # insert commands below
 }
 
-# example for a Ubuntu removal exit function 
-remove_ubuntu_exit(){
+# example for a Ubuntu removal last function 
+remove_ubuntu_last(){
     # insert commands below
 }
 ```
@@ -229,7 +233,6 @@ Options can be set directly into ```/src/loco.conf```.
 ## Other
 
 ### Make ```loco``` your own
-<<<<<<< HEAD
 The first point you need to keep in mind is security. SSH and GPG keys shall not be shared over the public internet, as should not servers configurations. To make ```loco``` your own, you first need to fork it over a private repository, or your own ```git``` server. Then:
 - for Gitlab.com or private Gitlab instances
 1. Retrieve your API [private token]
@@ -275,8 +278,8 @@ When you install ```loco``` a watermark file ```~/.loco``` is installed. It stor
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Backlog
+- cli : display modes (yes, detached...)
 - packagers: test and implement cask packages
-- code: first/last/after
 - actions: add upgrade, init, save
 - profiles: add devops, data-scientist...
 - remove action shall not rely on the base profile

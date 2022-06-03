@@ -1,9 +1,9 @@
 style:
   colors:
-    theme: monokai-light
+    theme: articestudio-nord
   fonts:
     name: MesloLGS NF
-    size: 12
+    size: 11
     urls:
       - https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
 packages:
