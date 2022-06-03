@@ -174,7 +174,7 @@ cli::set_options(){
 
   declare -A instances_dir_opt_array
   instances_dir_opt_array=(
-    [GLOBAL]="INSTANCES_DIR"
+    [GLOBAL]="INSTANCES_DIR" 
     [option]="i:"
     [description]="Define the path for backup instances."
     [default]="instances"
@@ -521,17 +521,19 @@ loco::fonts_manager(){
   if [[ $(ls -A "./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/") ]]; then
     # install local fonts
     if [[ "${ACTION}" == "install" ]]; then 
-      sudo cp -r ./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/* /usr/share/fonts/truetype/
+      local fonts_path=/home/"${CURRENT_USER}"/.fonts
+      mkdir -p fonts_path
+      sudo cp -r ./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/* "${fonts_path}"
     # remove local fonts
     elif [[ "${ACTION}" == "remove" ]]; then
       ls -a ./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts > ./src/temp/"${PROFILE}"_local_fonts_list
       sed -i -e '1,2d' ./src/temp/"${PROFILE}"_local_fonts_list
       while read font || [ -n "${font}" ] ; do 
-        if [[ ! -f /usr/share/fonts/truetype/"${font}" ]]; then
+        if [[ ! -f "${fonts_path}"/"${font}" ]]; then
             msg::debug "Font not found."
           else 
-          if ! rm /usr/share/fonts/truetype/"${font}"; then
-              echo "Unable to delete fonts /usr/share/fonts/truetype/"${font}"" >&2
+          if ! rm "${fonts_path}"/"${font}"; then
+              echo "Unable to delete fonts "${fonts_path}"/"${font}"" >&2
             fi
         fi
       done < ./src/temp/"${PROFILE}"_local_fonts_list

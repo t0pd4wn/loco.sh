@@ -27,17 +27,17 @@
 
 To install and execute ```loco``` :
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh)
 ```
 
 You can pass options like this :
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh) [options]
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) [options]
 ```
 
 For example, you can launch a verbose installation like this :
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh) -a install -V
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -V
 ```
 
 Once installed, you can simply interact with loco like this : 
@@ -209,7 +209,7 @@ The first point you need to keep in mind is security. SSH and GPG keys shall not
 - for Gitlab.com or private Gitlab instances
 1. Retrieve your API [private token]
 2. Retrieve the [project ID]
-3. Update ```./src/utils/loco_installation.sh``` with your information :
+3. Update ```./src/utils/installation.sh``` with your information :
 ```bash
 # modify below with your infos #
 local branch_name="gh-main"
@@ -218,7 +218,7 @@ local project_ID="1234"
 local secret_key="ABC-123"
 # # # # end of modifications
 ```
-4. modify function call in ```./src/utils/loco_installation.sh``` from 
+4. modify function call in ```./src/utils/installation.sh``` from 
   ```bash
   retrieve_public_archive "$@"
   ``` 
@@ -238,13 +238,20 @@ The first point you need to keep in mind is security. SSH or GPG keys for exampl
 3. Update ```./src/utils/loco_installation.sh``` with your private repo url
 4. You can now install loco with this url :
 ```bash
-bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://gitlab.com/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
+bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstallation.sh/raw?ref=gh-main)
 ```
 
 ### Build a release
-As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/utils/loco_build_release.sh```.
+As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/utils/build_release.sh```.
+
+## Troubleshooting
+
+### Dotfiles backup is not found
+When you install ```loco``` a watermark file ```~/.loco``` is installed. It stores the original dotfiles backup path. Wen you try to remove a profile ```loco``` tries to find this path to restore the original user dotfiles. If the path is broken, either correct the ```~/.loco``` watermark with the correct one or put your dotftiles at the expected path.
+If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Backlog
+- test and implement cask packages
 - enforce best practices
 - first/last/after
 - add actions : upgrade, init, save
@@ -252,7 +259,7 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 - remove action shall not rely on the base profile
 - improve bash modules structure
 - improve backup workflow
-- absolute path variable ?
+- absolute path variable ?+
 - display prompts options as table rows
 - add term styles
 - write architecture documentation
