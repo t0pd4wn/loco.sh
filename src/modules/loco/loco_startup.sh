@@ -13,15 +13,14 @@
 #   $@ just in case
 #######################################
 loco::startup(){
+  # check dependencies (yaml)
+  utils::check_dependencies
+  
   # remove temp files
   utils::clean_temp
 
   # set system clock
   utils::set_clock
-
-  # externally source the yaml parser 
-  # https://github.com/mrbaseman/parse_yaml
-  utils::yaml_source_parser
 
   # print the warning message
   msg::warning

@@ -8,11 +8,10 @@
 # Globals:
 #   PROFILE
 #   PROFILES_DIR
+#   YAML_PATH
 # Output:
 #   ./src/temp/"${PROFILE}"_yaml_variables.sh
 #######################################
 loco::yaml_profile(){
-  local yaml_path="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
-  local destination_path="./src/temp/"${PROFILE}"_yaml_variables.sh"
-  utils::yaml_read "${yaml_path}" "${destination_path}"
+  YAML_PATH="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
 }

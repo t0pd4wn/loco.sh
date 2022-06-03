@@ -72,10 +72,28 @@ utils::check_operating_system(){
 }
 
 #######################################
+# Check if dependencies are met
+# GLOBALS:
+#   LOCO_OS_VERSION
+#######################################
+utils::check_dependencies(){
+  if [[ $(command -v yq) ]]; then
+    msg::say "yq is istalled."
+  else
+    msg::say "Installing yq."
+    if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+      snap install yq
+    elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+      brew install yq
+    fi
+  fi
+}
+
+#######################################
 # Removes temp files.
 #######################################
 utils::clean_temp(){
-  utils::remove './src/temp/'
+  utils::remove './src/temp/*'
 }
 
 #######################################
@@ -168,6 +186,7 @@ utils::GLOBALS_lock(){
   # readonly ACTION
   # readonly PROFILE
   # readonly THEME
+  # readonly YAML_PATH
   readonly BACKGROUND_URL
   readonly PROFILES_DIR
   readonly INSTANCES_DIR
@@ -236,9 +255,6 @@ utils::mac_has_brew(){
 #   PACKAGE_MANAGER
 #######################################
 utils::mac_has_bash(){
-  echo "bash current version lol"
-  echo ${BASH_VERSINFO[0]}
-  echo $(bash -c 'echo ${BASH_VERSINFO[0]}')
   # install bash 4+ if on macos
   if [[ ${BASH_VERSINFO[0]} -eq 3 ]];  then
     if [[ -f /usr/local/bin/bash ]]; then
@@ -324,8 +340,10 @@ utils::remove(){
 # Set system clock (needed in  virtual hosts)
 #######################################
 utils::set_clock(){
-  if ! sudo hwclock --hctosys; then
-    _error "Unable to set clock"
+  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+    if ! sudo hwclock --hctosys; then
+      _error "Unable to set clock"
+    fi
   fi
 }
 
@@ -352,81 +370,115 @@ utils::timestamp(){
 }
 
 #######################################
-# Download and source the parse_yaml script.
-#######################################
-utils::yaml_source_parser(){
-  # get parse_yaml "https://github.com/mrbaseman/parse_yaml"
-  local script_url="https://raw.githubusercontent.com/mrbaseman/parse_yaml/master/src/parse_yaml.sh"
-  utils::get_url "./src/temp/" "${script_url}"
-
-  # source file
-  utils::source ./src/temp/parse_yaml.sh
-
-  # commented out because /src/temp/ is full rm'd at each start
-  # if true, keep a copy locally
-  # local cache_flag=false
-  # if [[ "${cache_flag}" == false ]]; then
-  #   utils::remove "./src/temp/parse_yaml.sh"
-  # fi
-}
-
-#######################################
-# Build and source the profiles yaml.
+# Return yaml keys
 # Globals:
 #   PROFILE
 #   PROFILES_DIR
-# Output:
-#   ./src/temp/"${PROFILE}"_yaml_variables.sh
+# Arguments:
+#   $1 // a yaml variable ".variable.path"
+#   $2 // an optional yaml file path
 #######################################
-utils::yaml_read(){
-  local path="${1-}"
-  local output="${2-}"
-  local key
-  local value
-  # declare -A YAML
-  # YAML=()
+utils::yaml_get_keys(){
+  local var="${1-}"
+  local path="${2:-"${YAML_PATH}"}"
 
-  # check if file exist
   if [[ ! -f "${path}" ]]; then
-    msg::print "${EMOJI_STOP} No " "YAML file" " found"
+    msg::debug "${EMOJI_STOP} No " "YAML file" " found"
   else
-    # parse the $PROFILE yaml
-    if ! parse_yaml "${path}" "" > "${output}"; then
-      _error "Unable to parse YAML"
+    if ! cat "${path}" | yq "${var}" | grep -v '^ .*' | sed 's/:.*$//'; then
+      _error "Unable to yq ${var} in ${path}"
     fi
-    # clean the result file
-    sed -i 's/_=" /_="/g' "${output}"
-    sed -i 's/_="/="/g' "${output}"
-    if (( $? != 0 )); then
-      _error "Unable to sed ${output}"
-    fi
-    # source the result file
-    # todo add a loop here
-    utils::source "${output}"
-
-    # todo: finalize yaml implem
-    # while IFS= read -r line; do
-
-    #   msg::debug "${line}"
-
-    #   IFS='=' read -r -a line_array <<< "${line}"
-
-    #   key="${line_array[0]}"
-
-    #   msg::debug "${key}"
-    #   value="${line_array[1]}"
-    #   msg::debug "${value}"
-    #   # YAML["${key}"]="123"
-    #   # YAML["${key}"]+=("${line_array[1]}")
-    #   YAML+=(["${key}"]="${value}")
-    #   msg::debug "${YAML["${key}"]}"
-
-    # done < "${output}"
-
-    # msg::debug "${YAML[@]}"
-    # exit
   fi
 }
+
+#######################################
+# Return yaml values
+# Globals:
+#   PROFILE
+#   PROFILES_DIR
+# Arguments:
+#   $1 // a yaml variable ".variable.path"
+#   $2 // an optional yaml file path
+#######################################
+utils::yaml_get_values(){
+  local var="${1-}" 
+  local path="${2:-"${YAML_PATH}"}"
+  local options="${3-}"
+  local value
+
+  # if file doesn't exist
+  if [[ ! -f "${path}" ]]; then
+    value=""
+  
+  # if a .yaml file is found
+  else
+    value=$(utils::yq "${var}" "${path}")
+  fi
+
+  # sends back the value
+  utils::echo "${value}"
+}
+
+#######################################
+# Check if a yaml selector is present in file
+# Globals:
+#   PROFILE
+#   PROFILES_DIR
+# Arguments:
+#   $1 // a yaml selector ".variable.path"
+#   $2 // a yaml file path
+#######################################
+utils::yq_has(){ 
+  local selector="${1-}" 
+  local yaml="${2-}"
+  # local child_selector=$(utils::echo "${selector}" | grep -oE "[^.]+$")
+  local child_selector=$(utils::echo "${selector}" | rev | cut -d. -f1 | rev)
+  local parent_selector="${selector%."${child_selector}"}"
+  
+  # in the case where an array is asked
+  if [[ "${child_selector}" == "[]" ]]; then
+    child_selector=$(utils::echo "${selector}" | rev | cut -d. -f2 | rev)
+    parent_selector="${selector%."${child_selector}.[]"}"
+  fi
+  
+  local has_selector=""${parent_selector}" | has(\""${child_selector}"\")"
+  local selector_exist=$(cat "${yaml}" | yq "${has_selector}") 
+
+  if [[ "${selector_exist}" == false ]]; then
+    # selector doesn't exist
+    return 1
+  elif [[ "${selector_exist}" == true ]]; then
+    # selector does exist
+    return 0
+  fi
+}
+
+#######################################
+# Return yaml values
+# Arguments:
+#   $1 // a yaml selector ".variable.path"
+#   $2 // a yaml file path
+#######################################
+utils::yq(){
+  # local options="${1-}"
+  local selector="${1-}" 
+  local yaml="${2-}"
+
+  # check if selector exist in file
+  utils::yq_has "${selector}" "${yaml}"
+
+  # if yes, tries to recover value
+  if (( $? != 0 )); then
+    return 1
+  # if not, propagates a 1 exit code
+  else
+    if ! cat "${yaml}" | yq "${selector}"; then
+      echo "Unable to yq ${selector} in ${yaml}"
+    fi
+  fi
+}
+
+
 
 #######################################
 # Wget a file in a folder. (deprecated in favor to utils::get_url)
@@ -467,7 +519,7 @@ utils::get_url(){
 # Print an error message in STDERR
 #######################################
 _error() {
-  echo "${@-}" >&2 ":: $*"
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${@-}" >&2 ":: $*"
 }
 
 #######################################

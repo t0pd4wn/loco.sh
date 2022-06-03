@@ -7,7 +7,7 @@
 loco::prompt_profile
 
 # read and source "${PROFILE}" yaml file
-msg::say "Reading " "${PROFILE}" " YAML"
+msg::say "Reading " "${PROFILE}" " yaml_profile"
 loco::yaml_profile
 
 # prompt themes, if none is set
@@ -45,7 +45,7 @@ msg::say "Installing " "fonts"
 loco::fonts_manager
 
 # build terminal conf
-loco::term_conf_set
+loco::term_conf_manager
 
 # install custom exit scripts
 msg::say "Installing " "${LOCO_OSTYPE}" " exit scripts"

@@ -45,7 +45,8 @@ msg::say "Installing " "fonts"
 loco::fonts_manager
 
 # build terminal conf
-loco::term_conf_set
+msg::say "Preparing " "terminal" " configuration"
+loco::term_conf_manager
 
 # install custom exit scripts
 msg::say "Installing " "${LOCO_OSTYPE}" " exit scripts"
