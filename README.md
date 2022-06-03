@@ -13,10 +13,10 @@
 
 - **default** : default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
 - **loco-vim** : provides a fully configured ```vim``` (removes nvim if installed) ; supports MacOSx and Ubuntu
-<!-- - **loco-nvim** : same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 - **loco-zsh-p10k** : a fully configured ```zsh``` with ```p10K``` ; supports MacOSx and Ubuntu
-- **loco-term** : a custom themed terminal
+- **loco-term** : a custom themed terminal ; supports Ubuntuw
 - **loco-vim-zsh-p10k-term** : all examples made into one profile
+<!-- - **loco-nvim** : same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev** : a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
 **WARNING** : *use this script at your own risk as it will deal with your system configuration.*
@@ -40,26 +40,30 @@ For example, you can launch a verbose installation like this :
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh) -a install -V
 ```
 
-Once installed, you can simply interact with loco like this : ```./loco```.
+Once installed, you can simply interact with loco like this : 
+```bash
+cd ~/loco-dist
+./loco [options]
+```
 
 ### Manually
 
 ```bash
 #clone repo
-git clone [repo]
+git clone [repository]
 
 #navigate to repo
-cd [repo]
+cd [repository]
 
 #execute interactive script
 ./loco [options]
 ```
 
-Forking this repository is advised as you may want to save changes you will make to *profiles* (or contribute them as PRs).
+***Forking this repository*** is advised as you may want to save changes you will make to *profiles* (or contribute them as PRs). To understand further how to do so, see [make loco your own](#make-loco-your-own).
 
 ## Profiles
 
-*Profiles* are made of a YAML description, dotfiles, scripts and other assets.
+*Profiles* are made of a YAML file, dotfiles, scripts and other assets.
 
 - folder structure : ```./profiles/``` 
 
@@ -67,12 +71,12 @@ Forking this repository is advised as you may want to save changes you will make
 .
 └── profiles
 	└── [profile]
-		├── profile.yaml # profile description
-		├── custom.sh # custom functions
-		├── assets #stores specific files
-		│	├── fonts # fonts in this folder will be installed
+		├── profile.yaml # profile description (needed)
+		├── custom.sh # custom functions (optional)
+		├── assets #stores specific files (optional)
+		│	├── fonts # fonts in this folder will be installed (optional)
 		│	└── terminal.conf # user terminal configuration (optional, ubuntu only)
-		└── dotfiles # dotfiles in this folder will be symlinked or hard copied
+		└── dotfiles # dotfiles in this folder will be symlinked or hard copied (optional)
 
 ```
 
@@ -242,10 +246,12 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 
 ## Backlog
 - enforce best practices
+- first/last/after
 - add actions : upgrade, init, save
 - add profiles : devops, data-scientist...
 - remove action shall not rely on the base profile
 - improve bash modules structure
+- absolute path variable ?
 - display prompts options as table rows
 - add term styles
 - write architecture documentation

@@ -53,8 +53,9 @@ loco::extract_and_run(){
   rm ~/loco-dist.zip
   # navigate to folder
   cd ~/loco-dist
+  # set GLOBAL
   # launch loco
-  ./loco "$@"
+  ./loco "$@" -J
 }
 
 retrieve_public_archive "$@"

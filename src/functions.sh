@@ -259,6 +259,16 @@ cli::set_options(){
     [CMD]="ROOT_YES=true"
   )
   cli::define_option root_flag_array
+
+  declare -A dist_flag_array
+  dist_flag_array=(
+    [GLOBAL]="LOCO_DIST"
+    [option]="J"
+    [description]="Modify ./path/ if remote installation"
+    [default]=false
+    [CMD]="LOCO_DIST=true"
+  )
+  cli::define_option dist_flag_array
 }
 
 #######################################
@@ -727,20 +737,28 @@ loco::startup(){
 #######################################
 loco::term_conf_set(){
   # note : Apparently, it is possible to set dconf for a specific user.
-  # This can be achieved with root rights (su, not sudo) 
+  # This can be achieved with root rights (su, not sudo)
+  # check if current loco is remote installation
+  local is_dist="${LOCO_DIST}"
+  local dist_path=""
+  if [[ "${is_dist}" == true ]]; then
+    dist_path="loco-dist/"
+  fi
+  # create path
   local term_conf_path="./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf"
   if [[ ! -f "${term_conf_path}" ]]; then
     msg::print "No terminal configuration file found"
   else
     if [[ "${ACTION}" == "install" ]]; then
-      echo 'dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < '"${term_conf_path}" > ./src/temp/loco-term.sh
+      local term_path="./"${dist_path}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf"
+      echo 'dconf load /org/gnome/terminal/legacy/profiles:/:b1dcc9dd-5262-4d8d-a863-c897e6d979b9/ < '"${term_path}" > ./src/temp/loco-term.sh
       chmod +x ./src/temp/loco-term.sh
-      msg::record 'type `./src/temp/loco-term.sh` to set your terminal style' 
+      msg::record 'type `./'"${dist_path}"'src/temp/loco-term.sh` to set your terminal style' 
 
     elif [[ "${ACTION}" == "remove" ]]; then
       echo 'dconf reset -f /org/gnome/terminal/legacy/profiles:/' > ./src/temp/loco-term-reset.sh
       chmod +x ./src/temp/loco-term-reset.sh
-      msg::record 'type `./src/temp/loco-term-reset.sh` to reset terminal'
+      msg::record 'type `./'"${dist_path}"'src/temp/loco-term-reset.sh` to reset terminal'
     fi
   fi
 }
@@ -1024,6 +1042,8 @@ utils::check_operating_system(){
 
 #######################################
 # Check if the current user is root
+# GLOBALS
+#   LOCO_DIST
 # Output:
 #   ./src/temp/loco_conf_is_start
 #######################################
@@ -1052,7 +1072,7 @@ utils::check_if_root(){
   if [[ "${ROOT_YES}" == false ]]; then
     if [[ "${IS_ROOT}" -ne 0 ]]; then
       msg::print "................................................................"
-      msg::print "..............You need to run this script as " "root" "..............."
+      msg::print "..............You need to run this script as " "sudo" "..............."
       msg::print "................................................................"
       # remove then stores current user name in a file
       # if ! rm ./src/temp/conf_CURRENT_USER; then
@@ -1092,6 +1112,8 @@ utils::GLOBALS_set(){
   PACKAGE_MANAGER_TEST_CMD=""
   PACKAGE_TEST_CMD=""
   PACKAGE_ACTION_CMD=""
+  # used in wget installation
+  # LOCO_DIST=""
   # emojis
   readonly EMOJI_LOGO="\U1f335"
   readonly EMOJI_STOP="\U1F6A8"
