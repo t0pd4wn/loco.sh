@@ -7,7 +7,7 @@ set -eu
 
 #######################################
 # Retrieve loco archive from Github
-# Arguments
+# Arguments:
 #   ./loco "$@" ones
 # Output:
 #   ~/loco-dist
@@ -24,7 +24,7 @@ retrieve_public_archive(){
 
 #######################################
 # Retrieve loco archive from a private server
-# Arguments
+# Arguments:
 #   ./loco "$@" ones
 # Output:
 #   ~/loco-dist
@@ -47,7 +47,7 @@ retrieve_private_archive(){
 
 #######################################
 # Extract loco archive and run main script
-# Arguments
+# Arguments:
 #   ./loco "$@" ones
 #######################################
 loco::extract_and_run(){

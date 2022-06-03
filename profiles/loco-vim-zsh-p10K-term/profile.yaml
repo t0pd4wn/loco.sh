@@ -1,19 +1,19 @@
 style:
-  colors :
-    theme : monokai
-  fonts :
-    name : MesloLGS NF
-    size : 12
-    urls :
+  colors:
+    theme: monokai
+  fonts:
+    name: MesloLGS NF
+    size: 12
+    urls:
       - https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-packages :
-  macos :
-    brew :
+packages:
+  macos:
+    brew:
       - git
       - vim
       - zsh
-  ubuntu :
-    apt :
+  ubuntu:
+    apt:
       - git
       - vim
       - zsh

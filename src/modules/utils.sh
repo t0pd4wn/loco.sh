@@ -247,7 +247,7 @@ utils::yaml_source_parser(){
 
   # source file
   utils::source ./src/temp/parse_yaml.sh
-  
+
   # commented out because /src/temp/ is full rm'd at each start
   # if true, keep a copy locally
   # local cache_flag=false
@@ -311,11 +311,12 @@ utils::wget(){
 utils::get_url(){
   local path="${1-}"
   local url="${2-}"
+  local curl_options="--create-dirs -C - -LOs --output-dir"
   if eval 'command -v wget' > /dev/null 2>&1; then
     msg::debug "wget is used"
     cmd::run_as_user "wget -nc -q -P " "${path}" "${url}"
   else
     msg::debug "curl is used"
-    cmd::run_as_user "curl --create-dirs -C - -LOs --output-dir " "${path}" "${url}"
+    cmd::run_as_user "curl ${curl_options} " "${path}" "${url}"
   fi
 }

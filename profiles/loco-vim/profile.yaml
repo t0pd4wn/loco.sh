@@ -1,12 +1,12 @@
 styles:
-  fonts :
+  fonts:
     - https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-packages :
-  macos :
-    brew :
+packages:
+  macos:
+    brew:
       - git
       - vim
-  ubuntu :
-    apt :
+  ubuntu:
+    apt:
       - git
       - vim
