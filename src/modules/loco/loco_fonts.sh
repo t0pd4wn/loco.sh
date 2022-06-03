@@ -30,11 +30,8 @@ loco::fonts_manager(){
       font=${!i}
 
       # install yaml fonts
-      if [[ "${ACTION}" == "install" ]]; then
-        utils::mkdir "${fonts_path}"
-        utils::get_url "${fonts_path}" "${font}"
-        # refresh fonts cache
-        cmd::run_as_user "fc-cache -fr ""${fonts_path}"
+      if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
+
 
       # remove yaml fonts
       elif [[ "${ACTION}" == "remove" ]]; then
@@ -57,7 +54,7 @@ loco::fonts_manager(){
   else
 
     # install local fonts
-    if [[ "${ACTION}" == "install" ]]; then
+    if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
       utils::mkdir "${fonts_path}"
       local from_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/*
       local dest_path="${fonts_path}"
@@ -81,4 +78,18 @@ loco::fonts_manager(){
       done
     fi
   fi
+}
+
+loco::fonts_action_install_yaml(){
+          utils::mkdir "${fonts_path}"
+        utils::get_url "${fonts_path}" "${font}"
+        # refresh fonts cache
+        cmd::run_as_user "fc-cache -fr ""${fonts_path}"
+}
+
+loco::fonts_action_remove_yaml(){
+          utils::mkdir "${fonts_path}"
+        utils::get_url "${fonts_path}" "${font}"
+        # refresh fonts cache
+        cmd::run_as_user "fc-cache -fr ""${fonts_path}"
 }
