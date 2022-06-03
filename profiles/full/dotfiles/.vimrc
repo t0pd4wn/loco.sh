@@ -52,7 +52,7 @@ Plugin 'VundleVim/Vundle.vim'
 		"minimap
 		Plugin 'severin-lemaignan/vim-minimap'
 		let g:minimap_highlight='Visual'
-		au BufEnter * :Minimap
+		silent! au BufEnter * :Minimap
 
 		"highlight search results
 		set hlsearch

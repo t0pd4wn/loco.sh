@@ -1,6 +1,6 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
+***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
 
 *One-liner installation example:*
 ![Loco.sh demo](dist/loco_demo_0.3.gif)
@@ -104,9 +104,15 @@ cd [repository]
 - YAML schema: ```./profiles/[profile]/profile.yaml``` 
 
 ```yaml
-styles:
+style:
+  background: [background url]
+  colors:
+    theme: [theme name]
   fonts:
-    - [font url]
+    name: [font name]
+    size: [font size]
+    urls:
+      - [font url]
 packages:
   generic:
     npm:
@@ -237,6 +243,8 @@ palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]',
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | ACTION | a | Define the loco action | string | install, remove | - |
 | PROFILE | p | Define the loco profile | string | default, loco-vim, loco-nvim, loco-full | - |
+| THEME | t | Define the loco color theme | string | monokai, monokai-light, nord, nord-light | - |
+| BACKGROUND | b | Define the user background | string | filenames fom available /src/backgrounds/ | - |
 | CURRENT_USER | u | Define the current user name (default: \`$USER\`) | string | [user defined] | $USER |
 | PROFILES_DIR | t | Define path for profiles directories | string |  [user defined] | "profiles" |
 | INSTANCES_DIR | i | Define path for profiles instances | string | [user defined] | "instances" |

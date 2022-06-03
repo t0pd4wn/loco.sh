@@ -13,6 +13,74 @@
 # Arguments:
 #   $1 # "entry" or "exit"
 #######################################
+loco::background_manager(){
+  local ab_path=$(pwd)
+  local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
+  local file_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*')
+  local yaml_file_path="${style_background-}"
+  local local_files_path=./src/backgrounds/
+  local final_path
+
+  # if no background file is present in /assets/
+  if [[ ! -f "${file_path}" ]]; then
+    msg::debug "No local assets background."
+    # if no background url is present in the yaml file
+    if [[ -z "${yaml_file_path}" ]]; then
+      msg::debug "No yaml background url."
+      # if no background(s) file(s) are present in /src/backgrounds
+      if [[ -z "$(ls -A "${local_files_path}" 2>/dev/null)" ]]; then
+        msg::debug "No backgrounds found in /src/backgrounds/."
+
+      # 3. if background(s) file(s) are present in /src/backgrounds
+      else
+        msg::debug "Backgrounds found in /src/backgrounds/."
+        loco::prompt_background
+        msg::debug "${ab_path}""/src/backgrounds"
+        final_path=$(find "${ab_path}""/src/backgrounds" -name "${BACKGROUND}.*")
+      fi
+
+    # 2. if a background file is present in the yaml file
+    else
+      msg::debug "Yaml background url found."
+      final_path="${yaml_file_path}"
+    fi
+
+  # 1. if a background file is present in /assets/
+  else
+    msg::debug "Local assets background found."
+    final_path="${file_path}"
+  fi
+  msg::debug "${final_path-}"
+  if [[ ! -z "${final_path-}" ]]; then
+    loco::set_background "${final_path}"
+  fi
+}
+
+#######################################
+# Call the themes prompt
+# Arguments:
+#   $1 // a background uri 
+#######################################
+loco::set_background(){
+  local background_path="${@-}"
+  msg::debug "${background_path}"
+  local gsettings_opts="org.gnome.desktop.background picture-uri"
+  cmd::record "gsettings set "${gsettings_opts}" "${background_path}""
+  if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
+    cmd::record "gsettings set "${gsettings_opts}"-dark "${background_path}""
+  fi
+}
+
+#######################################
+# Prepare custom functions execution
+# GLOBALS:
+#   ACTION
+#   LOCO_OSTYPE
+#   PROFILE
+#   PROFILES_DIR
+# Arguments:
+#   $1 # "entry" or "exit"
+#######################################
 loco::custom_action(){
   local custom_function_path="./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh"
   if [[ -f "${custom_function_path}" ]]; then
@@ -351,7 +419,7 @@ loco::meta_package(){
 #   PROFILE
 #   PROFILES_DIR
 # Arguments:
-#   $1 # defines the packages type
+#   $1 # defines the packages type (OS specific or not)
 # Output:
 #   Writes the bash variables file from yaml 
 #######################################
@@ -408,10 +476,23 @@ loco::meta_package_manager(){
 # Globals:
 #   ACTION
 #######################################
-loco::prompt_profile(){
+loco::prompt_action(){
   if [ -z "${ACTION}" ]; then
-    prompt::build "ACTION" "./src/themes" "Choose an action :" true
+    prompt::build "ACTION" "./src/actions" "Choose an action :" true
     prompt::call "ACTION"
+  fi
+}
+
+#######################################
+# Call the themes prompt
+# Globals:
+#   style_background
+#   BACKGROUND
+#######################################
+loco::prompt_background(){
+  if [ -z "${style_background-"${BACKGROUND}"}" ]; then
+    prompt::build "BACKGROUND" "./src/backgrounds/" "Choose a background:" false
+    prompt::call "BACKGROUND"
   fi
 }
 
@@ -467,10 +548,7 @@ loco::startup(){
   msg::warning
 
   # build and source the actions prompt file, if there is no option set
-  if [ -z "$ACTION" ]; then
-    prompt::build "ACTION" "./src/actions" "What do you want to do ?"
-    prompt::call "ACTION" "./src/actions" "What do you want to do ?"
-  fi  
+  loco::prompt_action
 }
 
 #######################################
@@ -556,12 +634,13 @@ loco::term_conf_action(){
 #######################################
 loco::watermark_check(){
   local current_profile="${PROFILE}"
+  local recorded_messages=("${MSG_ARRAY[@]}")
   if [[ ! -f /home/"${CURRENT_USER}"/.loco ]]; then
     msg::print "No " "previous instance" " found."
     if [[ "${ACTION}" == "remove" ]]; then
       _exit
     fi
-  else 
+  else
     if [[ "${ACTION}" == "install" ]]; then
       msg::print "${EMOJI_STOP} There is a " "${CURRENT_USER}" " watermark."
       msg::print "" "Please, remove this instance first."
@@ -571,10 +650,17 @@ loco::watermark_check(){
         msg::print "${EMOJI_YES}" " Yes, remove instance."
         # switch to remove
         ACTION="remove"
+        # keep a copy of current finish script
+        utils::cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
         utils::source ./src/actions/"${ACTION}".sh
+        # keep a copy of current messages
         # switch back to installation
-        # remove temp finish.sh
+        # remove the newly created finish.sh
         utils::remove "./src/temp/finish.sh"
+        # put the copy back
+        utils::cp "./src/temp/finish_temp.sh" "./src/temp/finish.sh"
+        # keep a copy of current messages
+        MSG_ARRAY=("${recorded_messages[@]}")
         ACTION="install"
         PROFILE="${current_profile}"
       ;;

@@ -1,4 +1,5 @@
 style:
+  background: https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/backgrounds/christoph-von-gellhorn.jpg
   colors:
     theme: monokai
   fonts:

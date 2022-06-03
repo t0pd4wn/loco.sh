@@ -176,14 +176,24 @@ cli::set_options(){
   cli::define_option config_path_opt_array
 
   declare -A theme_opt_array
-  config_path_opt_array=(
+  theme_opt_array=(
     [GLOBAL]="THEME"
     [option]="t:"
     [description]="Define the selected theme"
     [default]=""
     [CMD]=""
   )
-  cli::define_option config_path_opt_array
+  cli::define_option theme_opt_array
+
+  declare -A background_opt_array
+  background_opt_array=(
+    [GLOBAL]="BACKGROUND"
+    [option]="b:"
+    [description]="Define the selected background"
+    [default]=""
+    [CMD]=""
+  )
+  cli::define_option background_opt_array
 
   declare -A watermark_opt_array
   watermark_opt_array=(
@@ -220,7 +230,7 @@ cli::set_options(){
     [GLOBAL]="VERSION"
     [option]="v"
     [description]="Print Version Number"
-    [default]="0.3"
+    [default]="0.5"
     [CMD]="cli::print_version\nexit"
   )
   cli::define_option version_flag_array

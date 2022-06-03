@@ -18,6 +18,7 @@ build_release(){
 	-x '*.DS_Store*' \
 	-x '/.git*' \
 	-x '/instances/*' \
+	-x '/src/backgrounds/*' \
 	-x '/dist/*'
 }
 
