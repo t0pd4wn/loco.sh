@@ -244,7 +244,8 @@ palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]',
 | ACTION | a | Define the loco action | string | install, remove | - |
 | PROFILE | p | Define the loco profile | string | default, loco-vim, loco-nvim, loco-full | - |
 | THEME | t | Define the loco color theme | string | monokai, monokai-light, nord, nord-light | - |
-| BACKGROUND | b | Define the user background | string | filenames fom available /src/backgrounds/ | - |
+| BACKGROUND | b | Define the user background (from /src/backgrounds) | string | filenames fom available /src/backgrounds/ | - |
+| BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |
 | CURRENT_USER | u | Define the current user name (default: \`$USER\`) | string | [user defined] | $USER |
 | PROFILES_DIR | t | Define path for profiles directories | string |  [user defined] | "profiles" |
 | INSTANCES_DIR | i | Define path for profiles instances | string | [user defined] | "instances" |
@@ -316,6 +317,7 @@ If for some reasons, you don't have access to these files, simply remove the ```
 
 ## Backlog
 - cli: display modes (yes, detached...)
+- cli / yaml: implement 'none' values
 - yaml: better yaml values management (use normative array?)
 - packagers: test and implement cask packages
 - actions: add upgrade, init, save

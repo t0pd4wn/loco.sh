@@ -197,6 +197,16 @@ cli::set_options(){
   )
   cli::define_option background_opt_array
 
+  declare -A background_url_opt_array
+  background_url_opt_array=(
+    [GLOBAL]="BACKGROUND_URL"
+    [option]="B:"
+    [description]="Define the background url"
+    [default]=""
+    [CMD]=""
+  )
+  cli::define_option background_url_opt_array
+
   declare -A watermark_opt_array
   watermark_opt_array=(
     [GLOBAL]="WATERMARK"

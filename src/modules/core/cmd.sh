@@ -28,14 +28,16 @@ cmd::record(){
 #######################################
 cmd::msg(){
   # check if current loco is remote installation
-  local dist_path=""
+  local dist_path
   if [[ "${LOCO_DIST}" == true ]]; then
     dist_path="~/loco-dist/"
   fi
   # check if finish file is present
   local script_path="./src/temp/finish.sh"
+  local prefix=${dist_path-"./"}
+  msg::debug "${prefix}"
   if [[ -f "${script_path}" ]]; then
-    msg::record 'type `'"${dist_path-"./"}"'src/temp/finish.sh` to finish installation'
+    msg::record 'type `'"${prefix}"'src/temp/finish.sh` to finish installation'
   fi
 }
 
