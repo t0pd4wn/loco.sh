@@ -7,3 +7,4 @@ bind 'set bell-style none'
 
 # set zsh as default shell
 zsh
+. "$HOME/.cargo/env"

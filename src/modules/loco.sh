@@ -108,7 +108,7 @@ loco::dotfiles_manager(){
           utils::remove "/home/""${CURRENT_USER}"/"${dotfile}"
         fi
 
-        # Copy/link new one 
+        # copy/link new one 
         if [[ "${DETACHED}" == false ]]; then
           msg::debug "Not detached"
           ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
