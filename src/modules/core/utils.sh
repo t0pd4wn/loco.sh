@@ -54,9 +54,9 @@ utils::check_if_root(){
 # Check $OSTYPE and defines current OS
 # GLOBALS:
 #   LOCO_OSTYPE
+# Note : only methods from this file should be called.
 #######################################
 utils::check_operating_system(){
-  msg::debug "$OSTYPE"
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     LOCO_OSTYPE="ubuntu"
     LOCO_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
@@ -68,15 +68,13 @@ utils::check_operating_system(){
     LOCO_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
   else 
     _exit "Operating System not supported."
-  fi 
-  msg::debug "${LOCO_OS_VERSION}"
+  fi
 }
 
 #######################################
 # Removes temp files.
 #######################################
 utils::clean_temp(){
-  echo "remove temp"
   utils::remove './src/temp/'
 }
 
@@ -195,6 +193,7 @@ utils::list(){
   shopt -s nullglob
   # iterate over aguments paths
   for element_path in "${list_path}"/.??* "${list_path}"/*; do
+    # substitute a / ?
     element_name=${element_path##*/}
     list_name+=("${element_name}")
   done
@@ -219,12 +218,12 @@ utils::mac_has_brew(){
     # fi
 
     if [[ $(command -v brew) == "" ]]; then
-      echo "\U1f335 Homebrew needs to be installed."
-      echo "\U1f335 Your password will be asked several times."
+      echo -e "\U1f335 Homebrew needs to be installed."
+      echo -e "\U1f335 Your password will be asked several times."
       PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
       loco::meta_action "${PACKAGE_ACTION_CMD}"
     else
-      echo "\U1f335 Homebrew is installed."
+      echo -e "\U1f335 Homebrew is installed."
     fi
   fi
 }
@@ -237,11 +236,21 @@ utils::mac_has_brew(){
 #   PACKAGE_MANAGER
 #######################################
 utils::mac_has_bash(){
+  echo "bash current version lol"
+  echo ${BASH_VERSINFO[0]}
+  echo $(bash -c 'echo ${BASH_VERSINFO[0]}')
   # install bash 4+ if on macos
-  if [[ $(bash -c 'echo ${BASH_VERSINFO[0]}') -eq 3 ]];  then
-    echo -e "\U1f335 Bash 4+ will be installed."
-    PACKAGE_ACTION_CMD='brew install bash'
-    loco::meta_action
+  if [[ ${BASH_VERSINFO[0]} -eq 3 ]];  then
+    if [[ -f /usr/local/bin/bash ]]; then
+      echo -e "\U1f335 An other version of bash is installed."
+      echo -e "\U1f335 Please, use the command below :"
+      echo -e "/usr/local/bin/bash ./loco"
+      _exit
+    else
+      echo -e "\U1f335 Bash 4+ will be installed."
+      PACKAGE_ACTION_CMD='brew install bash'
+      loco::meta_action
+    fi
   else
     echo -e "\U1f335 Bash ${BASH_VERSINFO[0]} is installed."
   fi
@@ -372,6 +381,10 @@ utils::yaml_source_parser(){
 utils::yaml_read(){
   local path="${1-}"
   local output="${2-}"
+  local key
+  local value
+  # declare -A YAML
+  # YAML=()
 
   # check if file exist
   if [[ ! -f "${path}" ]]; then
@@ -388,7 +401,30 @@ utils::yaml_read(){
       _error "Unable to sed ${output}"
     fi
     # source the result file
+    # todo add a loop here
     utils::source "${output}"
+
+    # todo: finalize yaml implem
+    # while IFS= read -r line; do
+
+    #   msg::debug "${line}"
+
+    #   IFS='=' read -r -a line_array <<< "${line}"
+
+    #   key="${line_array[0]}"
+
+    #   msg::debug "${key}"
+    #   value="${line_array[1]}"
+    #   msg::debug "${value}"
+    #   # YAML["${key}"]="123"
+    #   # YAML["${key}"]+=("${line_array[1]}")
+    #   YAML+=(["${key}"]="${value}")
+    #   msg::debug "${YAML["${key}"]}"
+
+    # done < "${output}"
+
+    # msg::debug "${YAML[@]}"
+    # exit
   fi
 }
 
