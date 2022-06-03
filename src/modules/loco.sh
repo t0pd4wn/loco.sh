@@ -405,7 +405,7 @@ loco::prompt_profile(){
 #######################################
 loco::prompt_profile(){
   if [ -z "${PROFILE}" ]; then
-    prompt::build "PROFILE" "./src/themes" "Choose a profile :" true
+    prompt::build "PROFILE" "./profiles" "Choose a profile :" true
     prompt::call "PROFILE"
   fi
 }
@@ -492,13 +492,13 @@ loco::term_conf_set(){
       msg::debug "${colors_theme}"
       utils::echo "[/]" > "${local_path}"
       cat "${colors_theme_file}" >> "${local_path}"
-      utils::echo "\nfont='\''"${font_name}" "${font_size}"'\''" >> "${local_path}"
+      utils::echo "\n""font='"${font_name}" "${font_size}"'" >> "${local_path}"
       utils::echo "use-system-font=false" >> "${local_path}"
       utils::echo "use-theme-colors=false" >> "${local_path}"
       utils::echo "use-theme-transparency=false" >> "${local_path}"
       utils::echo "use-transparent-background=true" >> "${local_path}"
       utils::echo "bold-color-same-as-fg=false" >> "${local_path}"
-      utils::echo "visible-name='\''loco-profile'\''" >> "${local_path}"
+      utils::echo "visible-name='loco-profile'" >> "${local_path}"
       loco::term_conf_action "${gnome_path}" "${gnome_UUID}" "${distro_path}"
     fi
   else
@@ -528,37 +528,6 @@ loco::term_conf_action(){
 }
 
 #######################################
-# Build terminal style file.
-# note : Setting dconf for a specific user thorugh terminal,
-# can only be achieved with root rights (su, not sudo).
-# GLOBALS:
-#   PROFILES
-#   PROFILES_DIR
-#   ACTION
-#   LOCO_DIST
-#######################################
-# loco::term_colors_set(){
-#   # check if current loco is a remote installation
-#   if [[ "${LOCO_DIST}" == true ]]; then local dist_path=loco-dist/; fi
-#   local local_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
-#   local distro_path=./"${dist_path-}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
-#   local gnome_path="/org/gnome/terminal/legacy/profiles:/"
-#   local gnome_UUID="b1dcc9dd-5262-4d8d-a863-c897e6d979b9"
-
-#   # check if a terminal configuration is present
-#   if [[ ! -f "${local_path}" ]]; then
-#     msg::print "No terminal configuration file found"
-#   else
-#     # if yes, print command to install / remove it
-#     if [[ "${ACTION}" == "install" ]]; then
-#       cmd::record "dconf load "${gnome_path}":"${gnome_UUID}"/ < ""${distro_path}"
-#     elif [[ "${ACTION}" == "remove" ]]; then
-#       cmd::record "dconf reset -f "${gnome_path}""
-#     fi
-#   fi
-# }
-
-#######################################
 # Check for watermark presence
 # GLOBALS:
 #   CURRENT_USER
@@ -573,7 +542,7 @@ loco::watermark_check(){
   if [[ ! -f /home/"${CURRENT_USER}"/.loco ]]; then
     msg::print "No " "previous instance" " found."
     if [[ "${ACTION}" == "remove" ]]; then
-      exit
+      _exit
     fi
   else 
     if [[ "${ACTION}" == "install" ]]; then
@@ -594,7 +563,7 @@ loco::watermark_check(){
       ;;
       * )
         msg::print "${EMOJI_NO}" " No, I'll keep current instance."
-        exit;
+        _exit
       ;;
       esac
     elif [[ "${ACTION}" == "remove" ]]; then
@@ -620,7 +589,7 @@ loco::watermark_check(){
 loco::watermark_set(){
   if [[ "${ACTION}" == "remove" ]]; then
     msg::say "Removing " "watermark"
-    rm /home/${CURRENT_USER}/.loco
+    utils::remove /home/${CURRENT_USER}/.loco
   elif [[ "${WATERMARK}" == true ]]; then
     utils::echo '#loco.sh instance infos...' > /home/"${CURRENT_USER}"/.loco
     utils::echo 'CURRENT_USER='${CURRENT_USER} >> /home/"${CURRENT_USER}"/.loco

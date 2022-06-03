@@ -6,15 +6,15 @@
 #################
 # all OS
 #################
-install_generic_exit(){
+install_exit(){
   # install powerlevel10K
-  sudo rm -fR /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k
+  # utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
   cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
 }
 
-remove_generic_exit(){
-  # launch bash, could be automated further
-  msg::record 'type `bash` to reset your prompt'
+remove_exit(){
+  # remove powerlevel10K
+  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
 }
 
 #################
@@ -28,3 +28,4 @@ install_macos_entry(){
     loco::meta_package "${PACKAGE}" "${PACKAGE_ACTION_CMD}"
   fi
 }
+

@@ -58,14 +58,11 @@ utils::check_if_root(){
 utils::check_operating_system(){
   msg::debug "$OSTYPE"
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    #echo "Linux"
     LOCO_OSTYPE="ubuntu"
   elif [[ "$OSTYPE" == "darwin"* ]]; then
-    #echo "MacOs"
     LOCO_OSTYPE="macos" 
   else 
-    echo "Operating System not supported."
-    exit 1
+    _exit "Operating System not supported."
   fi 
 }
 
@@ -86,7 +83,7 @@ utils::cp(){
   local from="${1-}"
   local to="${2-}"
   if ! cmd::run_as_user "cp -Rr "${from}" "${to}""; then
-    echo "Unable to copy ${from} in ${to}" >&2
+    _error "Unable to copy ${from} in ${to}"
   fi
 }
 
@@ -98,8 +95,8 @@ utils::cp(){
 #######################################
 utils::echo(){
   local message="${@-}"
-  if ! cmd::run_as_user "echo -e '"${message}"'"; then
-    echo "Unable to echo -e ${message}" >&2
+  if ! echo -e "${message}"; then
+    _error "Unable to echo -e ${message}"
   fi
 }
 
@@ -181,7 +178,7 @@ utils::list(){
 utils::mkdir(){
   local path="${@-}"
   if ! cmd::run_as_user "mkdir -p ""${path}"; then
-    echo "Unable to create "${path}"" >&2
+    _error "Unable to create ${path}"
   fi
 }
 
@@ -195,10 +192,10 @@ utils::remove(){
   # unset eu due to rm exits
   set +eu
   # try two different expansions 
-  if ! sudo rm -R ${path}; then
+  if ! sudo rm -fR ${path}; then
     if ! sudo rm -R "$path"; then
       msg::debug "Unable to remove $path"
-      echo "Unable to remove $path" >&2
+      _error "Unable to remove $path"
       else 
       msg::debug "REMOVED"
     fi
@@ -212,7 +209,7 @@ utils::remove(){
 #######################################
 utils::set_clock(){
   if ! sudo hwclock --hctosys; then
-    echo "Unable to set clock" >&2
+    _error "Unable to set clock"
   fi
 }
 
@@ -226,7 +223,7 @@ utils::source(){
   local path="${1-}"
   local arg="${2-}"
   if ! source "${path}" $arg; then
-    echo "Unable to source $path" >&2
+    _error "Unable to source $path"
   fi
 }
 
@@ -271,17 +268,17 @@ utils::yaml_read(){
 
   # check if file exist
   if [[ ! -f "${path}" ]]; then
-    msg::print "${EMOJI_STOP} No " "YAML file" " found" >&2
+    msg::print "${EMOJI_STOP} No " "YAML file" " found"
   else
     # parse the $PROFILE yaml
     if ! parse_yaml "${path}" "" > "${output}"; then
-      echo "Unable to parse YAML" >&2
+      _error "Unable to parse YAML"
     fi
     # clean the result file
     sed -i 's/_=" /_="/g' "${output}"
     sed -i 's/_="/="/g' "${output}"
     if (( $? != 0 )); then
-      echo "Unable to sed ${output}" >&2
+      _error "Unable to sed ${output}"
     fi
     # source the result file
     utils::source "${output}"
@@ -299,7 +296,7 @@ utils::wget(){
   local url="${2-}"
   if ! cmd::run_as_user "wget -nc -q -P " "${path}" "${url}"; then
     msg::debug "Unable to wget ${url}"
-    echo "Unable to wget ${url}" >&2
+    _error "Unable to wget ${url}"
   fi
 }
 
@@ -312,12 +309,28 @@ utils::wget(){
 utils::get_url(){
   local path="${1-}"
   local url="${2-}"
+  local wget_options="-nc -q -P"
   local curl_options="--create-dirs -C - -LOs --output-dir"
   if eval 'command -v wget' > /dev/null 2>&1; then
     msg::debug "wget is used"
-    cmd::run_as_user "wget -nc -q -P " "${path}" "${url}"
+    cmd::run_as_user "wget ${curl_options} " "${path}" "${url}"
   else
     msg::debug "curl is used"
     cmd::run_as_user "curl ${curl_options} " "${path}" "${url}"
   fi
+}
+
+#######################################
+# Print an error message in STDERR
+#######################################
+_error() {
+  echo "${@-}" >&2 ":: $*"
+}
+
+#######################################
+# Print an error and exit
+#######################################
+_exit() {
+  _error "${@-}"
+  exit 1
 }

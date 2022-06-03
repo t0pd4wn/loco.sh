@@ -8,7 +8,7 @@
 # EMBEDDED VARIABLES
 #   FUNCNAME[1] # parent function name
 #   BASH_LINENO[0] # Function call line number
-# GLOBALS
+# GLOBALS:
 #   VERBOSE
 # Arguments:
 #   $@ # a message, a variable...
@@ -22,13 +22,13 @@ msg::debug(){
     message+=("Function: " "${b}""${FUNCNAME[1]}""${n}")
     message+=("Line: ""${b}""${BASH_LINENO[0]}""${n}")
     message+=("Message: ""${b}""$@""${n}")
-      echo ${message[@]}
+    utils::echo ${message[@]}
   fi
 }
 
 #######################################
 # Play recorded messages
-# GLOBALS :
+# GLOBALS:
 #   MSG_ARRAY # an array of messages
 #######################################
 msg::play(){
@@ -45,7 +45,7 @@ msg::play(){
 msg::print(){
   local b=$(tput bold)
   local n=$(tput sgr0)
-  echo -e "${n}"${1-}"${b}"${2-}"${n}"${3-}
+  utils::echo "${n}"${1-}"${b}"${2-}"${n}"${3-}
 }
 
 #######################################
@@ -73,7 +73,7 @@ msg::prompt(){
 
 #######################################
 # Record messages
-# GLOBALS :
+# GLOBALS:
 #   MSG_ARRAY # an array of messages
 #   MSG_INDEX # array index
 # Arguments:
@@ -97,7 +97,7 @@ msg::say(){
 
 #######################################
 # Print the start message
-# GLOBALS
+# GLOBALS:
 #   EMOJI_LOGO
 #   VERSION
 #   CURRENT_USER
@@ -111,7 +111,7 @@ msg::start(){
 
 #######################################
 # Print the warning message
-# GLOBALS
+# GLOBALS:
 #   EMOJI_STOP
 #######################################
 msg::warning(){
@@ -125,7 +125,7 @@ msg::warning(){
 
 #######################################
 # Print the end message
-# GLOBALS
+# GLOBALS:
 #   VERBOSE
 #   EMOJI_LOGO
 #   VERSION

@@ -1,6 +1,6 @@
 style:
   colors:
-    theme: articestudio-nord
+    theme: monokai
   fonts:
     name: MesloLGS NF
     size: 11

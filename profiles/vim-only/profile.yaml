@@ -1,5 +1,7 @@
 styles:
   fonts:
+    name: MesloLGS NF
+    size: 11
     - https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
 packages:
   macos:

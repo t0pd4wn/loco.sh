@@ -6,6 +6,10 @@
 # prompt profiles
 loco::prompt_profile
 
+# read and source "${PROFILE}" yaml file
+msg::say "Reading " "${PROFILE}" " YAML"
+loco::yaml_profile
+
 # prompt themes
 loco::prompt_theme
 
@@ -14,10 +18,6 @@ msg::say "Checking " "${CURRENT_USER}" " watermark"
 loco::watermark_check
 
 msg::say "Installing " "${PROFILE}" " profile"
-
-# read and source "${PROFILE}" yaml file
-msg::say "Reading " "${PROFILE}" " YAML"
-loco::yaml_profile
 
 # install custom "${PROFILE}" entry function
 msg::say "Installing " "${LOCO_OSTYPE}" " entry function"

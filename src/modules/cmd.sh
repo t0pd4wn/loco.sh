@@ -1,11 +1,15 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# cmd.sh | cmd.sh functions
+#-------------------------------------------------------------------------------
+
 #######################################
 # Register commands to a file
-# Globals:
 # Arguments:
 #   $1 // a command
 #######################################
 cmd::record(){
-  local command="$@"
+  local command="${@-}"
   local script_path="./src/temp/finish.sh"
   if [[ ! -f "${script_path}" ]]; then
     echo "${command}" > "${script_path}"
@@ -17,7 +21,8 @@ cmd::record(){
 
 #######################################
 # Display the cmd file message
-# Globals:
+# GLOBALS:
+#   LOCO_DIST
 # Arguments:
 #   $1 // a command
 #######################################
@@ -35,8 +40,9 @@ cmd::msg(){
 
 #######################################
 # Runs a command as current user
-# Globals:
-# Argumsnts:
+# GLOBALS:
+#   CURRENT_USER
+# Arguments:
 #   $1 // a command
 #######################################
 cmd::run_as_user(){

@@ -5,7 +5,9 @@
 
 #######################################
 # Build cli file
-# Globals :
+# note: echo is preferred to utils::echo here,
+# because it doesn't require su rights
+# GLOBALS:
 #   CLI_OPT_PARAMETERS
 #   CLI_OPT_DESCRIPTIONS
 #   HELP_TEXT
@@ -19,12 +21,12 @@ cli::build(){
   # build file
   joined_parameters=$(IFS=; echo "${CLI_OPT_PARAMETERS[*]}");
   joined_descriptions=$(IFS=; echo "${CLI_OPT_DESCRIPTIONS[*]}");
-  echo "while getopts ${joined_parameters} flag" > "${cli_file}"
-  echo "do" >> "${cli_file}"
-  echo "case "'"${flag}"'" in" >> "${cli_file}"
-  echo -e "${joined_descriptions}" >> "${cli_file}"              
-  echo "esac" >> "${cli_file}"
-  echo "done" >> "${cli_file}"
+  utils::echo "while getopts ${joined_parameters} flag" > "${cli_file}"
+  utils::echo "do" >> "${cli_file}"
+  utils::echo "case "'"${flag}"'" in" >> "${cli_file}"
+  utils::echo "${joined_descriptions}" >> "${cli_file}"              
+  utils::echo "esac" >> "${cli_file}"
+  utils::echo "done" >> "${cli_file}"
 }
 
 #######################################
@@ -40,7 +42,7 @@ cli::call(){
 
 #######################################
 # Set cli options and GLOBALS
-# Globals :
+# GLOBALS:
 #   CLI_OPT_PARAMETERS
 #   CLI_OPT_DESCRIPTIONS
 #   HELP_TEXT
@@ -73,24 +75,24 @@ cli::define_option(){
 
 #######################################
 # Print the help text.
-# Globals :
+# GLOBALS:
 #   HELP_TEXT
 #######################################
 cli::print_help(){
   local joined_help_text
   joined_help_text=$(IFS=; echo "${HELP_TEXT[*]}");
-  echo -e "${joined_help_text}"
-  echo -e "loco.sh ${EMOJI_LOGO}"
+  utils::echo "${joined_help_text}"
+  utils::echo "loco.sh ${EMOJI_LOGO}"
 }
 
 #######################################
 # Print the version number.
 # Globals:
-#   LOCO_LOGO
+#   EMOJI_LOGO
 #   VERSION
 #######################################
 cli::print_version(){
-  echo -e "loco.sh ${EMOJI_LOGO} version ${VERSION}"
+  utils::echo "loco.sh ${EMOJI_LOGO} version ${VERSION}"
 }
 
 #######################################
@@ -102,6 +104,7 @@ cli::print_version(){
 #   PROFILES_DIR
 #   INSTANCES_DIR
 #   CONFIG_PATH
+#   THEME
 #   WATERMARK
 #   DETACHED
 #   HELP

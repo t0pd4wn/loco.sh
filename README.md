@@ -32,32 +32,32 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, MacOSx)
 ```bash
-bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ)
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL)
 ```
 
 #### Ubuntu (wget)
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install)
 ```
 
 #### MacOSx (curl)
 ```bash
-bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install.sh)
+bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install)
 ```
 
 You can pass options like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) [options]
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options]
 ```
 
 For example, you can launch a verbose profile installation like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) -a install -V
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -V
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif):
 ```bash
-bash <(wget -qO- https://bit.ly/3PlqlGJ 2>/dev/null || curl -L https://bit.ly/3PlqlGJ) -a install -p "full" -Y
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -p "full" -Y
 ```
 
 Once installed, you can simply interact with loco like this: 
@@ -237,7 +237,7 @@ The first point you need to keep in mind is security. SSH and GPG keys shall not
 - for Gitlab.com or private Gitlab instances
 1. Retrieve your API [private token]
 2. Retrieve the [project ID]
-3. Update ```./src/utils/install.sh``` with your information:
+3. Update ```./src/utils/install``` with your information:
 ```bash
 # modify below with your infos #
 local branch_name="gh-main"
@@ -246,7 +246,7 @@ local project_ID="1234"
 local secret_key="ABC-123"
 # # # # end of modifications
 ```
-4. modify function call in ```./src/utils/install.sh``` from 
+4. modify function call in ```./src/utils/install``` from 
   ```bash
   retrieve_public_archive "$@"
   ``` 
@@ -260,16 +260,16 @@ local secret_key="ABC-123"
 
 Using wget:
 ```bash
-bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall.sh/raw?ref=gh-main)
+bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=gh-main)
 ```
 
 Using curl:
 ```bash
-bash <(curl --header="PRIVATE-TOKEN: [private token]" -L https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall.sh/raw?ref=gh-main)
+bash <(curl --header="PRIVATE-TOKEN: [private token]" -L https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=gh-main)
 ```
 
 ### Build a release
-As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/utils/build_release.sh```.
+As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/utils/build_release```.
 
 ## Troubleshooting
 
