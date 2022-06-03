@@ -14,7 +14,7 @@
 loco::meta_action(){
   local local_package_action_cmd
   # if there isn't a specific command, build one
-  if [[ -z "${PACKAGE_ACTION_CMD}" ]]; then 
+  if [[ -z "${PACKAGE_ACTION_CMD-}" ]]; then 
     local_package_action_cmd="${PACKAGE_MANAGER} ${PACKAGE_ACTION} ${PACKAGE}"
     msg::debug "${local_package_action_cmd}"
     eval "${local_package_action_cmd}"
