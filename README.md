@@ -2,6 +2,7 @@
 
 ***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
 
+*One-liner installation example :*
 ![Loco.sh demo](dist/loco_demo_0.2.gif)
 
 ***Loco.sh*** can be useful to :
@@ -42,7 +43,7 @@ For example, you can launch a verbose profile installation like this :
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -V
 ```
 
-Or be *loco* and directly install a profile with the ```-Y``` flag on (as showcased in the gif file) :
+Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif file) :
 ```bash
 bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/installation.sh) -a install -p "loco-vim-zsh-p10K-term" -Y
 ```
