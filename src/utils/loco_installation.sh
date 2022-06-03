@@ -13,7 +13,7 @@ set -eu
 #   ~/loco.sh-"${branch_name}"
 #######################################
 function retrieve_archive(){
-  local branch_name="main"
+  local branch_name="gh-main"
   # download archive
   wget -nc -P ~/ https://github.com/t0pd4wn/loco.sh/raw/"${branch_name}"/dist/loco-dist.zip
   # unzip archive

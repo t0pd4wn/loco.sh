@@ -25,17 +25,17 @@
 
 To install and execute ```loco``` :
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/main/src/utils/loco_installation.sh)
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh)
 ```
 
 You can pass options like this :
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/main/src/utils/loco_installation.sh) [options]
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh) [options]
 ```
 
 For example, you can launch a verbose installation like this :
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/main/src/utils/loco_installation.sh) -a install -V
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/loco_installation.sh) -a install -V
 ```
 
 ### Manually
