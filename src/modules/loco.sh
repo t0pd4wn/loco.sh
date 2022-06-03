@@ -85,7 +85,7 @@ loco::dotfiles_manager(){
   # list profile dotfiles (shall be dumped/retrieved from/to .loco)
   utils::list dotfiles "${dotfiles_path}"
   msg::debug ${dotfiles[@]}
-  # check if there are dotfiles in e $PROFILE
+  # check if there are dotfiles in $PROFILE
   if [[ -d "${dotfiles_path}" ]]; then
     # $ACTION == "install"
     if [[ "${ACTION}" == "install" ]]; then
@@ -104,9 +104,11 @@ loco::dotfiles_manager(){
           else 
           msg::debug "${dotfile}" " is backup'd"
           cp -R /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
+          # remove existing file 
+          utils::remove "/home/""${CURRENT_USER}"/"${dotfile}"
         fi
-        # remove existing file and then copy/link new one
-        utils::remove "/home/""${CURRENT_USER}"/"${dotfile}"
+
+        # Copy/link new one 
         if [[ "${DETACHED}" == false ]]; then
           msg::debug "Not detached"
           ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
