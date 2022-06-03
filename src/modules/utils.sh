@@ -313,7 +313,7 @@ utils::get_url(){
   local curl_options="--create-dirs -C - -LOs --output-dir"
   if eval 'command -v wget' > /dev/null 2>&1; then
     msg::debug "wget is used"
-    cmd::run_as_user "wget ${curl_options} " "${path}" "${url}"
+    cmd::run_as_user "wget ${wget_options} " "${path}" "${url}"
   else
     msg::debug "curl is used"
     cmd::run_as_user "curl ${curl_options} " "${path}" "${url}"
