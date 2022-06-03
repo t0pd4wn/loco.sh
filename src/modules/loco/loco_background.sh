@@ -17,7 +17,7 @@
 loco::background_manager(){
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
-  local profile_file_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*')
+  local profile_file_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
   local yaml_file_path="${style_background-}"
   local url_file_path="${BACKGROUND_URL:-"${yaml_file_path}"}"
   local local_files_path=./src/backgrounds/

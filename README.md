@@ -348,7 +348,7 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 
 ## Troubleshooting
 
-### Dotfiles backup is not found
+### ```Dotfiles backup``` is not found
 When you install ```loco``` a watermark file ```~/.loco``` is installed. It stores the original dotfiles backup path. Wen you try to remove a profile ```loco``` tries to find this path to restore the original user dotfiles. If the path is broken, either correct the ```~/.loco``` watermark with the correct one or put your dotftiles at the expected path.
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
@@ -363,7 +363,7 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - profiles: add devops, data-scientist...
 - remove action shall not rely on the base profile (but on watermark)
 - actions: improve backup workflow
-- code: absolute path variable ?+
+- code: absolute path variable ?++
 - UI: display prompts options as table rows
 - Ghost mode leaving no assets prior to action
 - profiles: install multiple profiles for one user (update watermark)
