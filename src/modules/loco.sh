@@ -410,18 +410,15 @@ loco::startup(){
 #   PROFILES
 #   PROFILES_DIR
 #   ACTION
+#   LOCO_DIST
 #######################################
 loco::term_conf_set(){
-  local dist_path=""
+  # check if current loco is a remote installation
+  if [[ "${LOCO_DIST}" == true ]]; then local dist_path=loco-dist/; fi
   local local_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
-  local distro_path=./"${dist_path}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+  local distro_path=./"${dist_path-}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
   local gnome_path="/org/gnome/terminal/legacy/profiles:/"
   local gnome_UUID="b1dcc9dd-5262-4d8d-a863-c897e6d979b9"
-
-  # check if current loco is remote installation
-  if [[ "${LOCO_DIST}" == true ]]; then
-    dist_path=loco-dist/
-  fi
 
   # check if a terminal configuration is present
   if [[ ! -f "${local_path}" ]]; then

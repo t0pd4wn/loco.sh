@@ -13,7 +13,7 @@ set -eu
 build_release(){
 	zip -FS -r ./dist/loco-dist.zip . -x '*.DS_Store*' \
 	-x '/.git*' \
-	-x '/temp/*' \
+	-x '/src/temp/*' \
 	-x '/instances/*' \
 	-x '/dist/*'
 }
