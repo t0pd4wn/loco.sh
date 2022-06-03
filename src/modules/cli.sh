@@ -207,7 +207,7 @@ cli::set_options(){
     [GLOBAL]="VERSION"
     [option]="v"
     [description]="Print Version Number"
-    [default]="0.2"
+    [default]="0.3"
     [CMD]="cli::print_version\nexit"
   )
   cli::define_option version_flag_array
