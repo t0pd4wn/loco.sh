@@ -1,12 +1,12 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager, it can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal style, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user, or user type, accross one or more OS platforms, and *actions* which perform various workflows on top of the *profiles*.
+***Loco.sh*** is a **lo**cal **co**nfiguration manager, it can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal style, fonts, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more OS platforms, and *actions* which run workflows on top of the *profiles*.
 
 ***Loco.sh*** can be useful to :
 
 - **system administrators**, who need to manage their users profiles in a single place
 - **security consultants**, to deal with a variety of identities and security access
-- **developers**, who need to manage various environments, with the same look and feel
+- **developers**, who need to manage various environments and machines, with the same look and feel
 - **regular users**, who can easily manage their configuration files
 
 ***Loco.sh*** comes with 5 example profiles :
@@ -200,7 +200,6 @@ As its complicated to archive correctly ```git sub-modules``` in *profiles*, loc
 
 ## Backlog
 
-- more MacOS love
 - enforce best practices
 - add actions : upgrade, init, save
 - add profiles : devops, data-scientist...
