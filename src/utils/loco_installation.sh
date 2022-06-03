@@ -10,12 +10,43 @@ set -eu
 # Arguments
 #   ./loco "$@" ones
 # Output:
-#   ~/loco.sh-"${branch_name}"
+#   ~/loco.sh-dist
 #######################################
-function retrieve_archive(){
+retrieve_public_archive(){
   local branch_name="gh-main"
+  local release_url="https://github.com/t0pd4wn/loco.sh/raw/"${branch_name}"/dist/loco-dist.zip"
   # download archive
-  wget -nc -P ~/ https://github.com/t0pd4wn/loco.sh/raw/"${branch_name}"/dist/loco-dist.zip
+  wget -nc -P ~/ "${release_url}"
+  loco::extract_and_run "$@"
+}
+
+#######################################
+# Retrieve loco archive from a private server
+# Arguments
+#   ./loco "$@" ones
+# Output:
+#   ~/loco-dist
+#######################################
+retrieve_private_archive(){
+  # modify below with your infos #
+  local branch_name="gh-main"
+  local git_server="https://gitlab.com"
+  local project_ID="1234"
+  local secret_key="ABC-123"
+  # # # # end of modifications
+  local private_header="PRIVATE-TOKEN: ${secret_key}"
+  local release_url="${git_server}/api/v4/projects/${project_ID}/repository/files/dist%2Floco-dist.zip/raw?ref=${branch_name}"
+  # download archive
+  wget --header="${private_header}" -nc -P ~/ "${release_url}"
+  loco::extract_and_run "$@"
+}
+
+#######################################
+# Extract loco archive and run main script
+# Arguments
+#   ./loco "$@" ones
+#######################################
+loco::extract_and_run(){
   # unzip archive
   unzip -oqq ~/loco-dist.zip -d ~/loco-dist
   # remove archive
@@ -26,4 +57,4 @@ function retrieve_archive(){
   ./loco "$@"
 }
 
-retrieve_archive "$@"
+retrieve_public_archive "$@"

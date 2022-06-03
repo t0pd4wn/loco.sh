@@ -11,11 +11,13 @@
 
 ***Loco.sh*** comes with 5 example profiles :
 
-- **default** : default example for a Loco.sh user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
-- **loco-shell** : a minimal example with pre-configured zsh, p10K and a custom fonts installation (both local and remote) ; supports MacOSx et Ubuntu
-- **loco-vim** : same as *loco-shell* with git and vim (removes nvim if installed) ; supports MacOSx et Ubuntu
-- **loco-nvim** : same as *loco-shell* with nvim ; supports MacOSx et Ubuntu
-- **loco-webdev** : a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx
+- **default** : default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
+- **loco-vim** : provides a fully configured ```vim``` (removes nvim if installed) ; supports MacOSx and Ubuntu
+<!-- - **loco-nvim** : same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
+- **loco-zsh-p10k** : a fully configured ```zsh``` with ```p10K``` ; supports MacOSx and Ubuntu
+- **loco-term** : default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
+- **loco-vim-zsh-p10k-term** : all examples made into one profile
+<!-- - **loco-webdev** : a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
 **WARNING** : *use this script at your own risk as it will deal with your system configuration.*
 
@@ -198,14 +200,19 @@ Options can be set directly into ```/src/loco.conf```.
 ## Other
 
 ### Make ```loco``` your own
-The first point you need to keep in mind is security. SSH or GPG keys for example are quite unwelcomed on the public internet, as could be servers configurations. To make ```loco``` your own, you first need to fork it over a private repository. Then :
-- for Gitlab.com
+The first point you need to keep in mind is security. SSH and GPG keys shall not be shared over the public internet, as could be servers configurations. To make ```loco``` your own, you first need to fork it over a private repository, or your own ```git``` server. Then :
+- for Gitlab.com or private Gitlab instances
 1. Retrieve your API [private token]
 2. Retrieve the [project ID]
-3. Update ```./src/utils/loco_installation.sh``` with your private repo url
+3. Update ```./src/utils/loco_installation.sh``` with your [private repo url]
+```bash
+bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
+```
+
+
 4. You can now install loco with this url :
 ```bash
-bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://gitlab.com/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
+bash <(wget  --header="PRIVATE-TOKEN: [private token]" -qO- https://[gitlab server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Floco_installation.sh/raw?ref=gh-main)
 ```
 
 ### Build a release
