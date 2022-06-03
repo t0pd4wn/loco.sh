@@ -15,7 +15,3 @@ source ~/.zsh-plugins/powerlevel10k/powerlevel10k.zsh-theme
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-
-### linux configuration
-# no terminal sound
-bind 'set bell-style none'

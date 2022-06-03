@@ -45,6 +45,9 @@ remove_ubuntu_custom_exit(){
   # launch bash, could be automated further
   msg::record 'type `bash` to reset your prompt'
 
+  # remove powerlevel10K
+  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
+
   # set ubuntu 22.04 default dock style
   if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true"
