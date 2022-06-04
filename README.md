@@ -18,7 +18,7 @@
 - **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K``` (master)
 - **vim-only**: fully configured ```vim``` (removes nvim if installed)
 - **shell-only**: fully configured ```zsh``` with ```p10K``` (lean)
-- **term-only**: custom themed terminal
+- **style-only**: custom themed terminal and OS (dock, background)
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -184,7 +184,8 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 └── src
 	└── actions #stores actions scripts
 		├── install.sh # install packages and dotfiles, based on a profile
-		└── remove.sh  # remove packages and dotfiles, based on an installed instance
+    ├── remove.sh  # remove packages and dotfiles, based on an installed instance
+		└── update.sh # update packages and dotfiles, based on a profile
 ```
 
 ### Add an action
