@@ -7,7 +7,7 @@
 loco::prompt_profile
 
 # read and source "${PROFILE}" yaml file
-msg::say "Reading " "${PROFILE}" " yaml_profile"
+msg::say "Reading " "${PROFILE}" " YAML"
 loco::yaml_profile
 
 # prompt themes, if none is set
@@ -45,6 +45,7 @@ msg::say "Installing " "fonts"
 loco::fonts_manager
 
 # build terminal conf
+msg::say "Preparing " "terminal" " configuration"
 loco::term_conf_manager
 
 # install custom exit scripts
@@ -56,4 +57,7 @@ msg::say "Installing " "watermark"
 loco::watermark_set
 
 # record a closing terminal command in loco_finish.sh
-cmd::record 'kill -9 $PPID'
+# if no new fonts, exit normally
+if [[ "${IS_NEW_FONT-}" != "true" ]]; then
+	cmd::record "exit 2&>/dev/null"
+fi

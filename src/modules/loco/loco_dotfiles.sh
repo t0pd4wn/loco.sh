@@ -81,9 +81,10 @@ loco::dotfiles_action_install(){
     loco::dotfiles_backup "${dotfile}"
     # copy/link "${dotfile}"
     loco::dotfiles_set "${dotfile}"
-    msg::say "${CURRENT_USER}" " dotfiles were backup'd here :"
-    msg::say "/"$INSTANCE_PATH"/dotfiles-backup"
   done
+
+  msg::say "${CURRENT_USER}" " dotfiles were backup'd here :"
+  msg::say "/"$INSTANCE_PATH"/dotfiles-backup"
 }
 
 #######################################
@@ -121,11 +122,10 @@ loco::dotfiles_action_update(){
   local copy_from
   local copy_to
   # check if a previous backup exist
-  if [[ ! -z "${OLD_INSTANCE_PATH}" ]]; then
+  if [[ ! -z "${OLD_INSTANCE_PATH-}" ]]; then
     msg::print "Dotfiles path to be updated : " "${OLD_INSTANCE_PATH}"
     if [[ -d "${OLD_INSTANCE_PATH}""/legacy-dotfiles" ]]; then
       backup_suffix="/legacy-dotfiles"
-      #statements
     else
       backup_suffix="/dotfiles-backup"
     fi
@@ -146,7 +146,7 @@ loco::dotfiles_action_update(){
 loco::dotfiles_backup(){
   local dotfile="${1-}"
   if [ ! -f /home/"${CURRENT_USER}"/"${dotfile}" ]; then
-    msg::debug "No corresponding file"
+    msg::print "No corresponding " "${dotfile}" " file"
   else 
     msg::debug "${dotfile}" " is backup'd"
     utils::cp /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"

@@ -7,7 +7,7 @@
 # Manages fonts installation and removal
 # Ref : https://www.linuxshelltips.com/export-import-gnome-terminal-profile/
 # GLOBALS:
-#   styles_fonts # yaml font array
+#   IS_NEW_FONT
 # Arguments:
 #   ACTION
 #   PROFILE
@@ -16,13 +16,9 @@
 #######################################
 loco::fonts_manager(){
   local font
-  local yaml_fonts
   local yaml_fonts=$(utils::yaml_get_values '.style.fonts.urls.[]')
   declare -a yaml_fonts_array
   yaml_fonts_array=("${yaml_fonts}")
-
-  msg::debug "${yaml_fonts_array[@]}"
-  msg::debug "${yaml_fonts_array[0]}"
 
   local assets_fonts=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/
   local fonts_path=/home/"${CURRENT_USER}"/.fonts
@@ -32,13 +28,13 @@ loco::fonts_manager(){
     msg::print "No YAML fonts found."
   else 
     msg::say "YAML " "fonts" " processed."
-    # IFS=' ' read -r -a fonts_array <<< "${yaml_fonts}"
 
     for i in "${yaml_fonts_array[@]}"; do
       font=${i}
       # install yaml fonts
       if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
         loco::fonts_action_install_yaml "${fonts_path}" "${font}"
+        IS_NEW_FONT="true"
       # remove yaml fonts
       elif [[ "${ACTION}" == "remove" ]]; then
         loco::fonts_action_remove_yaml "${fonts_path}" "${font}"
@@ -54,9 +50,10 @@ loco::fonts_manager(){
     # install local fonts
     if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
       loco::fonts_action_install_local "${fonts_path}"
+      IS_NEW_FONT="true"
     # remove local fonts
     elif [[ "${ACTION}" == "remove" ]]; then
-      loco::fonts_action_remove_local
+      loco::fonts_action_remove_local "${fonts_path}"
     fi
   fi
 }
@@ -66,6 +63,8 @@ loco::fonts_manager(){
 # Arguments:
 #   $1 # fonts destination path
 #   $2 # a font url
+# Output :
+#   Download font in $1
 #######################################
 loco::fonts_action_install_yaml(){
   local fonts_path="${1-}"
@@ -82,6 +81,8 @@ loco::fonts_action_install_yaml(){
 # Arguments:
 #   $1 # fonts destination path
 #   $2 # a font url
+# Output:
+#   Remove font from $1
 #######################################
 loco::fonts_action_remove_yaml(){
   local fonts_path="${1-}"
@@ -111,6 +112,8 @@ loco::fonts_action_remove_yaml(){
 #   PROFILES_DIR
 # Arguments:
 #   $1 # fonts destination path
+# Output:
+#   Copy fonts in $1
 #######################################
 loco::fonts_action_install_local(){
   local fonts_path="${1-}"
@@ -124,8 +127,13 @@ loco::fonts_action_install_local(){
 # GLOBALS:
 #   PROFILE
 #   PROFILES_DIR
+# Arguments:
+#   $1 # fonts destination path
+# Output:
+#   Remove fonts in $1
 #######################################
 loco::fonts_action_remove_local(){
+  local fonts_path="${1-}"
   local font_name
   local font_path
   # get a list of fonts as a bash array
@@ -135,7 +143,7 @@ loco::fonts_action_remove_local(){
     # get clean system path
     font_name=$(utils::decode_URI "${font}")
     # font_name=$(utils::escape_string "${font}")
-    local font_path="${fonts_path}"/"${font_name}"
+    font_path="${fonts_path}"/"${font_name}"
     # if the file exist, remove it
     loco::font_unset "${font_path}"
   done
@@ -145,6 +153,8 @@ loco::fonts_action_remove_local(){
 # Font removal
 # Arguments:
 #   $1 # a font destination path
+# Output:
+#   Remove $1
 #######################################
 loco::font_unset(){
   local font_path="${1-}"

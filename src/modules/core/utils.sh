@@ -59,13 +59,13 @@ utils::check_if_root(){
 utils::check_operating_system(){
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     LOCO_OSTYPE="ubuntu"
-    LOCO_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
+    SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
   elif [[ "$OSTYPE" == "darwin"* ]]; then
     LOCO_OSTYPE="macos" 
     utils::mac_has_brew
     utils::mac_has_bash
     # get version information, then grep version line, cut full semver, cut main version "e.g 12"
-    LOCO_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
+    SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
   else 
     _exit "Operating System not supported."
   fi
@@ -78,7 +78,7 @@ utils::check_operating_system(){
 #######################################
 utils::check_dependencies(){
   if [[ $(command -v yq) ]]; then
-    msg::say "yq is istalled."
+    msg::say "yq is installed."
   else
     msg::say "Installing yq."
     if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
@@ -94,6 +94,23 @@ utils::check_dependencies(){
 #######################################
 utils::clean_temp(){
   utils::remove './src/temp/*'
+}
+
+#######################################
+# Display a countdown
+# Arguments:
+#   $1 # message to be displayed
+#   $2 # countdown duration
+#######################################
+utils::countdown(){
+  local message="${1-}"
+  local duration="${2-}"
+  local seconds=$((1 * "${duration}"))
+  while [ $seconds -gt 0 ]; do
+     echo -ne "${message}" "$seconds\033[0K\r"
+     sleep 1
+     : $((seconds--))
+  done
 }
 
 #######################################
@@ -187,6 +204,8 @@ utils::GLOBALS_lock(){
   # readonly PROFILE
   # readonly THEME
   # readonly YAML_PATH
+  # readonly IS_NEW_FONT
+  # readonly SHORT_OS_VERSION
   readonly BACKGROUND_URL
   readonly PROFILES_DIR
   readonly INSTANCES_DIR
@@ -199,7 +218,7 @@ utils::GLOBALS_lock(){
 }
 
 #######################################
-# List files and folders
+# List files and folders within an array
 # Arguments:
 #   $1 // a normative array name
 #   $2 // a path
@@ -220,7 +239,7 @@ utils::list(){
 }
 
 #######################################
-# for macOS check if brew is installed or install it
+# For macOS check if brew is installed or install it
 # GLOBALS:
 #   PACKAGE_ACTION_CMD
 #   PACKAGE_MANAGER
@@ -228,14 +247,10 @@ utils::list(){
 #   PACKAGE
 #######################################
 utils::mac_has_brew(){
-  # install homebrew if on macos
+  # if on macOS
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
-    # if $(command -v brew) > /dev/null 2>&1; then
-    #   echo -e "\U1f335 Homebrew is installed."
-    # else
-      
-    # fi
 
+    # if brew is not installed
     if [[ $(command -v brew) == "" ]]; then
       echo -e "\U1f335 Homebrew needs to be installed."
       echo -e "\U1f335 Your password will be asked several times."
@@ -255,13 +270,17 @@ utils::mac_has_brew(){
 #   PACKAGE_MANAGER
 #######################################
 utils::mac_has_bash(){
-  # install bash 4+ if on macos
+  # if bash version is equal to 3.x
   if [[ ${BASH_VERSINFO[0]} -eq 3 ]];  then
+    # if there is a binary in the brew/bash path
     if [[ -f /usr/local/bin/bash ]]; then
       echo -e "\U1f335 An other version of bash is installed."
       echo -e "\U1f335 Please, use the command below :"
+      # todo : execute directly scriipt under correct path
+      # $(/usr/local/bin/bash ./loco)
       echo -e "/usr/local/bin/bash ./loco"
       _exit
+    # if not install brew/bash
     else
       echo -e "\U1f335 Bash 4+ will be installed."
       PACKAGE_ACTION_CMD='brew install bash'
@@ -477,8 +496,6 @@ utils::yq(){
     fi
   fi
 }
-
-
 
 #######################################
 # Wget a file in a folder. (deprecated in favor to utils::get_url)
