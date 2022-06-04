@@ -1,4 +1,8 @@
 style:
 packages :
   macos :
+    brew :
+      - tree
   ubuntu :
+    apt :
+      - tree
