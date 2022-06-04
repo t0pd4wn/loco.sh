@@ -81,7 +81,7 @@ loco::term_conf_set(){
   fi
 
   font_size=$(utils::yaml_get_values '.style.fonts.size')
-  font_size="${font_size:-"11"}"
+  font_size="${font_size:-"10"}"
 
   # local /assets/terminal.conf file
   local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf

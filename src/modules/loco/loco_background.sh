@@ -34,6 +34,7 @@ loco::background_manager(){
     if [[ ! -z "${bg_url}" ]]; then
       msg::debug "Background url option found."
       utils::get_url "./src/backgrounds" "${bg_url}"
+
       img_basename=$(basename "${bg_url}")
       # clean file name from URI encoded characters
       img_clean_name=$( utils::decode_URI "${img_basename}" )
