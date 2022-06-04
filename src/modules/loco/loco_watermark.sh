@@ -18,7 +18,7 @@ loco::watermark_check(){
   local current_profile="${PROFILE-}"
   local current_user="${CURRENT_USER-}"
   local current_path="${INSTANCE_PATH-}"
-  # keep a copy of current messages
+  # keep a copy of previously recorded messages
   local recorded_messages=("${MSG_ARRAY[@]-}")
 
   # if no .loco file is found
@@ -55,7 +55,6 @@ loco::watermark_check(){
 loco::watermark_action_install(){
   # keep a copy of current GLOBALs values
   local current_profile="${PROFILE-}"
-  msg::debug ${current_profile}
   local current_user="${CURRENT_USER-}"
   local current_path="${INSTANCE_PATH-}"
   # keep a copy of current messages
@@ -73,8 +72,6 @@ loco::watermark_action_install(){
     utils::cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
     # source the $ACTION.sh file
     utils::source ./src/actions/"${ACTION}".sh
-    # clean the yaml variables
-    # todo : correct yaml file sourcing
     # remove the newly created finish.sh
     utils::remove "./src/temp/finish.sh"
     # put the copy back
@@ -128,6 +125,7 @@ loco::watermark_action_update(){
   local old_path
 
   msg::print "${EMOJI_STOP} There is a " "${CURRENT_USER}" " watermark."
+  
   msg::prompt "Update the " "installed" " instance ?"
   case ${USER_ANSWER:0:1} in
   y|Y )
@@ -154,7 +152,7 @@ loco::watermark_action_update(){
 }
 
 #######################################
-# set / unset a post script watermark.
+# Unset a post script watermark.
 # GLOBALS:
 #   ACTION
 #   CURRENT_USER
@@ -164,10 +162,10 @@ loco::watermark_action_update(){
 loco::watermark_unset(){
   msg::say "Removing " "watermark"
   utils::remove /home/${CURRENT_USER}/.loco
-}  
+}
 
 #######################################
-# set / unset a post script watermark.
+# Set a post script watermark.
 # GLOBALS:
 #   CURRENT_USER
 #   PROFILE

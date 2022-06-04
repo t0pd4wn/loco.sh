@@ -1,9 +1,11 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# functions.sh | functions
+# main.sh | main function file
 #-------------------------------------------------------------------------------
 
-# source the core modules
+set -eu
+
+# source core modules
 # source the utils module
 if ! source ./src/modules/core/utils.sh; then
   echo "Can not source ./src/modules/utils.sh" >&2
@@ -36,17 +38,43 @@ utils::source ./src/modules/loco/loco_yaml.sh
 #   $@ // script options
 #######################################
 main(){
+  # detect and check if OS is supported
+  utils::check_operating_system 
+
+  # set globals
+  utils::GLOBALS_set  
+
+  # set options, build and source the cli file
+  cli::set_options
+  cli::build
+  cli::call "${@-}" 
+
+  # load default or user conf
+  utils::source "${CONFIG_PATH}"  
+
+  # lock globals
+  utils::GLOBALS_lock 
+
+  # init debug message
+  msg::debug "Verbose mode" 
+
+  # check if first start, else display start messsage
+  utils::check_if_start 
+
+  # check if first root, otherwise ask password and restart
+  utils::check_if_root "${@-}"
+
   # launch startup checks and utils
   loco::startup "${@-}"
 
   # source main action script
   utils::source ./src/actions/"${ACTION}".sh
 
-  # display recorded commands script
-  cmd::msg
-
   # display end message
   msg::end
+
+  # display countdown
+  utils::countdown "Terminal will reset in" "3"
 
   # trap custom last function
   if ! trap 'loco::custom_last' 0; then
@@ -56,3 +84,6 @@ main(){
   # end script
   exit $?
 }
+
+# call the main function
+main "${@-}"

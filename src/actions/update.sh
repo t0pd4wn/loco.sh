@@ -20,28 +20,28 @@ loco::background_manager
 msg::say "Checking " "${CURRENT_USER}" " watermark"
 loco::watermark_check
 
-msg::say "Installing " "${PROFILE}" " profile"
+msg::say "Updating " "${PROFILE}" " profile"
 
 # install custom "${PROFILE}" entry function
-msg::say "Installing " "${LOCO_OSTYPE}" " entry function"
+msg::say "Updating " "${LOCO_OSTYPE}" " entry function"
 loco::custom_entry
 
 # print entry scripts msg::says
 msg::play
 
 # install "${LOCO_OSTYPE}" packages
-msg::say "Installing " "${LOCO_OSTYPE}" " packages"
+msg::say "Updating " "${LOCO_OSTYPE}" " packages"
 loco::meta_package_manager "${LOCO_OSTYPE}"
 
 # install generic packages
-msg::say "Installing " "generic" " packages"
+msg::say "Updating " "generic" " packages"
 loco::meta_package_manager "generic"
 
 # link "${PROFILE}" .dotfiles to $USER
 loco::dotfiles_manager "Replace your dotfiles with " "${PROFILE}" " ones (y/n)?"
 
 # install fonts to system
-msg::say "Installing " "fonts"
+msg::say "Updating " "fonts"
 loco::fonts_manager
 
 # build terminal conf
@@ -49,12 +49,15 @@ msg::say "Preparing " "terminal" " configuration"
 loco::term_conf_manager
 
 # install custom exit scripts
-msg::say "Installing " "${LOCO_OSTYPE}" " exit scripts"
+msg::say "Updating " "${LOCO_OSTYPE}" " exit scripts"
 loco::custom_exit
 
 # install watermark
-msg::say "Installing " "watermark"
+msg::say "Updating " "watermark"
 loco::watermark_set
 
 # record a closing terminal command in loco_finish.sh
-cmd::record 'kill -9 $PPID'
+# if no new fonts, exit normally
+if [[ "${IS_NEW_FONT-}" != "true" ]]; then
+	cmd::record "exit 2&>/dev/null"
+fi

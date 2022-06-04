@@ -4,9 +4,11 @@
 #-------------------------------------------------------------------------------
 
 #######################################
-# Register commands to a file
+# Register commands to finish.sh
 # Arguments:
 #   $1 // a command
+# Output:
+#   src/temp/finish.sh
 #######################################
 cmd::record(){
   local command="${@-}"
@@ -20,29 +22,7 @@ cmd::record(){
 }
 
 #######################################
-# Display the cmd file message
-# GLOBALS:
-#   LOCO_DIST
-# Arguments:
-#   $1 // a command
-#######################################
-cmd::msg(){
-  # check if current loco is remote installation
-  local dist_path
-  if [[ "${LOCO_DIST}" == true ]]; then
-    dist_path="~/loco-dist/"
-  fi
-  # check if finish file is present
-  local script_path="./src/temp/finish.sh"
-  local prefix=${dist_path-"./"}
-  msg::debug "${prefix}"
-  if [[ -f "${script_path}" ]]; then
-    msg::record 'type `'"${prefix}"'src/temp/finish.sh` to finish installation'
-  fi
-}
-
-#######################################
-# Runs a command as current user
+# Run a command as current user
 # GLOBALS:
 #   CURRENT_USER
 # Arguments:

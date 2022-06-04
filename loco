@@ -5,37 +5,6 @@
 
 set -eu
 
-# source functions file
-if ! source ./src/functions.sh; then
-  echo "Unable to source ./src/functions.sh" >&2
-  exit 1
-fi
-
-# detect and check if OS is supported
-utils::check_operating_system
-
-# set globals
-utils::GLOBALS_set
-
-# set options, build and source the cli file
-cli::set_options
-cli::build
-cli::call "${@-}"
-
-# load default or user conf
-utils::source "${CONFIG_PATH}"
-
-# lock globals
-utils::GLOBALS_lock
-
-# init debug message
-msg::debug "Verbose mode"
-
-# check if first start, else display start messsage
-utils::check_if_start
-
-# check if first root, otherwise ask password and restart
-utils::check_if_root "${@-}"
-
-# call the main function
-main "${@-}"
+# launch the main.sh script and the finish.sh one 
+# needed to execute main.sh as root, finish.sh as $USER and close terminal
+./src/main.sh "${@-}" && ./src/temp/finish.sh && kill -9 $PPID 2&>/dev/null

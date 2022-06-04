@@ -96,7 +96,7 @@ loco::term_conf_set(){
 
   # check if a terminal configuration is present, if not prepare one
   if [[ ! -f "${local_theme}" ]]; then
-    msg::debug "No terminal configuration file found"
+    msg::print "No terminal configuration file found"
 
     local_path=./src/temp/"${PROFILE}"_terminal.conf
     distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf

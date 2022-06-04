@@ -117,9 +117,11 @@ loco::meta_package_manager(){
     msg::print "No " "$1" " package managers found"
   else
     # begin to assign values recursively from descriptors
-    IFS=' ' read -r -a packagers_array <<< "${packagers}"
-    for i in "${packagers_array[@]}"; do
+    packagers_array=($packagers)
+    msg::debug "${packagers}"
 
+    for i in "${packagers_array[@]}"; do
+      msg::debug "${i}"
       # prepare variables from package manager descriptor
       PACKAGE_ACTION="${ACTION}"
 

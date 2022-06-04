@@ -18,5 +18,3 @@ packages:
       - git
       - vim
       - zsh
-    snap:
-      - yq
