@@ -5,6 +5,13 @@
 
 set -eu
 
+LOCO_DEV="false"
+
 # launch the main.sh script and the finish.sh one 
 # needed to execute main.sh as root, finish.sh as $USER and close terminal
-./src/main.sh "${@-}" && ./src/temp/finish.sh && kill -9 $PPID 2&>/dev/null
+if [[ "${LOCO_DEV}" == "false" ]]; then
+	./src/main.sh "${@-}" && ./src/temp/finish.sh && kill -9 $PPID 2&>/dev/null
+else
+	# if dev is true, don't exit automatically
+	./src/main.sh "${@-}" && ./src/temp/finish.sh
+fi
