@@ -96,7 +96,7 @@ cd [repository]
 		├── custom.sh # custom functions (optional)
 		├── assets #stores specific files (optional)
 		│	├── background.[image extension] # background image (optional)
-    │ ├── fonts # fonts in this folder will be installed (optional)
+		│	├── fonts # fonts in this folder will be installed (optional)
 		│	└── terminal.conf # user terminal configuration (optional, ubuntu only)
 		└── dotfiles # dotfiles in this folder will be symlinked or hard copied (optional)
 
@@ -184,7 +184,7 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 └── src
 	└── actions #stores actions scripts
 		├── install.sh # install packages and dotfiles, based on a profile
-    ├── remove.sh  # remove packages and dotfiles, based on an installed instance
+		├── remove.sh  # remove packages and dotfiles, based on an installed instance
 		└── update.sh # update packages and dotfiles, based on a profile
 ```
 
@@ -354,19 +354,23 @@ When you install ```loco``` a watermark file ```~/.loco``` is installed. It stor
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Backlog
-- packagers: test and implement cask packages
-- packagers: better package managers abstraction
+- bug : themes option
 - actions: add init, save
 - actions: improve update and remove (add yaml diff)
 - actions: improve backup workflow
+- backgrounds : add support for complex urls (e.g. duckduckgo)
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
 - options : Ghost mode leaving no assets prior to action
+- packagers: test and implement cask packages
+- packagers: better package managers abstraction
 - profiles: add devops, data-scientist...
 - profiles: check for current user discrepancies (for multiple users ?)
 - themes: implement 16 colors themes (insted of the plain 8)
 - UI: display modes (yes, detached...)
 - UI: display prompts options as table rows
+- discovered bugs : bash cache on failures
+- discovered bugs : find dont decode ":"
 
 ## Thanks
 

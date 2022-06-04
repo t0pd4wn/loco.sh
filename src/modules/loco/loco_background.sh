@@ -32,22 +32,34 @@ loco::background_manager(){
   if [[ "${ACTION}" == "install" ]] ||[[ "${ACTION}" == "update" ]]; then
     # if a background url option is set through -B or profile.yaml
     if [[ ! -z "${bg_url}" ]]; then
-      msg::debug "Background url option found."
+      msg::print "Background url option found."
       utils::get_url "./src/backgrounds" "${bg_url}"
 
-      img_basename=$(basename "${bg_url}")
       # clean file name from URI encoded characters
+      img_basename=$(basename "${bg_url}")
+
+      # todo : enhance below to support duckduckgo images
+      # there are few problems linked to URLs special characters decoding 
+      # as duckduckgo proxies original URLs it is hard to get the correct path 
+      # local domain_name=$( echo "${bg_url}" | awk -F/ '{print $3}')
+      # if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
+      # # this substitution is meant fo correct `wget` colon substitution
+      #   img_basename="${img_basename/"%3A"/":"}"
+      #   img_basename=$(find "src/backgrounds/" -name '*'${img_basename})
+      #   final_path="file://""${ab_path}"/"${img_basename}"
+      # fi
+
       img_clean_name=$( utils::decode_URI "${img_basename}" )
       final_path="${ab_path}"/src/backgrounds/"${img_clean_name}"
 
     # or, if a background file is present in /assets/
     elif [[ -f "${profile_bg_path}" ]]; then
-      msg::debug "Local assets background found."
+      msg::print "Local assets background found."
       final_path="${profile_bg_path}" 
 
     # or, if background(s) file(s) are present in /src/backgrounds
     elif [[ ! -z "$(ls -A "${local_bgs_path}" 2>/dev/null)" ]]; then
-      msg::debug "Backgrounds found in /src/backgrounds/."
+      msg::print "Backgrounds found in /src/backgrounds/."
       # launch a prompt to select background
       loco::prompt_background
       final_path=$( find "${ab_path}""/src/backgrounds" -name "${BACKGROUND}.*" )
@@ -81,7 +93,7 @@ loco::set_background(){
   msg::debug "${background_path}"
   local gsettings_opts="org.gnome.desktop.background picture-uri"
   cmd::record "gsettings set" "${gsettings_opts}" "'""${background_path}""'"
-  if [[ "$(lsb_release -r -s)" == "22.04" || "22.10" ]]; then
+  if [[ "${SHORT_OS_VERSION}" == "22" ]]; then
     cmd::record "gsettings set" "${gsettings_opts}""-dark ""'""${background_path}""'"
   fi
 }
