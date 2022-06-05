@@ -60,5 +60,5 @@ loco::watermark_set
 # if no new fonts, exit normally
 # funny spelling to create a silent error
 if [[ "${IS_NEW_FONT-}" != "true" ]]; then
-	cmd::record "exaït 2&>/dev/null"
+	cmd::record "exit 2&>/dev/null"
 fi
