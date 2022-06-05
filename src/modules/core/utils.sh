@@ -57,8 +57,10 @@ utils::check_if_root(){
 # Note : only methods from this file should be called.
 #######################################
 utils::check_operating_system(){
+
   echo "utils::check_operating_system"
   echo "${SHORT_OS_VERSION-}"
+
   if [[ -z "${SHORT_OS_VERSION-}" ]]; then
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
       LOCO_OSTYPE="ubuntu"

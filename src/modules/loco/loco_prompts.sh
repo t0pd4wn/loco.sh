@@ -50,8 +50,10 @@ loco::prompt_theme(){
   local style_colors_theme
   style_colors_theme=$(utils::yaml_get_values '.style.colors.theme')
 
+  msg::debug "${style_colors_theme:-"${THEME}"}"
+
   # if no theme is set, launch a prompt
-  if [ -z "${style_colors_theme-"${THEME}"}" ]; then
+  if [ -z "${style_colors_theme:-"${THEME}"}" ]; then
     prompt::build "THEME" "./src/themes" "Choose a color theme :" false
     prompt::call "THEME"
   fi
