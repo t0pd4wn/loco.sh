@@ -32,33 +32,33 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, MacOSx)
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL)
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL); exit
 ```
 
 #### Ubuntu (wget)
 ```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install)
+bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install); exit
 ```
 
 #### MacOSx (curl)
 ```bash
-bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install)
+bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install); exit
 ```
 
 ##### Options
 You can pass options like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options]
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options]; exit
 ```
 
-For example, you can launch an installation with a custom background like this:
+For example, you can launch an interactive session with a custom background like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B "[image url]"
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B "[image url]"; exit
 ```
 
-Or go ***loco*** and install directly a profile with the ```-Y``` flag on (as showcased in the gif):
+Or go ***loco*** and install directly a profile with the ```-Y``` flag on :
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -p "full" -Y
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -p "full" -Y; exit
 ```
 
 Once installed, you can simply interact with loco like this: 
