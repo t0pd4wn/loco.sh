@@ -354,7 +354,6 @@ When you install ```loco``` a watermark file ```~/.loco``` is installed. It stor
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Backlog
-- bug : themes option
 - actions: add init, save
 - actions: improve update and remove (add yaml diff)
 - actions: improve backup workflow
