@@ -280,6 +280,20 @@ utils::mac_has_brew(){
       loco::meta_action "${PACKAGE_ACTION_CMD}"
     else
       echo -e "\U1f335 Homebrew is installed."
+
+
+# change the brew file ownership to the current logged in user
+# sudo chown $USER /usr/local/bin/brew
+
+# removes flag
+# chflags uchg /usr/local/Homebrew/Library/Homebrew/brew.sh
+
+# give correct rights to user over brew
+# $ sudo chown -R `whoami` /usr/local/Homebrew/
+# $ sudo chown -R $(whoami) $(brew --prefix)/*
+# $ sudo mkdir /usr/local/Frameworks
+# $ sudo chown -R `whoami` /usr/local/Frameworks/
+
     fi
   fi
 }
@@ -293,8 +307,6 @@ utils::mac_has_brew(){
 #######################################
 utils::mac_has_bash(){
   # if bash version is equal to 3.x
-  echo '${BASH_VERSINFO[0]}'
-  echo ${BASH_VERSINFO[0]}
   if [[ ${BASH_VERSINFO[0]} -eq 3 ]];  then
 
     # if there is a binary in the brew/bash path
@@ -304,8 +316,9 @@ utils::mac_has_bash(){
       # todo : execute directly script under correct path
       # $(/usr/local/bin/bash ./loco)
       echo -e "/usr/local/bin/bash ./loco"
-      # _exit
-    # if not install brew/bash
+      _exit
+
+    # if brew/bash is not installed
     else
       echo -e "\U1f335 Bash 4+ will be installed."
       PACKAGE_ACTION_CMD='brew install bash'

@@ -20,7 +20,11 @@ loco::meta_action(){
     eval "${local_package_action_cmd}"
   # if there is a specific command, execute it
   else
-    eval "${PACKAGE_ACTION_CMD}"
+    if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+      cmd::run_as_user "eval "${PACKAGE_ACTION_CMD}""
+    else
+      eval "${PACKAGE_ACTION_CMD}"
+    fi
   fi
 }
 
