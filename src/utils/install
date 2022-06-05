@@ -61,17 +61,19 @@ loco::extract_and_run(){
   # navigate to folder
   cd ~/loco-dist
   # source utils
-  source ~/loco-dist/src/modules/core/utils.sh
-  # check operating system
-  echo -e "\U1f335 Checking OS"
-  utils::check_operating_system
-  # launch loco
-  # if on macos, execute with the bin path
-  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-    /usr/local/bin/bash ./loco "$@" -J
-  else
+  # source ~/loco-dist/src/modules/core/utils.sh
+  # # check operating system
+  # echo -e "\U1f335 Checking OS"
+  # utils::check_operating_system
+  # # launch loco
+  # # if on macos, execute with the bin path
+  # if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+  #   echo 'launching macos'
+  #   /usr/local/bin/bash ./loco "$@" -J
+  # else
+  #   ./loco "$@" -J
+  # fi
     ./loco "$@" -J
-  fi
 }
 
 retrieve_public_archive "$@"
