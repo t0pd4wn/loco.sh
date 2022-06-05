@@ -85,7 +85,7 @@ loco::term_conf_set(){
 
   # local /assets/terminal.conf file
   local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
-  local distro_theme=./"${dist_path-}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+  # local distro_theme=./"${dist_path-}""${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
   
   # gnome related paths and infos
   local gnome_path="/org/gnome/terminal/legacy/profiles:/"
@@ -99,7 +99,7 @@ loco::term_conf_set(){
     msg::print "No terminal configuration file found"
 
     local_path=./src/temp/"${PROFILE}"_terminal.conf
-    distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf
+    # distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf
 
     # if there is a colors theme set, build the conf file
     if [[ ! -z "${colors_theme}" ]]; then
@@ -118,10 +118,10 @@ loco::term_conf_set(){
       utils::echo "use-transparent-background=true" >> "${local_path}"
       utils::echo "bold-color-same-as-fg=false" >> "${local_path}"
       utils::echo "visible-name='loco-profile'" >> "${local_path}"
-      loco::term_conf_record_command "${gnome_path}" "${gnome_UUID}" "${distro_path}"
+      loco::term_conf_record_command "${gnome_path}" "${gnome_UUID}" "${local_path}"
     fi
   else
     msg::say "Using /assets/terminal.conf file"
-    loco::term_conf_record_command "${gnome_path}" "${gnome_UUID}" "${distro_path}"
+    loco::term_conf_record_command "${gnome_path}" "${gnome_UUID}" "${local_theme}"
   fi
 }
