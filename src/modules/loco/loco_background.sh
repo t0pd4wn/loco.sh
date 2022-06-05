@@ -27,6 +27,8 @@ loco::background_manager(){
   local img_clean_name
   local ubuntu_default
   local ubuntu_path
+  local uri_first_part
+  local uri_second_part
 
   # if action is install
   if [[ "${ACTION}" == "install" ]] ||[[ "${ACTION}" == "update" ]]; then
@@ -38,19 +40,40 @@ loco::background_manager(){
       # clean file name from URI encoded characters
       img_basename=$(basename "${bg_url}")
 
-      # todo : enhance below to support duckduckgo images
-      # there are few problems linked to URLs special characters decoding 
-      # as duckduckgo proxies original URLs it is hard to get the correct path 
-      # local domain_name=$( echo "${bg_url}" | awk -F/ '{print $3}')
-      # if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
-      # # this substitution is meant fo correct `wget` colon substitution
-      #   img_basename="${img_basename/"%3A"/":"}"
-      #   img_basename=$(find "src/backgrounds/" -name '*'${img_basename})
-      #   final_path="file://""${ab_path}"/"${img_basename}"
-      # fi
+      # warning : below code is meant to support duckduckgo images
+      # there are few problems related to URLs special characters decoding 
+      # as duckduckgo proxies original URLs which can include sub-URLs
+      # it is hard to get the correct path to install them dynamically
+      local domain_name=$( echo "${bg_url}" | awk -F/ '{print $3}')
 
-      img_clean_name=$( utils::decode_URI "${img_basename}" )
-      final_path="${ab_path}"/src/backgrounds/"${img_clean_name}"
+      # if the image comes from duckduckgo images
+      if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
+        # this substitution is meant fo correct `wget` colon substitution in sub-URLs
+        img_basename="${img_basename/"%3A"/":"}"
+
+        # if the picture was originally hosted on reddit
+        if [[ "${bg_url}" == *"external-preview.redd.it"* ]]; then
+          # substitution to find the sub-URL
+          img_basename="${img_basename/"%3F"/"?"}"
+          # get the first part of the uri
+          uri_first_part=$( echo "${img_basename}" | cut -d'?' -f2 )
+          # get the second part of the uri (which is encoded)
+          uri_second_part=$( echo "${img_basename}" | cut -d'?' -f3 )
+          # decodes the second part
+          uri_second_part=$( utils::decode_URI "${uri_second_part}" )
+          # rebuilds pathname
+          img_basename="?""${uri_first_part}"?"${uri_second_part}"
+        fi
+
+        # find ase name to get exact filename and path (expansion is meant)
+        img_basename=$(find "src/backgrounds/" -name "*$img_basename")
+        final_path="${ab_path}"/"${img_basename}"
+
+      # else if the image comes from an other domain
+      else
+        img_clean_name=$( utils::decode_URI "${img_basename}" )
+        final_path="${ab_path}"/src/backgrounds/"${img_clean_name}"
+      fi
 
     # or, if a background file is present in /assets/
     elif [[ -f "${profile_bg_path}" ]]; then

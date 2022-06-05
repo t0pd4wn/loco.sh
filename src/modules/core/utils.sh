@@ -152,6 +152,18 @@ utils::escape_string(){
   fi
 }
 
+#######################################
+# Encode a path to URI
+# Arguments:
+#   $1 # a path
+#######################################
+utils::encode_URI(){
+  local string="${@-}"
+  if ! echo "${string}"| perl -MURI::file -e 'print URI::file->new(<STDIN>)'; then
+    _error "Unable to decode ${string}"
+  fi
+}
+
 
 #######################################
 # Decode an URI to a path
