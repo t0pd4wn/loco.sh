@@ -358,6 +358,7 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - actions: add init, save
 - actions: improve update and remove (add yaml diff)
 - actions: improve backup workflow
+- actions: better exit / close management
 - backgrounds : add support for complex urls (e.g. duckduckgo)
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
@@ -370,7 +371,6 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - UI: display modes (yes, detached...)
 - UI: display prompts options as table rows
 - discovered bugs : bash cache on failures
-- discovered bugs : find dont decode ":"
 
 ## Thanks
 
