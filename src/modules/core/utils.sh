@@ -57,10 +57,13 @@ utils::check_if_root(){
 # Note : only methods from this file should be called.
 #######################################
 utils::check_operating_system(){
+  echo "utils::check_operating_system"
+  echo "${SHORT_OS_VERSION-}"
   if [[ -z "${SHORT_OS_VERSION-}" ]]; then
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
       LOCO_OSTYPE="ubuntu"
       SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
+      echo "${SHORT_OS_VERSION-}"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
       LOCO_OSTYPE="macos"
       # check if mac has brew
@@ -69,6 +72,7 @@ utils::check_operating_system(){
       utils::mac_has_bash
       # get version information, then grep version line, cut full semver, cut main version "e.g 12"
       SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
+      echo "${SHORT_OS_VERSION-}"
     else 
       _exit "Operating System not supported."
     fi
@@ -287,15 +291,18 @@ utils::mac_has_brew(){
 #######################################
 utils::mac_has_bash(){
   # if bash version is equal to 3.x
+  echo '${BASH_VERSINFO[0]}'
+  echo ${BASH_VERSINFO[0]}
   if [[ ${BASH_VERSINFO[0]} -eq 3 ]];  then
+
     # if there is a binary in the brew/bash path
     if [[ -f /usr/local/bin/bash ]]; then
       echo -e "\U1f335 An other version of bash is installed."
       echo -e "\U1f335 Please, use the command below :"
-      # todo : execute directly scriipt under correct path
+      # todo : execute directly script under correct path
       # $(/usr/local/bin/bash ./loco)
       echo -e "/usr/local/bin/bash ./loco"
-      _exit
+      # _exit
     # if not install brew/bash
     else
       echo -e "\U1f335 Bash 4+ will be installed."

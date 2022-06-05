@@ -7,10 +7,17 @@ set -eu
 
 LOCO_DEV="false"
 
+source ~/loco-dist/src/modules/core/utils.sh
+# check operating system
+echo -e "\U1f335 Checking OS"
+utils::check_operating_system
+
 # launch the main.sh script and the finish.sh one 
 # needed to execute main.sh as root, finish.sh as $USER and close terminal
 if [[ "${LOCO_DEV}" == "false" ]]; then
-	./src/main.sh "${@-}" && ./src/temp/finish.sh && kill -9 $PPID 2&>/dev/null
+	if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+		/usr/local/bin/bash ./src/main.sh "${@-}" && ./src/temp/finish.sh && kill -9 $PPID 2&>/dev/null
+	fi
 else
 	# if dev is true, don't exit automatically
 	./src/main.sh "${@-}" && ./src/temp/finish.sh
