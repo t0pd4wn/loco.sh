@@ -57,17 +57,21 @@ utils::check_if_root(){
 # Note : only methods from this file should be called.
 #######################################
 utils::check_operating_system(){
-  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    LOCO_OSTYPE="ubuntu"
-    SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
-  elif [[ "$OSTYPE" == "darwin"* ]]; then
-    LOCO_OSTYPE="macos" 
-    utils::mac_has_brew
-    utils::mac_has_bash
-    # get version information, then grep version line, cut full semver, cut main version "e.g 12"
-    SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
-  else 
-    _exit "Operating System not supported."
+  if [[ -z "${SHORT_OS_VERSION-}" ]]; then
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+      LOCO_OSTYPE="ubuntu"
+      SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+      LOCO_OSTYPE="macos"
+      # check if mac has brew
+      utils::mac_has_brew
+      # check if mac has bash 4+
+      utils::mac_has_bash
+      # get version information, then grep version line, cut full semver, cut main version "e.g 12"
+      SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
+    else 
+      _exit "Operating System not supported."
+    fi
   fi
 }
 
