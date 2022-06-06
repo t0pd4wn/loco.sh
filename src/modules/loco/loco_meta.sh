@@ -13,19 +13,50 @@
 #######################################
 loco::meta_action(){
   local local_package_action_cmd
+
   # if there isn't a specific command, build one
   if [[ -z "${PACKAGE_ACTION_CMD-}" ]]; then 
     local_package_action_cmd="${PACKAGE_MANAGER} ${PACKAGE_ACTION} ${PACKAGE}"
     msg::debug "${local_package_action_cmd}"
+    if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+      cmd::run_as_user "eval "${local_package_action_cmd}""
+    else
+      eval "${local_package_action_cmd}"
+    fi
     eval "${local_package_action_cmd}"
+
   # if there is a specific command, execute it
   else
     if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+      msg::debug "macos"
+      msg::debug "${PACKAGE_ACTION_CMD}"
       cmd::run_as_user "eval "${PACKAGE_ACTION_CMD}""
     else
+      msg::debug "not macos"
+      msg::debug "${PACKAGE_ACTION_CMD}"
       eval "${PACKAGE_ACTION_CMD}"
     fi
   fi
+}
+
+# todo improve so this function expect a normative array as an input
+loco::meta_action_better(){
+  msg::debug "${PACKAGE_ACTION_CMD}"
+  # if there isn't a specific command, build one
+  if [[ -z "${PACKAGE_ACTION_CMD-}" ]]; then 
+    PACKAGE_ACTION_CMD="${PACKAGE_MANAGER} ${PACKAGE_ACTION} ${PACKAGE}"
+    msg::debug "${PACKAGE_ACTION_CMD}"
+  fi
+
+  # 
+  if [[ "${LOCO_OSTYPE}" == "macos" ]] && [[ "${PACKAGE_MANAGER}" == "brew" ]]; then
+      cmd::run_as_user "eval "${PACKAGE_ACTION_CMD}""
+  else
+    eval "${PACKAGE_ACTION_CMD}"
+  fi
+
+  # clear global value
+  PACKAGE_ACTION_CMD=""
 }
 
 #######################################
@@ -80,14 +111,14 @@ loco::meta_package(){
     # remove package
     if [[ "${ACTION-}" == "remove" ]]; then
       msg::say "Removing " "${PACKAGE_MANAGER} ${PACKAGE}"
-      loco::meta_action
+      loco::meta_action_better
     fi
   else
     msg::print "" "${PACKAGE-}" " is not installed."
     # install package
     if [[ "${ACTION-}" == "install" ]]; then
       msg::say "Installing " "${PACKAGE_MANAGER} ${PACKAGE}"
-      loco::meta_action
+      loco::meta_action_better
     fi
   fi
   # clear global variables
@@ -141,7 +172,13 @@ loco::meta_package_manager(){
         # expand variable value 
         PACKAGE_ACTION=${!PACKAGE_ACTION}   
         # update the package manager
-        ${PACKAGE_MANAGER} ${update}
+        if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+          if [[ "${PACKAGE_MANAGER}" == "brew" ]]; then
+            cmd::run_as_user "${PACKAGE_MANAGER} ${update}"
+          fi
+        else
+          ${PACKAGE_MANAGER} ${update}
+        fi
 
         # parse yaml to get packages names
         local packages_selector=".packages."${1}"."${i}".[]"

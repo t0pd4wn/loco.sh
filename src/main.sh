@@ -38,11 +38,11 @@ utils::source ./src/modules/loco/loco_yaml.sh
 #   $@ // script options
 #######################################
 main(){
-  # detect and check if OS is supported
-  utils::check_operating_system 
+  # source the globals from check_os
+  utils::source "./src/temp/conf_OS_GLOBALS"
 
   # set globals
-  utils::GLOBALS_set  
+  utils::GLOBALS_set
 
   # set options, build and source the cli file
   cli::set_options

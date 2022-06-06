@@ -54,31 +54,35 @@ utils::check_if_root(){
 # Check $OSTYPE and defines current OS
 # GLOBALS:
 #   LOCO_OSTYPE
+# Arguments:
+#   $1 # output visibility true / false
+# Output:
+#   ./src/temp/globals.conf
 # Note : only methods from this file should be called.
 #######################################
 utils::check_operating_system(){
-
-  echo "utils::check_operating_system"
-  echo "${SHORT_OS_VERSION-}"
-
-  if [[ -z "${SHORT_OS_VERSION-}" ]]; then
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-      LOCO_OSTYPE="ubuntu"
-      SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
-      echo "${SHORT_OS_VERSION-}"
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-      LOCO_OSTYPE="macos"
-      # check if mac has brew
-      utils::mac_has_brew
-      # check if mac has bash 4+
-      utils::mac_has_bash
-      # get version information, then grep version line, cut full semver, cut main version "e.g 12"
-      SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
-      echo "${SHORT_OS_VERSION-}"
-    else 
-      _exit "Operating System not supported."
-    fi
+  # if a linux platform
+  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    LOCO_OSTYPE="ubuntu"
+    SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
+  
+  # if a macos platform
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    LOCO_OSTYPE="macos"
+    # check if mac has brew
+    utils::mac_has_brew
+    # check if mac has bash 4+
+    utils::mac_has_bash
+    # get version information, then grep version line, cut full semver, cut main version "e.g 12"
+    SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
+  
+  else 
+    _error "Operating System not supported." 
+    _exit "Operating System not supported."
   fi
+  
+  echo "LOCO_OSTYPE=${LOCO_OSTYPE}" > "./src/temp/conf_OS_GLOBALS"
+  echo "SHORT_OS_VERSION=${SHORT_OS_VERSION}" >> "./src/temp/conf_OS_GLOBALS"
 }
 
 #######################################
@@ -94,7 +98,7 @@ utils::check_dependencies(){
     if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
       snap install yq
     elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-      brew install yq
+      cmd::run_as_user "brew install yq"
     fi
   fi
 }
@@ -271,7 +275,6 @@ utils::list(){
 utils::mac_has_brew(){
   # if on macOS
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
-
     # if brew is not installed
     if [[ $(command -v brew) == "" ]]; then
       echo -e "\U1f335 Homebrew needs to be installed."
@@ -280,20 +283,6 @@ utils::mac_has_brew(){
       loco::meta_action "${PACKAGE_ACTION_CMD}"
     else
       echo -e "\U1f335 Homebrew is installed."
-
-
-# change the brew file ownership to the current logged in user
-# sudo chown $USER /usr/local/bin/brew
-
-# removes flag
-# chflags uchg /usr/local/Homebrew/Library/Homebrew/brew.sh
-
-# give correct rights to user over brew
-# $ sudo chown -R `whoami` /usr/local/Homebrew/
-# $ sudo chown -R $(whoami) $(brew --prefix)/*
-# $ sudo mkdir /usr/local/Frameworks
-# $ sudo chown -R `whoami` /usr/local/Frameworks/
-
     fi
   fi
 }
@@ -312,11 +301,8 @@ utils::mac_has_bash(){
     # if there is a binary in the brew/bash path
     if [[ -f /usr/local/bin/bash ]]; then
       echo -e "\U1f335 An other version of bash is installed."
-      echo -e "\U1f335 Please, use the command below :"
-      # todo : execute directly script under correct path
-      # $(/usr/local/bin/bash ./loco)
+      echo -e "\U1f335 You may want to use the command below:"
       echo -e "/usr/local/bin/bash ./loco"
-      _exit
 
     # if brew/bash is not installed
     else

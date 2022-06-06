@@ -2,14 +2,12 @@
 #-------------------------------------------------------------------------------
 # loco | loco user interface
 #-------------------------------------------------------------------------------
-
-set -eu
-
 LOCO_DEV="false"
 
-source ~/loco-dist/src/modules/core/utils.sh
+# source utils methods
+source ./src/modules/core/utils.sh
+
 # check operating system
-echo -e "\U1f335 Checking OS"
 utils::check_operating_system
 
 # launch the main.sh script and the finish.sh one 
