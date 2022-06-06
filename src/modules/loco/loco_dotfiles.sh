@@ -26,7 +26,9 @@ loco::dotfiles_manager(){
 
   local dotfiles_path="./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles"
   # list profile dotfiles (todo: dump/retrieve from/to .loco)
+  msg::debug "${dotfiles_path}"
   utils::list dotfiles "${dotfiles_path}"
+  msg::debug "${dotfiles}"
 
   # check if there are dotfiles in $PROFILE
   if [[ -d "${dotfiles_path}" ]]; then
@@ -146,6 +148,7 @@ loco::dotfiles_action_update(){
 loco::dotfiles_backup(){
   local dotfile="${1-}"
   if [ ! -f /home/"${CURRENT_USER}"/"${dotfile}" ]; then
+    msg::debug "/home/""${CURRENT_USER}"/"${dotfile}"
     msg::print "No corresponding " "${dotfile}" " file"
   else 
     msg::debug "${dotfile}" " is backup'd"

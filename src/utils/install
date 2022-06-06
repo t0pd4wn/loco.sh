@@ -73,7 +73,7 @@ loco::extract_and_run(){
   # else
   #   ./loco "$@" -J
   # fi
-    ./loco "$@" -J
+  ./loco "$@" -J
 }
 
 retrieve_public_archive "$@"
