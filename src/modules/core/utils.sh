@@ -136,7 +136,7 @@ utils::countdown(){
 utils::cp(){
   local from="${1-}"
   local to="${2-}"
-  if ! cmd::run_as_user "cp -RrL "${from}" "${to}""; then
+  if ! cmd::run_as_user "cp -RL "${from}" "${to}""; then
     _error "Unable to copy ${from} in ${to}"
   fi
 }
