@@ -147,15 +147,22 @@ loco::dotfiles_action_update(){
 #######################################
 loco::dotfiles_backup(){
   local dotfile="${1-}"
-  if [ ! -f /home/"${CURRENT_USER}"/"${dotfile}" ]; then
-    msg::debug "/home/""${CURRENT_USER}"/"${dotfile}"
+  local path
+  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    path="Users"
+  else 
+    path="home"
+  fi
+
+  if [ ! -f /"${path}"/"${CURRENT_USER}"/"${dotfile}" ]; then
+    msg::debug "/"${path}"/""${CURRENT_USER}"/"${dotfile}"
     msg::print "No corresponding " "${dotfile}" " file"
   else 
     msg::debug "${dotfile}" " is backup'd"
-    utils::cp /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
+    utils::cp /"${path}"/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
     # cp -R /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
     # remove existing file 
-    utils::remove "/home/""${CURRENT_USER}"/"${dotfile}"
+    utils::remove "/"${path}"/""${CURRENT_USER}"/"${dotfile}"
   fi
 }
 
@@ -171,13 +178,20 @@ loco::dotfiles_backup(){
 #######################################
 loco::dotfiles_set(){
   local dotfile="${1-}"
-  local current_path=$(pwd)
+  local current_path=$(pwd)  
+  local path
+  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    path="Users"
+  else 
+    path="home"
+  fi
+  
   if [[ "${DETACHED}" == false ]]; then
     msg::debug "Not detached"
-    ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
+    ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${path}"/"${CURRENT_USER}"/
   else
     msg::debug "Detached"
-    utils::cp "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
+    utils::cp "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${path}"/"${CURRENT_USER}"/
     # cp -R "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
   fi
 }
