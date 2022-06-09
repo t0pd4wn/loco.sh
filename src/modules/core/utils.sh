@@ -279,8 +279,7 @@ utils::mac_has_brew(){
     if [[ $(command -v brew) == "" ]]; then
       echo -e "\U1f335 Homebrew needs to be installed."
       echo -e "\U1f335 Your password will be asked several times."
-      PACKAGE_ACTION_CMD='/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-      loco::meta_action "${PACKAGE_ACTION_CMD}"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
       echo -e "\U1f335 Homebrew is installed."
     fi
@@ -307,8 +306,7 @@ utils::mac_has_bash(){
     # if brew/bash is not installed
     else
       echo -e "\U1f335 Bash 4+ will be installed."
-      PACKAGE_ACTION_CMD='brew install bash'
-      loco::meta_action
+      $(brew install bash)
     fi
   else
     echo -e "\U1f335 Bash ${BASH_VERSINFO[0]} is installed."
