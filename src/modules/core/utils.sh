@@ -544,7 +544,7 @@ utils::get_url(){
   local path="${1-}"
   local url="${2-}"
   local wget_options="-nc -q -P"
-  local curl_options="--create-dirs -C - -JLOs --output-dir"
+  local curl_options="--create-dirs -C - -LOs --output-dir"
   if eval 'command -v wget' > /dev/null 2>&1; then
     msg::debug "wget is used"
     cmd::run_as_user "wget ${wget_options} " "${path}" "'"${url}"'"
