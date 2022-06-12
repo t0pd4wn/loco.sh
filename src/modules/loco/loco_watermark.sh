@@ -12,6 +12,7 @@
 #   INSTANCE_PATH
 #   EMOJI_YES
 #   EMOJI_NO
+#   OS_PREFIX
 #######################################
 loco::watermark_check(){        
   # keep a copy of current GLOBALs values
@@ -22,7 +23,7 @@ loco::watermark_check(){
   local recorded_messages=("${MSG_ARRAY[@]-}")
 
   # if no .loco file is found
-  if [[ ! -f /home/"${CURRENT_USER}"/.loco ]]; then
+  if [[ ! -f /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco ]]; then
     msg::print "No " "previous instance" " found."
     if [[ "${ACTION}" == "remove" ]]; then
       _exit
@@ -95,9 +96,10 @@ loco::watermark_action_install(){
 #   CURRENT_USER
 #   INSTANCE_PATH
 #   PROFILE
+#   OS_PREFIX
 #######################################
 loco::watermark_action_remove(){
-  utils::source /home/"${CURRENT_USER}"/.loco
+  utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
   msg::print "Profile to be removed : " "${PROFILE}"
   msg::print "User to be restored : " "${CURRENT_USER}"
   msg::print "Dotfiles path to be restored : " "${INSTANCE_PATH}"
@@ -131,7 +133,7 @@ loco::watermark_action_update(){
   y|Y )
     msg::print "${EMOJI_YES}" " Yes, update instance."
     # source GLOBALs file
-    utils::source /home/"${CURRENT_USER}"/.loco
+    utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
     # keep sourced GLOBALs values
     old_profile="${PROFILE-}"
     old_user="${CURRENT_USER-}"
@@ -156,12 +158,13 @@ loco::watermark_action_update(){
 # GLOBALS:
 #   ACTION
 #   CURRENT_USER
+#   OS_PREFIX
 # Output:
-#   Remove .loco file from /home/$USER
+#   Remove .loco file from /"${OS_PREFIX}"/"${CURRENT_USER}"
 #######################################
 loco::watermark_unset(){
   msg::say "Removing " "watermark"
-  utils::remove /home/${CURRENT_USER}/.loco
+  utils::remove /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
 }
 
 #######################################
@@ -172,14 +175,15 @@ loco::watermark_unset(){
 #   INSTANCE_PATH
 #   WATERMARK
 #   ACTION
+#   OS_PREFIX
 # Output:
-#   Writes .loco file to /home/$USER
+#   Writes .loco file to /"${OS_PREFIX}"/"${CURRENT_USER}"
 #######################################
 loco::watermark_set(){
   if [[ "${WATERMARK}" == true ]]; then
-    utils::echo '#loco.sh instance infos...' > /home/"${CURRENT_USER}"/.loco
-    utils::echo 'CURRENT_USER='${CURRENT_USER} >> /home/"${CURRENT_USER}"/.loco
-    utils::echo 'PROFILE='${PROFILE} >> /home/"${CURRENT_USER}"/.loco
-    utils::echo 'INSTANCE_PATH='${INSTANCE_PATH-} >> /home/"${CURRENT_USER}"/.loco
+    utils::echo '#loco.sh instance infos...' > /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
+    utils::echo 'CURRENT_USER='${CURRENT_USER} >> /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
+    utils::echo 'PROFILE='${PROFILE} >> /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
+    utils::echo 'INSTANCE_PATH='${INSTANCE_PATH-} >> /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
   fi
 }

@@ -142,84 +142,74 @@ loco::dotfiles_action_update(){
 # GLOBALS:
 #   CURRENT_USER
 #   INSTANCE_PATH
+#   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
 #######################################
 loco::dotfiles_backup(){
   local dotfile="${1-}"
-  local path
-  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-    path="Users"
-  else 
-    path="home"
-  fi
 
-  if [ ! -f /"${path}"/"${CURRENT_USER}"/"${dotfile}" ]; then
-    msg::debug "/"${path}"/""${CURRENT_USER}"/"${dotfile}"
+  # if the file doesn't exist
+  if [ ! -f /"${OS_PREFIX}"/"${CURRENT_USER}"/"${dotfile}" ]; then
+    msg::debug "/"${OS_PREFIX}"/""${CURRENT_USER}"/"${dotfile}"
     msg::print "No corresponding " "${dotfile}" " file"
-  else 
+  else
     msg::debug "${dotfile}" " is backup'd"
-    utils::cp /"${path}"/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
-    # cp -R /home/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
-    # remove existing file 
-    utils::remove "/"${path}"/""${CURRENT_USER}"/"${dotfile}"
+    utils::cp /"${OS_PREFIX}"/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
+    utils::remove "/"${OS_PREFIX}"/""${CURRENT_USER}"/"${dotfile}"
   fi
 }
 
 #######################################
-# Set dotfiles to /home/$USER 
+# Set dotfiles to /"${OS_PREFIX}"/"${CURRENT_USER}"
 # GLOBALS:
 #   CURRENT_USER
 #   DETACHED
 #   PROFILES_DIR
 #   PROFILE
+#   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
 #######################################
 loco::dotfiles_set(){
   local dotfile="${1-}"
-  local current_path=$(pwd)  
-  local path
-  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-    path="Users"
-  else 
-    path="home"
-  fi
+  local current_path=$(pwd)
   
   if [[ "${DETACHED}" == false ]]; then
     msg::debug "Not detached"
-    ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${path}"/"${CURRENT_USER}"/
+    ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
   else
     msg::debug "Detached"
-    utils::cp "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${path}"/"${CURRENT_USER}"/
-    # cp -R "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /home/"${CURRENT_USER}"/
+    utils::cp "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
   fi
 }
 
 #######################################
-# Restore dotfiles to /home/$USER 
+# Restore dotfiles to /"${OS_PREFIX}"/"${CURRENT_USER}"
 # GLOBALS:
 #   CURRENT_USER
 #   INSTANCE_PATH
+#   OS_PREFIX
 #######################################
 loco::dotfiles_restore(){
   if [[ -d ./"$INSTANCE_PATH""/legacy-dotfiles" ]]; then
-    cmd::run_as_user "cp -R ./"$INSTANCE_PATH"/legacy-dotfiles/." "/home/"${CURRENT_USER}"/" 
+    cmd::run_as_user "cp -R ./"$INSTANCE_PATH"/legacy-dotfiles/." "/"${OS_PREFIX}"/"${CURRENT_USER}"/" 
   elif [[ -d ./"$INSTANCE_PATH""/dotfiles-backup" ]]; then
-    cmd::run_as_user "cp -R ./"$INSTANCE_PATH"/dotfiles-backup/." "/home/"${CURRENT_USER}"/" 
+    cmd::run_as_user "cp -R ./"$INSTANCE_PATH"/dotfiles-backup/." "/"${OS_PREFIX}"/"${CURRENT_USER}"/" 
   else 
     msg::debug "No dotfiles to restore"
   fi
 }
 
 #######################################
-# Unset dotfiles from /home/$USER 
+# Unset dotfiles from /"${OS_PREFIX}"/"${CURRENT_USER}"
 # GLOBALS:
 #   CURRENT_USER
+#   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
 #######################################
 loco::dotfiles_unset(){
   local dotfile="${1-}"
-  utils::remove "/home/${CURRENT_USER}/${dotfile}"
+  utils::remove "/${OS_PREFIX}/${CURRENT_USER}/${dotfile}"
 }
