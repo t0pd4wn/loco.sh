@@ -65,10 +65,11 @@ utils::check_operating_system(){
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     LOCO_OSTYPE="ubuntu"
     SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
-  
+    OS_PREFIX="home"
   # if a macos platform
   elif [[ "$OSTYPE" == "darwin"* ]]; then
     LOCO_OSTYPE="macos"
+    OS_PREFIX="Users"
     # check if mac has brew
     utils::mac_has_brew
     # check if mac has bash 4+
@@ -83,6 +84,7 @@ utils::check_operating_system(){
   
   echo "LOCO_OSTYPE=${LOCO_OSTYPE}" > "./src/temp/conf_OS_GLOBALS"
   echo "SHORT_OS_VERSION=${SHORT_OS_VERSION}" >> "./src/temp/conf_OS_GLOBALS"
+  echo "OS_PREFIX=${OS_PREFIX}" >> "./src/temp/conf_OS_GLOBALS"
 }
 
 #######################################
@@ -241,6 +243,9 @@ utils::GLOBALS_lock(){
   readonly LOCO_YES
   readonly VERBOSE
   readonly VERSION
+  readonly OS_PREFIX
+  readonly SHORT_OS_VERSION
+  readonly LOCO_OS_TYPE
 }
 
 #######################################

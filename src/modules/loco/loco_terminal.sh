@@ -53,6 +53,7 @@ loco::term_conf_record_command(){
 # Build terminal style file.
 # note : Setting dconf for a specific user thorugh terminal,
 # can only be achieved with root rights (su, not sudo).
+# Ref : https://www.linuxshelltips.com/export-import-gnome-terminal-profile/
 # GLOBALS:
 #   PROFILES
 #   PROFILES_DIR

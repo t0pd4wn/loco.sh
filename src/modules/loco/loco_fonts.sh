@@ -5,14 +5,15 @@
 
 #######################################
 # Manages fonts installation and removal
-# Ref : https://www.linuxshelltips.com/export-import-gnome-terminal-profile/
 # GLOBALS:
 #   IS_NEW_FONT
-# Arguments:
+#   OS_PREFIX
 #   ACTION
 #   PROFILE
+#   PROFILES_DIR
+#   CURRENT_USER
 # Output:
-#   /home/$USER/.fonts/[fonts]
+#   /"${OS_PREFIX}"/"${CURRENT_USER}"/.fonts/[fonts]
 #######################################
 loco::fonts_manager(){
   local font
@@ -21,7 +22,7 @@ loco::fonts_manager(){
   yaml_fonts_array=("${yaml_fonts}")
 
   local assets_fonts=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/
-  local fonts_path=/home/"${CURRENT_USER}"/.fonts
+  local fonts_path=/"${OS_PREFIX}"/"${CURRENT_USER}"/.fonts
 
   # check for yaml fonts 
   if [[ -z "${yaml_fonts}" ]]; then
