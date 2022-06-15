@@ -358,11 +358,11 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - actions: improve update and remove (add yaml diff)
 - actions: improve backup workflow
 - actions: better exit / close management
+- code : add an exit $pid subshell loop ?
 - backgrounds : add support for complex urls (e.g. duckduckgo)
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
 - options : Ghost mode leaving no assets prior to action
-- packagers: test and implement cask packages
 - packagers: better package managers abstraction
 - profiles: add devops, data-scientist...
 - profiles: check for current user discrepancies (for multiple users ?)

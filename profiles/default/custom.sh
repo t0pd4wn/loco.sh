@@ -11,7 +11,6 @@ install_macos_custom_entry(){
 
 install_macos_custom_exit(){
     msg::record 'Custom macOS install exit'
-    # insert commands below
 }
 
 remove_macos_custom_entry(){
