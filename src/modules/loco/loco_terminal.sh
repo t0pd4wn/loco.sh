@@ -68,6 +68,11 @@ loco::term_conf_set(){
   local font_name
   local font_size
 
+  # macos relate
+  local osascript_opt
+  local osascript_fontname_opt
+  local osascript_fontsize_opt
+
   colors_theme=$(utils::yaml_get_values '.style.colors.theme')
   colors_theme="${THEME:-"${colors_theme}"}"
 
@@ -78,11 +83,23 @@ loco::term_conf_set(){
     #statements
     font_name="${font_name}"
   elif [[ "${ACTION}" == "remove" ]]; then
-    font_name="${"Monospace"}"
+    if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+      font_name="${"Monospace"}"
+    elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+      font_name="${"SF Mono"}"
+    fi
   fi
 
   font_size=$(utils::yaml_get_values '.style.fonts.size')
   font_size="${font_size:-"10"}"
+
+  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    osascript_opt="tell application \"Terminal\" to set the font "
+    osascript_fontname_opt="name of window 1 to \""${font_name}"\""
+    osascript_fontsize_opt="size of window 1 to \""${font_size}"\""
+    cmd::record "osascript -e '"${osascript_opt}""${osascript_fontname_opt}"'"
+    cmd::record "osascript -e '"${osascript_opt}""${osascript_fontsize_opt}"'"
+  fi
 
   # local /assets/terminal.conf file
   local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
@@ -121,8 +138,12 @@ loco::term_conf_set(){
       utils::echo "visible-name='loco-profile'" >> "${local_path}"
       loco::term_conf_record_command "${gnome_path}" "${gnome_UUID}" "${local_path}"
     fi
+  # only supported over ubuntu
   else
     msg::say "Using /assets/terminal.conf file"
     loco::term_conf_record_command "${gnome_path}" "${gnome_UUID}" "${local_theme}"
   fi
+
+
+
 }
