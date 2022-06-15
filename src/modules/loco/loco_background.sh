@@ -27,9 +27,9 @@ loco::background_manager(){
   local uri_second_part
   local final_path
 
-  # meant for remove default OS values
-  local ubuntu_default
-  local ubuntu_path
+  # meant to restore default OS values
+  local os_default_bg
+  local os_path
 
   # if action is install
   if [[ "${ACTION}" == "install" ]] ||[[ "${ACTION}" == "update" ]]; then
@@ -98,9 +98,14 @@ loco::background_manager(){
   elif [[ "${ACTION}" == "remove" ]]; then
     if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
       # works for 21.x, 22.x
-      ubuntu_default="warty-final-ubuntu.png"
-      ubuntu_path=/usr/share/backgrounds/
-      final_path="${ubuntu_path}""${ubuntu_default}"
+      os_default_bg="warty-final-ubuntu.png"
+      os_path=/usr/share/backgrounds/
+      final_path="${os_path}""${os_default_bg}"
+    elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+      echo "macos èèè"
+      os_default_bg="Monterey Graphic.heic"
+      os_path="/System/Library/Desktop Pictures/"
+      final_path="${os_path}""${os_default_bg}"
     fi
   fi
 
@@ -114,6 +119,9 @@ loco::background_manager(){
 
 #######################################
 # Call the themes prompt
+# GLOBALS:
+#   LOCO_OSTYPE
+#   SHORT_OS_VERSION
 # Arguments:
 #   $1 // a background uri 
 #######################################
@@ -123,17 +131,18 @@ loco::set_background(){
   local gsettings_opts
   # macos related
   local osascript_opts
-  msg::debug "${background_path}"
 
+  # if ubuntu, use gsettings
   if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
     gsettings_opts="org.gnome.desktop.background picture-uri"
     cmd::record "gsettings set" "${gsettings_opts}" "'""${background_path}""'"
     if [[ "${SHORT_OS_VERSION}" == "22" ]]; then
       cmd::record "gsettings set" "${gsettings_opts}""-dark ""'""${background_path}""'"
     fi
+  # if macos, use osascript
   elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-    osascript_opts="tell application "Finder" to set desktop picture to POSIX file"
-    osascript_opts="'"${osascript_opts}" "${background_path}"'"
+    osascript_opts="tell application \"Finder\" to set desktop picture to POSIX file"
+    osascript_opts="'"${osascript_opts}" \""${background_path}"\"'"
     msg::debug "${osascript_opts}"
     cmd::record "osascript -e "${osascript_opts}""
   fi
