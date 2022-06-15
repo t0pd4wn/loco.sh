@@ -31,6 +31,18 @@ remove_exit(){
 # defaults write com.apple.dock orientation left# move to right
 # defaults write com.apple.dock orientation right#restart Dock
 # killall Dock
+#################
+# macosx related
+#################
+install_macos_exit(){
+  # display only active apps
+  cmd::record "defaults write com.apple.dock static-only -bool TRUE; killall Dock"
+}
+
+remove_macos_exit(){
+  # display all apps
+  cmd::record "defaults write com.apple.dock static-only -bool FALSE; killall Dock"
+}
 
 #################
 # ubuntu related
