@@ -8,23 +8,22 @@
 #################
 install_exit(){
   # download vundle
-  # utils::remove "/home/${CURRENT_USER}/.vim/bundle/Vundle.vim"
-  cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /home/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
+  cmd::run_as_user "git clone https://github.com/VundleVim/Vundle.vim.git /"${OS_PREFIX}"/"${CURRENT_USER}"/.vim/bundle/Vundle.vim"
 
   # install vundle plugins
   cmd::run_as_user "vim +PluginInstall +qall"
 
   # install powerlevel10K
   # utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
-  cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /home/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
+  cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
 }
 
 remove_exit(){
   # remove vim bundles
-  utils::remove "/home/${CURRENT_USER}/.vim/bundle/*"
+  utils::remove "/"${OS_PREFIX}"/"${CURRENT_USER}"/.vim/bundle/*"
 
   # remove powerlevel10K
-  utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
+  utils::remove "/"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
 }
 
 # # insert commands below# move to bottom
