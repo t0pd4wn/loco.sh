@@ -81,8 +81,6 @@ loco::background_manager(){
         final_path="${ab_path}"/src/backgrounds/"${img_basename}"
       fi
 
-      
-
     # or, if a background file is present in /assets/
     elif [[ -f "${profile_bg_path}" ]]; then
       msg::print "Local assets background found."
@@ -121,10 +119,22 @@ loco::background_manager(){
 #######################################
 loco::set_background(){
   local background_path="${@-}"
+  # ubuntu related
+  local gsettings_opts
+  # macos related
+  local osascript_opts
   msg::debug "${background_path}"
-  local gsettings_opts="org.gnome.desktop.background picture-uri"
-  cmd::record "gsettings set" "${gsettings_opts}" "'""${background_path}""'"
-  if [[ "${SHORT_OS_VERSION}" == "22" ]]; then
-    cmd::record "gsettings set" "${gsettings_opts}""-dark ""'""${background_path}""'"
+
+  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+    gsettings_opts="org.gnome.desktop.background picture-uri"
+    cmd::record "gsettings set" "${gsettings_opts}" "'""${background_path}""'"
+    if [[ "${SHORT_OS_VERSION}" == "22" ]]; then
+      cmd::record "gsettings set" "${gsettings_opts}""-dark ""'""${background_path}""'"
+    fi
+  elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    osascript_opts="tell application "Finder" to set desktop picture to POSIX file"
+    osascript_opts="'"${osascript_opts}" "${background_path}"'"
+    msg::debug "${osascript_opts}"
+    cmd::record "osascript -e "${osascript_opts}""
   fi
 }
