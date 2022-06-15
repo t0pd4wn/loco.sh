@@ -100,7 +100,10 @@ loco::fonts_action_remove_yaml(){
   font_name=${font_name_array[-1]}
 
   # get clean system path
-  font_name=$(utils::decode_URI "${font_name}")
+  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+    font_name=$(utils::decode_URI "${font_name}")
+  fi
+  
   # font_name=$(utils::escape_string "${font_name}")
   font_path=${fonts_path}/${font_name}
 
@@ -178,5 +181,10 @@ loco::font_unset(){
 #######################################
 loco::fonts_cache_refresh(){
   local fonts_path="${1-}"
-  cmd::run_as_user "fc-cache -fr ""${fonts_path}"
+  # if on macos return 0 as this is not supported
+  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    return 0
+  else
+    cmd::run_as_user "fc-cache -fr ""${fonts_path}"
+  fi
 }
