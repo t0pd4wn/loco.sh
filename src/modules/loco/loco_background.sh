@@ -17,6 +17,7 @@
 loco::background_manager(){
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
+  local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
   local profile_bg_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
   local yaml_bg_url=$(utils::yaml_get_values '.style.background')
   local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
@@ -48,30 +49,40 @@ loco::background_manager(){
 
       # if the image comes from duckduckgo images
       if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
-        # this substitution is meant fo correct `wget` colon substitution in sub-URLs
-        img_basename="${img_basename/"%3A"/":"}"
+        if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+          msg::print "Duckduckgo images are not supported over MacOSX."
+          msg::print "Downgrading to custom default background."
+          # download image
+          utils::get_url "./src/backgrounds" "${custom_default_bg_url}"
+          # find ase name to get exact filename and path
+          img_basename=$(find "src/backgrounds/" -name "*${img_basename}")
+          final_path="${ab_path}"/"${img_basename}"
+        else
+          # this substitution is meant fo correct `wget` colon substitution in sub-URLs
+          img_basename="${img_basename/"%3A"/":"}"  
 
-        msg::debug ${img_basename}
+          msg::debug ${img_basename}  
 
-        # if the picture sub-URL has its own encoded parameters
-        if [[ "${bg_url}" == *"%3F"* ]]; then
-          # substitution to find the sub-URL
-          img_basename="${img_basename/"%3F"/"?"}"
-          # get the first part of the uri
-          uri_first_part=$( utils::echo "${img_basename}" | cut -d'?' -f2 )
-          # get the second part of the uri (which is encoded)
-          uri_second_part=$( utils::echo "${img_basename}" | cut -d'?' -f3 )
-          # decodes the second part
-          uri_second_part=$( utils::decode_URI "${uri_second_part}" )
-          # rebuilds pathname
-          img_basename="?""${uri_first_part}"?"${uri_second_part}"
+          # if the picture sub-URL has its own encoded parameters
+          if [[ "${bg_url}" == *"%3F"* ]]; then
+            # substitution to find the sub-URL
+            img_basename="${img_basename/"%3F"/"?"}"
+            # get the first part of the uri
+            uri_first_part=$( utils::echo "${img_basename}" | cut -d'?' -f2 )
+            # get the second part of the uri (which is encoded)
+            uri_second_part=$( utils::echo "${img_basename}" | cut -d'?' -f3 )
+            # decodes the second part
+            uri_second_part=$( utils::decode_URI "${uri_second_part}" )
+            # rebuilds pathname
+            img_basename="?""${uri_first_part}"?"${uri_second_part}"
+          fi
+          
+          # download image
+          utils::get_url "./src/backgrounds" "${bg_url}"
+          # find ase name to get exact filename and path
+          img_basename=$(find "src/backgrounds/" -name "*${img_basename}")
+          final_path="${ab_path}"/"${img_basename}"
         fi
-        
-        # download image
-        utils::get_url "./src/backgrounds" "${bg_url}"
-        # find ase name to get exact filename and path
-        img_basename=$(find "src/backgrounds/" -name "*${img_basename}")
-        final_path="${ab_path}"/"${img_basename}"
 
       # else if the image comes from an other domain
       else
@@ -102,7 +113,6 @@ loco::background_manager(){
       os_path=/usr/share/backgrounds/
       final_path="${os_path}""${os_default_bg}"
     elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-      echo "macos èèè"
       os_default_bg="Monterey Graphic.heic"
       os_path="/System/Library/Desktop Pictures/"
       final_path="${os_path}""${os_default_bg}"
