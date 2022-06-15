@@ -27,6 +27,12 @@ remove_exit(){
   utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
 }
 
+# # insert commands below# move to bottom
+# defaults write com.apple.dock orientation bottom# move to left
+# defaults write com.apple.dock orientation left# move to right
+# defaults write com.apple.dock orientation right#restart Dock
+# killall Dock
+
 #################
 # ubuntu related
 #################

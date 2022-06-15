@@ -17,12 +17,17 @@
 #######################################
 loco::fonts_manager(){
   local font
+  local fonts_path
   local yaml_fonts=$(utils::yaml_get_values '.style.fonts.urls.[]')
   declare -a yaml_fonts_array
   yaml_fonts_array=("${yaml_fonts}")
 
   local assets_fonts=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/
-  local fonts_path=/"${OS_PREFIX}"/"${CURRENT_USER}"/.fonts
+  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+    fonts_path=/"${OS_PREFIX}"/"${CURRENT_USER}"/.fonts
+  elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    fonts_path=/"${OS_PREFIX}"/"${CURRENT_USER}"/Library/Fonts
+  fi
 
   # check for yaml fonts 
   if [[ -z "${yaml_fonts}" ]]; then
