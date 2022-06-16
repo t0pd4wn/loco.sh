@@ -1,0 +1,57 @@
+#-------------------------------------------------------------------------------
+# .loco_startup | Effort to provide startup status
+#-------------------------------------------------------------------------------
+
+# over ubuntu, below variables will become GLOBALS
+# over macosx, they will be classical instance variables
+system_ENV(){
+  # add some GLOBAL environment variables below
+  export LOCO_ENV=true
+  # this is specific to macosX to disable bash sessions
+  export SHELL_SESSION_HISTORY=0
+}
+
+# over ubuntu, below variables will be limited to current shell
+shell_ENV(){
+  # add some shell environment variables below
+  export LOCO_SHELL=true
+}
+
+# on ubuntu, function will be called if .bashrc is sourced for the second time
+system_startup(){
+  echo -e "Installed with loco.sh \U1f335 You can edit this text in ~/.loco_startup"
+  # add some startup commands below
+}
+
+# on macosx, function will be called each time zsh is launched
+system_startup_mac(){
+  echo -e "Installed with loco.sh \U1f335 You can edit this text in ~/.loco_startup"
+  # add some startup commands below
+}
+
+# count number of times .bashrc is sourced
+startup_status(){
+  if [[ -z "${BASH_START_STATUS}" ]]; then
+    # if not, set a global flag at startup
+    export BASH_START_STATUS=true
+    # remove lock file
+    rm -rf ~/.is_started
+    # add environment variables once (execpt for macosx)
+    system_ENV
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      system_startup_mac
+    fi
+  # below won't be executed over macosx
+  # if "${BASH_START_STATUS}" is populated
+  elif [[ ! -z "${BASH_START_STATUS}" ]]; then
+    # if the lock is missing create one
+    if [[ ! -f ~/.is_started ]]; then
+      touch ~/.is_started
+      # launch startup function once
+      system_startup
+    else
+      # export shell environment variables
+      shell_ENV
+    fi
+  fi
+}
