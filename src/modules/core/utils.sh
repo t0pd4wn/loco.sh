@@ -282,11 +282,11 @@ utils::mac_has_brew(){
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
     # if brew is not installed
     if [[ $(command -v brew) == "" ]]; then
-      echo -e "\U1f335 Homebrew needs to be installed."
-      echo -e "\U1f335 Your password will be asked several times."
+      echo -e "🌵 Homebrew needs to be installed."
+      echo -e "🌵 Your password will be asked several times."
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     else
-      echo -e "\U1f335 Homebrew is installed."
+      echo -e "🌵 Homebrew is installed."
     fi
   fi
 }
@@ -304,17 +304,17 @@ utils::mac_has_bash(){
 
     # if there is a binary in the brew/bash path
     if [[ -f /usr/local/bin/bash ]]; then
-      echo -e "\U1f335 An other version of bash is installed."
-      echo -e "\U1f335 You may want to use the command below:"
+      echo -e "🌵 An other version of bash is installed."
+      echo -e "🌵 You may want to use the command below:"
       echo -e "/usr/local/bin/bash ./loco"
 
     # if brew/bash is not installed
     else
-      echo -e "\U1f335 Bash 4+ will be installed."
+      echo -e "🌵 Bash 4+ will be installed."
       $(brew install bash)
     fi
   else
-    echo -e "\U1f335 Bash ${BASH_VERSINFO[0]} is installed."
+    echo -e "🌵 Bash ${BASH_VERSINFO[0]} is installed."
   fi
 }
 
