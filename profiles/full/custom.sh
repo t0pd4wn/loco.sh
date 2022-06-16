@@ -26,22 +26,25 @@ remove_exit(){
   utils::remove "/"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
 }
 
-# # insert commands below# move to bottom
-# defaults write com.apple.dock orientation bottom# move to left
-# defaults write com.apple.dock orientation left# move to right
-# defaults write com.apple.dock orientation right#restart Dock
-# killall Dock
 #################
 # macosx related
 #################
 install_macos_exit(){
   # display only active apps
   cmd::record "defaults write com.apple.dock static-only -bool TRUE; killall Dock"
+  # activate menu bar autohide
+  cmd::record "defaults write NSGlobalDomain _HIHideMenuBar -bool TRUE; killall Finder"
+  # activate dock autohide
+  cmd::record "osascript -e 'tell application \"System Events\" to set the autohide of the dock preferences to true'"
 }
 
 remove_macos_exit(){
   # display all apps
   cmd::record "defaults write com.apple.dock static-only -bool FALSE; killall Dock"
+  # deactivate menu bar autohide
+  cmd::record "defaults write NSGlobalDomain _HIHideMenuBar -bool FALSE; killall Finder"
+  # deactivate dock autohide
+  cmd::record "osascript -e 'tell application \"System Events\" to set the autohide of the dock preferences to false'"
 }
 
 #################

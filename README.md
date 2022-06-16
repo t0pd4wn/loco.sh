@@ -369,7 +369,9 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - themes: implement 16 colors themes (insted of the plain 8)
 - UI: display modes (yes, detached...)
 - UI: display prompts options as table rows
-- discovered bugs : bash "weird" cache on failures
+- to be reported : bash "weird" cache after failures
+- to be reported : MacOSX P10k default terminal bright arrow
+- to be reported : yq null solution
 
 ## Thanks
 
