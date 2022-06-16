@@ -19,13 +19,13 @@ startup_status(){
     # if not, set a global flag at startup
     export BASH_START_STATUS=true
     # remove lock file
-    rm -rf /home/"${USER}"/.is_started
+    rm -rf ~/.is_started
     # add environment variables once
     system_ENV
   elif [[ ! -z "${BASH_START_STATUS}" ]]; then
     # if the global flag is set, creates a lock file
-    if [[ ! -f /home/"${USER}"/.is_started ]]; then
-      touch /home/"${USER}"/.is_started
+    if [[ ! -f ~/.is_started ]]; then
+      touch ~/.is_started
       # launch startup function once
       system_startup
     fi
