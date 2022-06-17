@@ -36,15 +36,19 @@ install_macos_exit(){
   cmd::record "defaults write NSGlobalDomain _HIHideMenuBar -bool TRUE; killall Finder"
   # activate dock autohide
   cmd::record "osascript -e 'tell application \"System Events\" to set the autohide of the dock preferences to true'"
+  # deactivate bash sessions
+  cmd::record "defaults write com.apple.Terminal NSQuitAlwaysKeepsWindows -bool false"
 }
 
 remove_macos_exit(){
   # display all apps
   cmd::record "defaults write com.apple.dock static-only -bool FALSE; killall Dock"
-  # deactivate menu bar autohide
+  # reactivate menu bar autohide
   cmd::record "defaults write NSGlobalDomain _HIHideMenuBar -bool FALSE; killall Finder"
-  # deactivate dock autohide
+  # reactivate dock autohide
   cmd::record "osascript -e 'tell application \"System Events\" to set the autohide of the dock preferences to false'"
+  # reactivate bash sessions
+  cmd::record "defaults write com.apple.Terminal NSQuitAlwaysKeepsWindows -bool true"
 }
 
 #################
