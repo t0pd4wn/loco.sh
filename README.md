@@ -32,33 +32,23 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, MacOSx)
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL); exit
-```
-
-#### Ubuntu (wget)
-```bash
-bash <(wget -qO- https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install); exit
-```
-
-#### MacOSx (curl)
-```bash
-bash <(curl -L https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/utils/install); exit
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL);
 ```
 
 ##### Options
 You can pass options like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options]; exit
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options];
 ```
 
 For example, you can launch an interactive session with a custom background like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B "[image url]"; exit
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B "[image url]";
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on :
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -p "full" -Y; exit
+bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -p "full" -Y;
 ```
 
 Once installed, you can simply interact with loco like this: 
@@ -74,7 +64,7 @@ cd ~/loco-dist
 git clone [repository]
 
 #navigate to repo
-cd [repository]
+cd loco.sh
 
 #execute interactive script
 ./loco [options]
@@ -364,6 +354,7 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - options : detached in a remote /.dotfiles/ folder
 - options : Ghost mode leaving no assets prior to action
 - packagers: better package managers abstraction
+- packagers: add flatpack support
 - profiles: add devops, data-scientist...
 - profiles: check for current user discrepancies (for multiple users ?)
 - themes: implement 16 colors themes (insted of the plain 8)
