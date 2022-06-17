@@ -11,5 +11,5 @@ git log --pretty=format: --name-only --diff-filter=A  | sort -u
 
 - remove a file in all branch and all commits
 ```bash
-git filter-branch --index-filter 'git rm --cached --ignore-unmatch [prev_commit]' HEAD
+git filter-branch --index-filter 'git rm --cached --ignore-unmatch [file_path]' HEAD
 ```
