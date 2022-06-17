@@ -9,5 +9,8 @@
 # launch count
 startup_status
 
+# set a shared history file between shells
+HISTFILE=~/.shell_history
+
 # set zsh as default shell
 zsh
