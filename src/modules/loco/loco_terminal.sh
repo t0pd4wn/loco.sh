@@ -99,6 +99,8 @@ loco::term_conf_set(){
     osascript_fontsize_opt="size of window 1 to \""${font_size}"\""
     cmd::record "osascript -e '"${osascript_opt}""${osascript_fontname_opt}"'"
     cmd::record "osascript -e '"${osascript_opt}""${osascript_fontsize_opt}"'"
+    # as terminal configuration is limited over macosx
+    return 0
   fi
 
   # local /assets/terminal.conf file
