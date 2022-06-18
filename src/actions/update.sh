@@ -38,7 +38,7 @@ msg::say "Updating " "generic" " packages"
 loco::meta_package_manager "generic"
 
 # link "${PROFILE}" .dotfiles to $USER
-loco::dotfiles_manager "Replace your dotfiles with " "${PROFILE}" " ones (y/n)?"
+loco::dotfiles_manager "Update your dotfiles with " "${PROFILE}" " ones (y/n)?"
 
 # install fonts to system
 msg::say "Updating " "fonts"
@@ -58,7 +58,6 @@ loco::watermark_set
 
 # record a closing terminal command in loco_finish.sh
 # if no new fonts, exit normally
-# funny spelling to create a silent error
 if [[ "${IS_NEW_FONT-}" != "true" ]]; then
 	cmd::record "exit 2&>/dev/null"
 fi
