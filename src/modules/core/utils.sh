@@ -251,8 +251,8 @@ utils::GLOBALS_lock(){
 #######################################
 # List files and folders within an array
 # Arguments:
-#   $1 // a normative array name
-#   $2 // a path
+#   $1 # a normative array name
+#   $2 # a path
 #######################################
 utils::list(){
   local -n list_name="${1-}"
@@ -321,7 +321,7 @@ utils::mac_has_bash(){
 #######################################
 # Make a directory
 # Arguments:
-#   $1 // a path
+#   $1 # a path
 #######################################
 utils::mkdir(){
   local path="${@-}"
@@ -333,7 +333,7 @@ utils::mkdir(){
 #######################################
 # Remove a file
 # Arguments:
-#   $1 // a file path
+#   $1 # a file path
 #######################################
 utils::remove_file(){
   local path="${@-}"
@@ -358,7 +358,7 @@ utils::remove_file(){
 #######################################
 # Remove a path
 # Arguments:
-#   $1 // a path
+#   $1 # a path
 #######################################
 utils::remove(){
   local path="${@-}"
@@ -383,6 +383,33 @@ utils::remove(){
 }
 
 #######################################
+# Replace a text block within a file
+# Notes :
+#   as the text block is a regex pattern within perl
+#   special characters such as single and double quotes 
+#   in "$3 # template content", must be escaped under their hex codes
+#   e.g. \x27 for single quote and \x22 for double quotes
+# Arguments:
+#   $1 # template first part (beginning of searched string)
+#   $2 # template last part (end of searched string)
+#   $3 # template content
+#   $4 # file to be modified path 
+#######################################
+utils::replace_in_file(){
+  local template_first_part="${1-}"
+  local template_last_part="${2-}"
+  local new_content="${3-}"
+  local file_path="${4-}"
+
+  local search_pattern="${template_first_part}".*?"${template_last_part}"
+  local search_and_replace='s/'"${search_pattern}"'/"'"${new_content}"'"/se'
+
+  if ! perl -i -p0e "${search_and_replace}" "${file_path}"; then
+    _error "Unable to replace text in "${file_path}""
+  fi
+}
+
+#######################################
 # Set system clock (needed in  virtual hosts)
 #######################################
 utils::set_clock(){
@@ -396,12 +423,13 @@ utils::set_clock(){
 #######################################
 # Source a file
 # Arguments:
-#   $1 // a path
-#   $2 // options
+#   $1 # a path
+#   $2 # options
 #######################################
 utils::source(){
   local path="${1-}"
   local arg="${2-}"
+
   if ! source "${path}" $arg; then
     _error "Unable to source $path"
   fi
@@ -421,8 +449,8 @@ utils::timestamp(){
 #   PROFILE
 #   PROFILES_DIR
 # Arguments:
-#   $1 // a yaml variable ".variable.path"
-#   $2 // an optional yaml file path
+#   $1 # a yaml variable ".variable.path"
+#   $2 # an optional yaml file path
 #######################################
 utils::yaml_get_keys(){
   local var="${1-}"
@@ -443,8 +471,8 @@ utils::yaml_get_keys(){
 #   PROFILE
 #   PROFILES_DIR
 # Arguments:
-#   $1 // a yaml variable ".variable.path"
-#   $2 // an optional yaml file path
+#   $1 # a yaml variable ".variable.path"
+#   $2 # an optional yaml file path
 #######################################
 utils::yaml_get_values(){
   local var="${1-}" 
@@ -471,8 +499,8 @@ utils::yaml_get_values(){
 #   PROFILE
 #   PROFILES_DIR
 # Arguments:
-#   $1 // a yaml selector ".variable.path"
-#   $2 // a yaml file path
+#   $1 # a yaml selector ".variable.path"
+#   $2 # a yaml file path
 #######################################
 utils::yq_has(){ 
   local selector="${1-}" 
@@ -502,8 +530,8 @@ utils::yq_has(){
 #######################################
 # Return yaml values
 # Arguments:
-#   $1 // a yaml selector ".variable.path"
-#   $2 // a yaml file path
+#   $1 # a yaml selector ".variable.path"
+#   $2 # a yaml file path
 #######################################
 utils::yq(){
   # local options="${1-}"
@@ -524,26 +552,26 @@ utils::yq(){
   fi
 }
 
-#######################################
+#############################
 # Wget a file in a folder. (deprecated in favor to utils::get_url)
 # Arguments:
-#   $1 // a path
-#   $2 // an url
+#   $1 # a path
+#   $2 # an url
 #######################################
-utils::wget(){
-  local path="${1-}"
-  local url="${2-}"
-  if ! cmd::run_as_user "wget -nc -q -P " "${path}" "${url}"; then
-    msg::debug "Unable to wget ${url}"
-    _error "Unable to wget ${url}"
-  fi
-}
+# utils::wget(){
+#   local path="${1-}"
+#   local url="${2-}"
+#   if ! cmd::run_as_user "wget -nc -q -P " "${path}" "${url}"; then
+#     msg::debug "Unable to wget ${url}"
+#     _error "Unable to wget ${url}"
+#   fi
+# }
 
 #######################################
 # Get a file from an URL into a folder.
 # Arguments:
-#   $1 // a folder path
-#   $2 // an url
+#   $1 # a folder path
+#   $2 # an url
 #######################################
 utils::get_url(){
   local path="${1-}"

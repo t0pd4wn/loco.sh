@@ -51,7 +51,7 @@ loco::prompt_theme(){
   style_colors_theme=$(utils::yaml_get_values '.style.colors.theme')
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-    msg::print "Themes are not supported over MacOSX"
+    msg::print "Themes are not supported over macOS"
     return 0
   fi
 

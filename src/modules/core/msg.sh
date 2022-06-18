@@ -22,7 +22,7 @@ msg::debug(){
     message+=("Function: " "${b}""${FUNCNAME[1]}""${n}")
     message+=("Line: ""${b}""${BASH_LINENO[0]}""${n}")
     message+=("Message: ""${b}""$@""${n}")
-    utils::echo ${message[@]}
+    echo ${message[@]}
   fi
 }
 

@@ -70,8 +70,10 @@ loco::term_conf_set(){
 
   # macos relate
   local osascript_opt
-  local osascript_fontname_opt
-  local osascript_fontsize_opt
+  local osascript_fontname
+  local osascript_fontsize
+  local osa_content
+  local osa_file
 
   colors_theme=$(utils::yaml_get_values '.style.colors.theme')
   colors_theme="${THEME:-"${colors_theme}"}"
@@ -95,11 +97,32 @@ loco::term_conf_set(){
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
     osascript_opt="tell application \"Terminal\" to set the font "
-    osascript_fontname_opt="name of window 1 to \""${font_name}"\""
-    osascript_fontsize_opt="size of window 1 to \""${font_size}"\""
-    cmd::record "osascript -e '"${osascript_opt}""${osascript_fontname_opt}"'"
-    cmd::record "osascript -e '"${osascript_opt}""${osascript_fontsize_opt}"'"
-    # as terminal configuration is limited over macosx
+    osascript_fontname="name of window 1 to \""${font_name}"\""
+    osascript_fontname="osascript -e '"${osascript_opt}""${osascript_fontname}"'"
+    osascript_fontsize="size of window 1 to \""${font_size}"\""
+    osascript_fontsize="osascript -e '"${osascript_opt}""${osascript_fontsize}"'"
+    # cmd::record "${osascript_fontname}"
+    # cmd::record "${osascript_fontsize}"
+
+    # doublon because perl needs a specific syntax
+    single_quote="\x27"
+    double_quote="\x22"
+    line_carriage="\n"
+    osa_opt='tell application '"${double_quote}"'Terminal'"${double_quote}"' to set the font '
+    osa_fontname='name of window 1 to '"${double_quote}""${font_name}""${double_quote}"
+    osa_fontname='  osascript -e '"${single_quote}""${osa_opt}""${osa_fontname}""${single_quote}"
+    osa_fontsize='size of window 1 to \"'"${font_size}"'\"'
+    osa_fontsize='  osascript -e '"${single_quote}""${osa_opt}""${osa_fontsize}""${single_quote}"
+
+    # write osascript commands to .zprofile to make them persistent
+    osa_content="${osa_fontname}""${line_carriage}""${osa_fontsize}"
+    osa_content='### MacOS font setup'"${line_carriage}""${osa_content}""${line_carriage}"'  ###'
+    osa_file='./'"${PROFILES_DIR}"/"${PROFILE}"'/dotfiles/.zprofile'
+
+    # find the block of text in .zprofile and replace it
+    utils::replace_in_file "### MacOS font" "###" "${osa_content}" "${osa_file}"
+    
+    # as terminal configuration is limited over macosx, end here
     return 0
   fi
 
