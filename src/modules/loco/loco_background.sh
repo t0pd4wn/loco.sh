@@ -51,7 +51,7 @@ loco::background_manager(){
       if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
         msg::print "Duckduckgo images can be unstable."
         if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-          msg::print "Duckduckgo images are not supported over MacOSX."
+          msg::print "Duckduckgo images are not supported over macOS."
           msg::print "Downgrading to custom default background."
           # download image
           utils::get_url "./src/backgrounds" "${custom_default_bg_url}"

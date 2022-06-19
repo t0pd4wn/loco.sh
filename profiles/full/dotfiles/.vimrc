@@ -51,7 +51,8 @@ Plugin 'VundleVim/Vundle.vim'
     
     "minimap
     Plugin 'severin-lemaignan/vim-minimap'
-
+    let g:minimap_highlight='Visual'
+    au BufEnter * silent! :Minimap
 
     "highlight search results
     set hlsearch
@@ -77,7 +78,7 @@ Plugin 'VundleVim/Vundle.vim'
   ":AnyFoldActivate
   filetype plugin indent on " required
   syntax on                 " required
-  autocmd Filetype * AnyFoldActivate               " activate for all filetypes
+  autocmd Filetype * silent! AnyFoldActivate
   " or
   " autocmd Filetype <your-filetype> AnyFoldActivate " activate for a specific filetype
   set foldlevel=0  " close all folds or 99 for open
@@ -113,7 +114,3 @@ filetype plugin indent on    " required
 " Theme
   silent! syntax enable
   silent! colorscheme monokai
-
-" Minimap test
-  silent! let g:minimap_highlight='Visual'
-  silent! au BufEnter * :Minimap
