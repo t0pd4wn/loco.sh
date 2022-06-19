@@ -1,6 +1,6 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of the *profiles*.
+***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of these *profiles*.
 
 *One-liner installation example:*
 ![Loco.sh demo](dist/loco_demo_0.3.gif)
@@ -10,15 +10,15 @@
 - **system administrators**, who need to manage their users profiles in a single place
 - **security consultants**, to deal with a variety of identities and security access
 - **developers**, who need to manage various environments and machines, with the same look and feel
-- **regular users**, who can easily manage their configuration files
+- **regular users**, who can easily manage their desktop style
 
-***Loco.sh*** comes with 5 example profiles, except for ```default``` they all come with a custom font :
+***Loco.sh*** comes with 5 example profiles :
 
-- **default**: default example for an user profile, does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
-- **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K``` (master)
-- **vim-only**: fully configured ```vim``` (removes nvim if installed)
-- **shell-only**: fully configured ```zsh``` with ```p10K``` (lean)
+- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
+- **vim-only**: fully configured ```vim```
+- **shell-only**: fully configured ```zsh``` with ```p10K```
 - **style-only**: custom themed terminal and OS (dock, background)
+- **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -30,28 +30,28 @@
 
 To install and execute ```loco```:
 
-#### All systems (Ubuntu, MacOSx)
+#### All systems (Ubuntu, macOS)
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL);
+bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l));
 ```
 
 ##### Options
 You can pass options like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) [options];
+bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options];
 ```
 
 For example, you can launch an interactive session with a custom background like this:
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -B "[image url]";
+bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -B "[image url]";
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on :
 ```bash
-bash <(wget -qO- https://bit.ly/3lfqopL 2>/dev/null || curl -L https://bit.ly/3lfqopL) -a install -p "full" -Y;
+bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
 ```
 
-Once installed, you can simply interact with loco like this: 
+Once installed, you can simply interact with ```loco``` like this: 
 ```bash
 cd ~/loco-dist
 ./loco [options]
@@ -84,7 +84,7 @@ cd loco.sh
 	└── [profile]
 		├── profile.yaml # profile description (optional)
 		├── custom.sh # custom functions (optional)
-		├── assets #stores specific files (optional)
+		├── assets # store specific files (optional)
 		│	├── background.[image extension] # background image (optional)
 		│	├── fonts # fonts in this folder will be installed (optional)
 		│	└── terminal.conf # user terminal configuration (optional, ubuntu only)
@@ -155,8 +155,6 @@ remove_ubuntu_last(){
 }
 ```
 
-Note: in ```bash``` empty functions are not allowed and will forbid sourcing the ```custom.sh``` script.
-
 ### Add a profile
 
 To create a new *profile*, simply duplicate one available in ```/profiles/```, and start editing it as you please.
@@ -172,7 +170,7 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 ```bash
 .
 └── src
-	└── actions #stores actions scripts
+	└── actions # store actions scripts
 		├── install.sh # install packages and dotfiles, based on a profile
 		├── remove.sh  # remove packages and dotfiles, based on an installed instance
 		└── update.sh # update packages and dotfiles, based on a profile
@@ -204,7 +202,7 @@ style:
 .
 └── profiles
   └── [profile]
-    └── assets #stores specific files (optional)
+    └── assets #store specific files (optional)
       └── background.[image extension] # background image (optional)
 ```
 
@@ -213,7 +211,7 @@ style:
 ```bash
 .
 └── src
-  └── backgrounds #stores actions scripts
+  └── backgrounds #store actions scripts
     └── [background images]
 ```
 
@@ -226,7 +224,7 @@ If more than one method is set the priority goes from 1. to 4.
 ```bash
 .
 └── src
-  └── themes #stores actions scripts
+  └── themes #store actions scripts
     ├── monokai.conf # a classic monokai theme
     ├── monokai-light.conf # a light monokai theme
     ├── nord.conf # nord theme from articicestudio
@@ -300,8 +298,7 @@ Options can be set directly into ```/src/loco.conf```.
 ### Make ```loco``` your own
 The first point you need to keep in mind is security. SSH and GPG keys shall not be shared over the public internet, as should not servers configurations. To make ```loco``` your own, you first need to fork it over a private repository, or your own ```git``` server. Then:
 - for Gitlab.com or private Gitlab instances
-1. Retrieve your [API private token]
-<!-- https://gitlab.com/-/profile/personal_access_tokens -->
+1. Retrieve your [API private token](https://gitlab.com/-/profile/personal_access_tokens)
 2. Retrieve the [project ID]
 3. Update ```./src/utils/install``` with your information:
 ```bash
@@ -334,6 +331,11 @@ Using curl:
 bash <(curl --header "PRIVATE-TOKEN: [secret key]" -JLO "https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name]")
 ```
 
+Using either (untested) :
+```bash
+bash <(echo '[secret key]' 'https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name]'|(read l o; wget --content-disposition --header="PRIVATE-TOKEN: $l -qO- $o 2>/dev/null || curl --header "PRIVATE-TOKEN: $l" -JLO $o));
+```
+
 ### Build a release
 As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/utils/build_release```.
 
@@ -346,21 +348,17 @@ If for some reasons, you don't have access to these files, simply remove the ```
 ## Backlog
 - actions: add init, save
 - actions: improve update and remove (add yaml diff)
-- actions: improve backup workflow
-- actions: better exit / close management
-- code : add an exit $pid subshell loop ?
-- backgrounds : add support for complex urls (e.g. duckduckgo)
+- actions: add a "change_background" action
+- documentation: add an example row in the options table
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
-- options : Ghost mode leaving no assets prior to action
+- options : ghost mode leaving no assets prior to action
 - packagers: better package managers abstraction
 - packagers: add flatpack support
 - profiles: add devops, data-scientist...
-- profiles: check for current user discrepancies (for multiple users ?)
 - themes: implement 16 colors themes (insted of the plain 8)
 - UI: display modes (yes, detached...)
 - UI: display prompts options as table rows
-- to be reported : MacOSX P10k default terminal bright arrow
 - to be reported : yq null solution
 
 ## Thanks
