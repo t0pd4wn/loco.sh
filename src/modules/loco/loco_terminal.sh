@@ -75,17 +75,10 @@ loco::term_conf_set(){
   local osa_content
   local osa_file
 
-  msg::debug "${PROFILE}"
-
   colors_theme=$(utils::yaml_get_values '.style.colors.theme')
   colors_theme="${THEME:-"${colors_theme}"}"
 
-  msg::debug "${THEME}"
-  msg::debug "${colors_theme}"
-
   local colors_theme_file=./src/themes/"${colors_theme}".conf
-  
-  msg::debug "${colors_theme_file}"
 
   font_name=$(utils::yaml_get_values '.style.fonts.name')
   if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
