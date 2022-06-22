@@ -1,0 +1,7 @@
+style:
+  background: https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/backgrounds/topcools-tee@unsplash.com.jpg
+  colors:
+    theme: nord-light
+  fonts:
+    name: MesloLGS NF
+    size: 11

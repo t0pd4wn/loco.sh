@@ -82,6 +82,8 @@ loco::watermark_action_install(){
     # switch back to installation and current profile
     ACTION="install"
     PROFILE="${current_profile}"
+    # reset the yaml .profile path
+    loco::yaml_profile
   ;;
   * )
     msg::print "${EMOJI_NO}" " No, I'll keep current instance."

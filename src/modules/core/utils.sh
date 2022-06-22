@@ -480,6 +480,8 @@ utils::yaml_get_values(){
   local options="${3-}"
   local value
 
+  msg::debug "${YAML_PATH}"
+
   # if file doesn't exist
   if [[ ! -f "${path}" ]]; then
     value=""

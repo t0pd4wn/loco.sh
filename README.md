@@ -15,7 +15,7 @@
 
 ***Loco.sh*** comes with 5 example profiles :
 
-- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics and *profile* folder structure
+- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure
 - **vim-only**: fully configured ```vim```
 - **shell-only**: fully configured ```zsh``` with ```p10K```
 - **style-only**: custom themed terminal and OS (dock, background)
@@ -273,7 +273,7 @@ palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]',
 | BACKGROUND | b | Define the user background (from /src/backgrounds) | string | filenames fom available /src/backgrounds/ | - |
 | BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |s
 | CURRENT_USER | u | Define the current user name (default: \`$USER\`) | string | [user defined] | $USER |
-| PROFILES_DIR | t | Define path for profiles directories | string |  [user defined] | "profiles" |
+| PROFILES_DIR | d | Define path for profiles directories | string |  [user defined] | "profiles" |
 | INSTANCES_DIR | i | Define path for profiles instances | string | [user defined] | "instances" |
 | CONFIG_PATH | c | Define path to the configuration file |  string | [user defined] | "./src/loco.conf" |
 | DETACHED | d | Define if dotfiles are symbolically linked from repo or from  | boolean | true/false | false |
@@ -350,6 +350,7 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - actions: add init, save
 - actions: improve update and remove (add yaml diff)
 - actions: add a "change_background" action
+- bug: install doesn't update theme
 - documentation: add an example row in the options table
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
