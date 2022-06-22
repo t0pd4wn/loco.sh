@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------------------
 
 #######################################
-# Build terminal style file.
+# Manage terminal style actions.
 # note : Setting dconf for a specific user thorugh terminal,
 # can only be achieved with root rights (su, not sudo).
 # GLOBALS:
@@ -29,7 +29,7 @@ loco::term_conf_manager(){
 }
 
 #######################################
-# Print the dconf configuration command
+# Print the dconf configuration command in finish.sh
 # note : scheme to dump profile
 # dconf list /org/gnome/terminal/legacy/profiles:/
 # dconf dump /org/gnome/terminal/legacy/profiles:/:[profile id]
@@ -75,11 +75,18 @@ loco::term_conf_set(){
   local osa_content
   local osa_file
 
+  msg::debug "${PROFILE}"
+
   colors_theme=$(utils::yaml_get_values '.style.colors.theme')
   colors_theme="${THEME:-"${colors_theme}"}"
 
+  msg::debug "${THEME}"
+  msg::debug "${colors_theme}"
+
   local colors_theme_file=./src/themes/"${colors_theme}".conf
   
+  msg::debug "${colors_theme_file}"
+
   font_name=$(utils::yaml_get_values '.style.fonts.name')
   if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
     #statements
@@ -101,8 +108,8 @@ loco::term_conf_set(){
     osascript_fontname="osascript -e '"${osascript_opt}""${osascript_fontname}"'"
     osascript_fontsize="size of window 1 to \""${font_size}"\""
     osascript_fontsize="osascript -e '"${osascript_opt}""${osascript_fontsize}"'"
-    # cmd::record "${osascript_fontname}"
-    # cmd::record "${osascript_fontsize}"
+    cmd::record "${osascript_fontname}"
+    cmd::record "${osascript_fontsize}"
 
     # doublon because perl needs a specific syntax
     single_quote="\x27"
@@ -140,6 +147,7 @@ loco::term_conf_set(){
   # check if a terminal configuration is present, if not prepare one
   if [[ ! -f "${local_theme}" ]]; then
     msg::print "No terminal configuration file found"
+
 
     local_path=./src/temp/"${PROFILE}"_terminal.conf
     # distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf

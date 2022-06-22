@@ -35,7 +35,7 @@ loco::prompt_background(){
 #######################################
 loco::prompt_profile(){
   if [ -z "${PROFILE}" ]; then
-    prompt::build "PROFILE" "./profiles" "Choose a profile :" true
+    prompt::build "PROFILE" "./"${PROFILES_DIR}"" "Choose a profile :" true
     prompt::call "PROFILE"
   fi
 }
