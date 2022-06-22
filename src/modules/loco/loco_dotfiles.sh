@@ -26,9 +26,7 @@ loco::dotfiles_manager(){
 
   local dotfiles_path="./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles"
   # list profile dotfiles (todo: dump/retrieve from/to .loco)
-  msg::debug "${dotfiles_path}"
   utils::list dotfiles "${dotfiles_path}"
-  msg::debug "${dotfiles}"
 
   # check if there are dotfiles in $PROFILE
   if [[ -d "${dotfiles_path}" ]]; then
