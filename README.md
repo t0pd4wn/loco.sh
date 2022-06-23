@@ -2,9 +2,7 @@
 
 ***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of these *profiles*.
 
-| Ubuntu (22.04) | MacOS (Monterey) | 
-| ------ | ------ |
-| ![Loco.sh Ubuntu demo](dist/loco_demo_0.7_Ubuntu.gif) | ![Loco.sh macOS demo](dist/loco_demo_0.6_macOS.gif) |
+<img alt="Loco.sh Ubuntu demo" src="dist/loco_demo_0.7_Ubuntu.gif" width="1080">
 
 ***Loco.sh*** can be useful to:
 
@@ -350,7 +348,7 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - actions: add init, save
 - actions: improve update and remove (add yaml diff)
 - actions: add a "change_background" action
-- bug: install doesn't update theme
+- bug: using remote /profiles/ dir doesn't work with remove
 - documentation: add an example row in the options table
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
