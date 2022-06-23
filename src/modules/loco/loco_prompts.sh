@@ -49,6 +49,8 @@ loco::prompt_profile(){
 loco::prompt_theme(){
   local style_colors_theme
   style_colors_theme=$(utils::yaml_get_values '.style.colors.theme')
+  local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
     msg::print "Themes are not supported over macOS"
@@ -56,7 +58,7 @@ loco::prompt_theme(){
   fi
 
   # if no theme is set, launch a prompt
-  if [ -z "${style_colors_theme:-"${THEME}"}" ]; then
+  if [ -z "${style_colors_theme:-"${THEME}"}" ] &&  [ ! -f "${local_theme}" ] ; then
     prompt::build "THEME" "./src/themes" "Choose a color theme :" false
     prompt::call "THEME"
   fi
