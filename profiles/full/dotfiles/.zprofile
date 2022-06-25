@@ -5,7 +5,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
   . ~/.loco_startup 
 
   # launch status count
-  startup_status
+  shell_status
 
   ### MacOS font setup
   # osascript command goes here
