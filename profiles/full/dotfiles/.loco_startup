@@ -4,7 +4,7 @@
 
 # over ubuntu, below variables will become GLOBALS
 # over macosx, they will be classical instance variables
-system_ENV(){
+set_system_ENV(){
   # add some GLOBAL environment variables below
   export LOCO_ENV=true
   # this is specific to macosX to disable bash sessions
@@ -12,46 +12,55 @@ system_ENV(){
 }
 
 # over ubuntu, below variables will be limited to current shell
-shell_ENV(){
+set_shell_ENV(){
   # add some shell environment variables below
   export LOCO_SHELL=true
 }
 
-# on ubuntu, function will be called if .bashrc is sourced for the second time
-system_startup(){
+# on ubuntu, this function will be called if .bashrc is sourced for the first time
+session_start(){
+  echo -e "Installed with loco.sh \U1f335. You can edit this text in ~/.loco_startup"
+  # add some session commands below (keyboard configurations, vpn...)
+}
+
+# on macOS, function will be called each time zsh is launched (?)
+session_start_macos(){
   echo -e "Installed with loco.sh \U1f335 You can edit this text in ~/.loco_startup"
   # add some startup commands below
 }
 
-# on macosx, function will be called each time zsh is launched
-system_startup_mac(){
-  echo -e "Installed with loco.sh \U1f335 You can edit this text in ~/.loco_startup"
-  # add some startup commands below
+# on ubuntu, this function will be called every time a shell is opened
+shell_start(){
+  # print a cactus if not first start
+  if [[ ! -f ~/.is_started ]]; then echo -e "\U1f335"; fi
+  set_shell_ENV
+  # add some shell commands below 
+}
+
+# on ubuntu, function will be called if .bashrc is sourced for the second time
+system_start(){
+  set_system_ENV
+  # create lock file
+  touch ~/.is_started
 }
 
 # count number of times .bashrc is sourced
-startup_status(){
-  if [[ -z "${BASH_START_STATUS}" ]]; then
-    # if not, set a global flag at startup
-    export BASH_START_STATUS=true
-    # remove lock file
-    rm -rf ~/.is_started
-    # add environment variables once (execpt for macosx)
-    system_ENV
+shell_status(){
+  # if start flag is present
+  if [[ -f ~/.is_started ]]; then
+    # todo : check if true on macOS
     if [[ "$OSTYPE" == "darwin"* ]]; then
-      system_startup_mac
-    fi
-  # below won't be executed over macosx
-  # if "${BASH_START_STATUS}" is populated
-  elif [[ ! -z "${BASH_START_STATUS}" ]]; then
-    # if the lock is missing create one
-    if [[ ! -f ~/.is_started ]]; then
-      touch ~/.is_started
-      # launch startup function once
-      system_startup
+      session_start_macos
     else
-      # export shell environment variables
-      shell_ENV
+      session_start
     fi
+    shell_start
+    # remove lock file
+    rm -fr .is_started
+  
+  # in all other cases
+  else
+    shell_start
   fi
 }
+
