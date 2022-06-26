@@ -14,10 +14,10 @@
 ***Loco.sh*** comes with 5 example profiles :
 
 - **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure
-- **vim-only**: fully configured ```vim```
-- **shell-only**: fully configured ```zsh``` with ```p10K```
-- **style-only**: custom themed terminal and OS (dock, background)
-- **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
+- **base-full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
+- **base-vim-only**: fully configured ```vim```
+- **base-shell-only**: fully configured ```zsh``` with ```p10K```
+- **base-style-only**: custom themed terminal and OS (dock, background)
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -47,7 +47,7 @@ bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L 
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on :
 ```bash
-bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
+bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p base-full; exit
 ```
 
 Once installed, you can simply interact with ```loco``` like this: 
