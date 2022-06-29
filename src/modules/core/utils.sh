@@ -103,6 +103,19 @@ utils::check_dependencies(){
       cmd::run_as_user "brew install yq"
     fi
   fi
+  # if OVERLAY flag is set, 
+  if [[ "${OVERLAY}" == true ]]; then
+    if [[ $(command -v convert) ]]; then
+      msg::say "imagemagick is installed."
+    else
+      msg::say "Installing imagemagick."
+      if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+        apt --yes install imagemagick
+      elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+        cmd::run_as_user "brew install imagemagick"
+      fi
+    fi
+  fi
 }
 
 #######################################
@@ -138,6 +151,7 @@ utils::countdown(){
 utils::cp(){
   local from="${1-}"
   local to="${2-}"
+
   if ! cmd::run_as_user "cp -RL "${from}" "${to}""; then
     _error "Unable to copy ${from} in ${to}"
   fi
@@ -249,6 +263,58 @@ utils::GLOBALS_lock(){
 }
 
 #######################################
+# Add a transparent image over another
+# Arguments:
+#   $1 # a normal image path
+#   $2 # a transparent png path
+#   $3 # is an optional output pathname
+#######################################
+utils::image_overlay(){
+  local img_path="${1-}"
+  local ovl_path="${2-}"
+  local out_path="${3:-"img+overlay-output.jpg"}"
+  local ratio_flag=false
+  local img_sz
+  local img_wd
+  local img_ht
+  local img_ratio
+
+  # get the background width and height
+  img_wd=$(identify -format '%w' "${img_path}")
+  img_ht=$(identify -format '%h' "${img_path}")
+
+  # calculate the background ratio
+  img_ratio=$(bc <<< "scale=2; "${img_wd}"/"${img_ht}"")
+
+  # if background ratio under 1.77 resize it
+  if (( $(bc -l <<< "${img_ratio} < 1.77") )); then
+    ratio_flag=true
+    msg::print "Original background doesn't fit."
+    msg::print "It will be backup'd and resized."
+    # backup orginal background
+    utils::cp "${img_path}" "${img_path}.temp"
+    # modify original background resolution
+    cmd::run_as_user "convert "${img_path}" -resize 3840x2160^ -gravity Center -extent 3840x2160 "${img_path}""
+  fi 
+
+  msg::debug "${ratio_flag}"
+
+  # get the background width and height
+  img_sz=$(identify -format '%wx%h' "${img_path}")
+
+  # send background and overlay to imagemagick composite
+  msg::print "Applying overlay to background image."
+  cmd::run_as_user "convert -size "${img_sz}" -composite "${img_path}" "${ovl_path}" -geometry "${img_sz}""+0+0" -depth 8 "${out_path}""
+
+  # restore original background and clean temp files
+  if [[ "${ratio_flag}" == true ]]; then
+    utils::remove "${img_path}"
+    utils::cp "${img_path}.temp" "${img_path}"
+    utils::remove "${img_path}.temp"
+  fi
+}
+
+#######################################
 # List files and folders within an array
 # Arguments:
 #   $1 # a normative array name
@@ -258,6 +324,7 @@ utils::list(){
   local -n list_name="${1-}"
   local list_path="${2-}"
   local element_name
+
   # prevail empty folders
   shopt -s nullglob
   # iterate over aguments paths
@@ -479,8 +546,6 @@ utils::yaml_get_values(){
   local path="${2:-"${YAML_PATH}"}"
   local options="${3-}"
   local value
-
-  msg::debug "${YAML_PATH}"
 
   # if file doesn't exist
   if [[ ! -f "${path}" ]]; then

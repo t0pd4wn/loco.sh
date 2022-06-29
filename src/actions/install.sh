@@ -59,7 +59,6 @@ loco::watermark_set
 # record a closing terminal command in loco_finish.sh
 # if no new fonts, exit normally
 if [[ "${IS_NEW_FONT-}" != "true" ]]; then
-	msg::debug "this one ?"
 	cmd::record "exit 2&>/dev/null"
 else
 	return 0

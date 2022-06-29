@@ -288,4 +288,25 @@ cli::set_options(){
     [CMD]="LOCO_DIST=true"
   )
   cli::define_option dist_flag_array
+
+  declare -A overlay_flag_array
+  overlay_flag_array=(
+    [GLOBAL]="OVERLAY"
+    [option]="o"
+    [description]="Activate the overlay option"
+    [default]=false
+    [CMD]="OVERLAY=true"
+  )
+  cli::define_option overlay_flag_array
+
+  declare -A overlay_option_array
+  overlay_option_array=(
+    [GLOBAL]="OVERLAY_PATH"
+    [option]="O:"
+    [description]="Define an overlay path"
+    [default]=""
+    [CMD]=""
+  )
+  cli::define_option overlay_option_array
+
 }

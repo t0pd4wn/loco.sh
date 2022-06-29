@@ -24,6 +24,7 @@ utils::source ./src/modules/loco/loco_custom_functions.sh
 utils::source ./src/modules/loco/loco_dotfiles.sh
 utils::source ./src/modules/loco/loco_fonts.sh
 utils::source ./src/modules/loco/loco_meta.sh
+utils::source ./src/modules/loco/loco_overlay.sh
 utils::source ./src/modules/loco/loco_prompts.sh
 utils::source ./src/modules/loco/loco_startup.sh
 utils::source ./src/modules/loco/loco_terminal.sh 
@@ -68,7 +69,7 @@ main(){
   loco::startup "${@-}"
 
   # source main action script
-  utils::source ./src/actions/"${ACTION}".sh
+  utils::source ./src/actions/"${ACTION}.sh"
 
   # display end message
   msg::end

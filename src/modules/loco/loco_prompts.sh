@@ -16,17 +16,39 @@ loco::prompt_action(){
 }
 
 #######################################
-# Call the themes prompt
+# Call the backgrounds prompt
 # Globals:
 #   style_background
 #   BACKGROUND
 #######################################
 loco::prompt_background(){
-  if [ -z "${style_background-"${BACKGROUND}"}" ]; then
+  local style_background
+  style_background=$(utils::yaml_get_values '.style.background')
+
+  if [ -z "${style_background:-"${BACKGROUND}"}" ]; then
     prompt::build "BACKGROUND" "./src/backgrounds/" "Choose a background:" false
     prompt::call "BACKGROUND"
+
+    msg::debug "${BACKGROUND}"
   fi
 }
+
+#######################################
+# Call the overlays prompt
+# Globals:
+#   style_overlay
+#   OVERLAY
+#######################################
+loco::prompt_overlay(){
+  local style_overlay
+  style_overlay=$(utils::yaml_get_values '.style.overlay')
+
+  if [ -z "${style_overlay:-"${OVERLAY_PATH}"}" ]; then
+    prompt::build "OVERLAY_PATH" "./src/background-overlays/" "Choose an overlay:" false
+    prompt::call "OVERLAY_PATH"
+  fi
+}
+
 
 #######################################
 # Call the profiles prompt
