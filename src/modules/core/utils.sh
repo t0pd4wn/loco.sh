@@ -17,6 +17,8 @@ utils::check_if_start(){
     utils::remove ./src/temp/conf_is_start
   else
     msg::start
+    # save current $USER in a GLOBAL variable
+    CURRENT_USER=$USER
   fi
 }
 
