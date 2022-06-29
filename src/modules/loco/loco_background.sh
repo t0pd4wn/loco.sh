@@ -60,9 +60,7 @@ loco::background_manager(){
           final_path="${ab_path}"/"${img_basename}"
         else
           # this substitution is meant fo correct `wget` colon substitution in sub-URLs
-          img_basename="${img_basename/"%3A"/":"}"  
-
-          msg::debug ${img_basename}  
+          img_basename="${img_basename/"%3A"/":"}"
 
           # if the picture sub-URL has its own encoded parameters
           if [[ "${bg_url}" == *"%3F"* ]]; then
@@ -103,7 +101,8 @@ loco::background_manager(){
       msg::print "Backgrounds found in /src/backgrounds/."
       # launch a prompt to select background
       loco::prompt_background
-      final_path=$( find "${ab_path}""/src/backgrounds" -name "${BACKGROUND}.*" )
+      final_path=$( find "${ab_path}""/src/backgrounds" -name "${BACKGROUND}.*" | tail -n 1)
+      
     fi
 
   # if action is remove
@@ -122,9 +121,16 @@ loco::background_manager(){
 
   msg::debug "${final_path-}"
 
-  # send the image path to config file
+  # if there is a background file selected
   if [[ ! -z "${final_path-}" ]]; then
-    loco::set_background "${final_path}"
+    # if the OVERLAY flag is set
+    if [[ "${OVERLAY}" == true ]]; then
+      loco::overlay_manager "${final_path}"
+    # if not
+    else
+      # send the image path to config file
+      loco::set_background "${final_path}"
+    fi
   fi
 }
 

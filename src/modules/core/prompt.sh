@@ -28,7 +28,9 @@ prompt::build(){
   for FILE in "${local_dir}"/*; do
     prompt_index=$((prompt_index+1))
     file_basename=$(basename "${FILE}")
-    prompt_option=$(echo $file_basename | cut -f 1 -d '.')
+    # prompt option only take the filename without extension
+    # extension is later found back through find or static suffix
+    prompt_option="${file_basename%.*}"
     prompt_option_name="$(tr '[:lower:]' '[:upper:]' <<< ${prompt_option:0:1})${prompt_option:1}"
     prompt_options+="'""${prompt_option_name}""' "
     argCases+="$prompt_index) printf -v ""${local_GLOBAL}"" '%s' '"${prompt_option}"';;\n"

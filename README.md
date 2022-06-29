@@ -1,15 +1,15 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, and perform custom configuration tasks. ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of these *profiles*.
+***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, overlays, and perform custom pre and post script configuration tasks.
 
 <img alt="Loco.sh Ubuntu demo" src="dist/loco_demo_0.7_Ubuntu.gif" width="1080">
 
 ***Loco.sh*** can be useful to:
 
+- **regular users**, who can easily manage their desktop style
+- **developers**, who need to manage various environments and machines, with the same look and feel
 - **system administrators**, who need to manage their users profiles in a single place
 - **security consultants**, to deal with a variety of identities and security access
-- **developers**, who need to manage various environments and machines, with the same look and feel
-- **regular users**, who can easily manage their desktop style
 
 ***Loco.sh*** comes with 5 example profiles :
 
@@ -73,6 +73,8 @@ cd loco.sh
 
 ## Profiles
 
+***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of these *profiles*.
+
 *Profiles* are made of a YAML file, dotfiles, scripts and other assets. They are all optional and independant from each others.
 
 - folder structure: ```./profiles/``` 
@@ -80,7 +82,7 @@ cd loco.sh
 ```bash
 .
 └── profiles
-	└── [profile]
+	└── [profile name]
 		├── profile.yaml # profile description (optional)
 		├── custom.sh # custom functions (optional)
 		├── assets # store specific files (optional)
@@ -96,6 +98,7 @@ cd loco.sh
 ```yaml
 style:
   background: [background url]
+  overlay: [overlay path]
   colors:
     theme: [theme name]
   fonts:
@@ -244,6 +247,44 @@ palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]',
 
 *Themes* can be set through the ```-t``` option.
 
+## Overlays
+
+Transparent *overlays* can be added on top of users backgrounds.
+
+### Add an overlay
+
+*Overlays* need to be activated with the ```-o``` option.
+
+*Overlays* and can be selected through tree methods :
+
+1. ```-O``` option: the path to a transparent image can be provided to set an overlay
+2. profile yaml: a path can be provided to set an overlay
+
+```yaml
+style:
+  overlay: [overlay path]
+```
+3. profile asset: a file can be provided to set an overlay
+
+```bash
+.
+└── profiles
+  └── [profile]
+    └── assets #store specific files (optional)
+      └── overlay.png # overlay image (optional)
+```
+
+4. prompt: a prompt will be launched to set an overlay from the ones available in ```/src/background-overlays/```
+
+```bash
+.
+└── src
+  └── background-overlays #store actions scripts
+    └── [overlay images]
+```
+
+If more than one method is set the priority goes from 1. to 4.
+
 ## Instances
 
 *Instances* store the backups for each loco installation. They are later used to restore the original $USER dotfiles. Note that only dotfiles installed by a *profile* are backed up. This helps to keep a mix of *profile* managed and $USER managed dotfiles.
@@ -266,21 +307,23 @@ palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]',
 | Name | Command | Description |  Type |  Options |  Default |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | ACTION | a | Define the loco action | string | install, remove | - |
-| PROFILE | p | Define the loco profile | string | default, loco-vim, loco-nvim, loco-full | - |
-| THEME | t | Define the loco color theme | string | monokai, monokai-light, nord, nord-light | - |
 | BACKGROUND | b | Define the user background (from /src/backgrounds) | string | filenames fom available /src/backgrounds/ | - |
-| BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |s
-| CURRENT_USER | u | Define the current user name (default: \`$USER\`) | string | [user defined] | $USER |
-| PROFILES_DIR | d | Define path for profiles directories | string |  [user defined] | "profiles" |
-| INSTANCES_DIR | i | Define path for profiles instances | string | [user defined] | "instances" |
-| CONFIG_PATH | c | Define path to the configuration file |  string | [user defined] | "./src/loco.conf" |
-| DETACHED | d | Define if dotfiles are symbolically linked from repo or from  | boolean | true/false | false |
-| WATERMARK | w | Define if a loco watermark is set (needed for remove)| boolean | true/false | true |
-| VERBOSE | V | Verbose mode | flag | - | - |
-| YES | Y | Automate the yes answer (the few left) | flag | - | - |
-| ROOT | R | Remove the sudo prompt (experimental) | flag | - | - |
+| BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |
+| CONFIG_PATH | c | Define a path to the configuration file |  string | [user defined] | "./src/loco.conf" |
+| PROFILES_DIR | d | Define a path for profiles directories | string |  [user defined] | "profiles" |
+| DETACHED | D | Define if dotfiles are symbolically linked from repo or from  | boolean | true/false | false |
 | HELP | h | Display options and exit | flag | - | - |
+| INSTANCES_DIR | i | Define a path for profiles instances | string | [user defined] | "instances" |
+| OVERLAY | o | Define if the overlay option is activated | boolean | true/false | false |
+| OVERLAY_PATH | O | Define a path for an overlay image  | string | local path | - |
+| PROFILE | p | Define the loco profile | string | default, loco-vim, loco-nvim, loco-full | - |
+| ROOT | R | Remove the sudo prompt (experimental) | flag | - | - |
+| THEME | t | Define the loco color theme | string | monokai, monokai-light, nord, nord-light | - |
+| CURRENT_USER | u | Define the current user name (default: \`$USER\`) | string | [user defined] | $USER |
 | VERSION | v | Print Version and exit | flag | - | - |
+| VERBOSE | V | Verbose mode | flag | - | - |
+| WATERMARK | w | Define if a loco watermark is set (needed for remove)| boolean | true/false | true |
+| YES | Y | Automate the yes answer (the few left) | flag | - | - |
 
 ### Define static options
 
