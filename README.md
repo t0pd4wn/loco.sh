@@ -255,7 +255,7 @@ Transparent *overlays* can be added on top of users backgrounds.
 
 *Overlays* need to be activated with the ```-o``` option.
 
-*Overlays* and can be selected through tree methods :
+*Overlays* can be selected through four methods :
 
 1. ```-O``` option: the path to a transparent image can be provided to set an overlay
 2. profile yaml: a path can be provided to set an overlay
