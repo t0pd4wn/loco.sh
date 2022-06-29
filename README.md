@@ -208,7 +208,7 @@ style:
       └── background.[image extension] # background image (optional)
 ```
 
-4. prompt: a prompt will be launched to set a background from the ones available in ```/src/backgrounds/```
+4. prompt: a prompt will be launched to choose a background from the ones available in ```/src/backgrounds/```
 
 ```bash
 .
@@ -274,7 +274,7 @@ style:
       └── overlay.png # overlay image (optional)
 ```
 
-4. prompt: a prompt will be launched to set an overlay from the ones available in ```/src/background-overlays/```
+4. prompt: a prompt will be launched to choose an overlay from the ones available in ```/src/background-overlays/```
 
 ```bash
 .
@@ -392,6 +392,8 @@ If for some reasons, you don't have access to these files, simply remove the ```
 - actions: improve update and remove (add yaml diff)
 - actions: add a "change_background" action
 - bug: using remote /profiles/ dir doesn't work with remove
+- bug: remove is broken after one update
+- code: add an img module class ?
 - documentation: add an example row in the options table
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
