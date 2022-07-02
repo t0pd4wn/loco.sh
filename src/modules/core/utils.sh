@@ -610,11 +610,12 @@ utils::yq(){
   # check if selector exist in file
   utils::yq_has "${selector}" "${yaml}"
 
-  # if yes, tries to recover value
+  # check if error code is 0
   if (( $? != 0 )); then
+    # if not, propagates a 1 exit code
     return 1
-  # if not, propagates a 1 exit code
   else
+    # if yes, tries to recover value
     if ! cat "${yaml}" | yq "${selector}"; then
       echo "Unable to yq ${selector} in ${yaml}"
     fi
