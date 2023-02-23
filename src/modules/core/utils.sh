@@ -394,8 +394,14 @@ utils::mac_has_bash(){
 #######################################
 utils::mkdir(){
   local path="${@-}"
-  if ! cmd::run_as_user "mkdir -p ""${path}"; then
-    _error "Unable to create ${path}"
+
+  # check if directory exists
+  if [[ -d "${path}" ]]; then
+    msg::debug "${path} already exists"
+  else
+    if ! cmd::run_as_user "mkdir -p ""${path}"; then
+      _error "Unable to create ${path}"
+    fi
   fi
 }
 
@@ -644,37 +650,6 @@ utils::yq_contains(){
 }
 
 #######################################
-# Delete a yaml value
-# Arguments:
-#   $1 # a yaml file path
-#   $2 # a yaml selector ".variable.path"
-#   $3 # a yaml value
-#######################################
-utils::yq_delete(){
-  local yaml="${1-}"
-  local selector="${2-}" 
-  local value="${3-}"
-  
-  local arg="${selector}"'.[] | select(. == "'"${value}"'")'
-
-  # check if value exist
-  local hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
-
-  if "${hasValue}"; then
-    # tries to delete value
-    if ! cat "${yaml}" | yq 'del('"${arg}"')' > src/temp/yaml.local; then
-      echo "Unable to yq delete ${selector}[${value}] in ${yaml}"
-    else
-      # if succeeds, overwrites original yaml
-      # condition used to ensure yaml.local is written by yq
-      if [[ -f src/temp/yaml.local ]]; then
-        cat src/temp/yaml.local > "${yaml}"
-      fi
-    fi
-  fi
-}
-
-#######################################
 # Add a yaml value
 # Arguments:
 #   $1 # a yaml file path
@@ -698,6 +673,37 @@ utils::yq_add(){
       # tries to add value
     if ! cat "${yaml}" | yq "${arg}" > src/temp/yaml.local; then
       echo "Unable to yq add ${value} in ${selector} in ${yaml}"
+    else
+      # if succeeds, overwrites original yaml
+      # condition used to ensure yaml.local is written by yq
+      if [[ -f src/temp/yaml.local ]]; then
+        cat src/temp/yaml.local > "${yaml}"
+      fi
+    fi
+  fi
+}
+
+#######################################
+# Delete a yaml value
+# Arguments:
+#   $1 # a yaml file path
+#   $2 # a yaml selector ".variable.path"
+#   $3 # a yaml value
+#######################################
+utils::yq_delete(){
+  local yaml="${1-}"
+  local selector="${2-}" 
+  local value="${3-}"
+  
+  local arg="${selector}"'.[] | select(. == "'"${value}"'")'
+
+  # check if value exist
+  local hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
+
+  if "${hasValue}"; then
+    # tries to delete value
+    if ! cat "${yaml}" | yq 'del('"${arg}"')' > src/temp/yaml.local; then
+      echo "Unable to yq delete ${selector}[${value}] in ${yaml}"
     else
       # if succeeds, overwrites original yaml
       # condition used to ensure yaml.local is written by yq
