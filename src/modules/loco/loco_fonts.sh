@@ -18,7 +18,7 @@
 loco::fonts_manager(){
   local font
   local fonts_path
-  local yaml_fonts=$(utils::yaml_get_values '.style.fonts.urls.[]')
+  local yaml_fonts=$(utils::profile_get_values '.style.fonts.urls.[]')
   declare -a yaml_fonts_array
   yaml_fonts_array=("${yaml_fonts}")
 
@@ -80,6 +80,8 @@ loco::fonts_action_install_yaml(){
   utils::get_url "${fonts_path}" "${font}"
   # refresh fonts cache
   loco::fonts_cache_refresh "${fonts_path}"
+  # write url in instance yaml
+  utils::yq_add "${INSTANCE_YAML}" ".style.fonts.urls" "${font}"
 }
 
 #######################################

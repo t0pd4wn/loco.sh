@@ -58,29 +58,26 @@ loco::term_conf_record_command(){
 #   PROFILES
 #   PROFILES_DIR
 #   LOCO_DIST
+#   THEME
 #######################################
 loco::term_conf_set(){
   # check if current loco is a remote installation
   if [[ "${LOCO_DIST}" == true ]]; then local dist_path=loco-dist/; fi
 
   # instanciate yaml values or global/default ones
-  local colors_theme
   local font_name
   local font_size
 
-  # macos relate
+  # macos related
   local osascript_opt
   local osascript_fontname
   local osascript_fontsize
   local osa_content
   local osa_file
 
-  colors_theme=$(utils::yaml_get_values '.style.colors.theme')
-  colors_theme="${THEME:-"${colors_theme}"}"
+  local colors_theme_file=./src/themes/"${THEME}".conf
 
-  local colors_theme_file=./src/themes/"${colors_theme}".conf
-
-  font_name=$(utils::yaml_get_values '.style.fonts.name')
+  font_name=$(utils::profile_get_values '.style.fonts.name')
   if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
     #statements
     font_name="${font_name}"
@@ -92,7 +89,7 @@ loco::term_conf_set(){
     fi
   fi
 
-  font_size=$(utils::yaml_get_values '.style.fonts.size')
+  font_size=$(utils::profile_get_values '.style.fonts.size')
   font_size="${font_size:-"10"}"
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
@@ -146,13 +143,15 @@ loco::term_conf_set(){
     # distro_path=./"${dist_path-}"src/temp/"${PROFILE}"_terminal.conf
 
     # if there is a colors theme set, build the conf file
-    if [[ ! -z "${colors_theme}" ]]; then
+    if [[ ! -z "${THEME}" ]]; then
       utils::echo "[/]" > "${local_path}"
       cat "${colors_theme_file}" >> "${local_path}"
       # for some reasons, an extra "\n" needs to be applied here
       if [[ ! -z "${font_name}" ]]; then
         utils::echo "\n""font='"${font_name}" "${font_size}"'" >> "${local_path}"
         utils::echo "use-system-font=false" >> "${local_path}"
+        utils::yq_change "${INSTANCE_YAML}" ".style.fonts.name" "${font_name}"
+        utils::yq_change "${INSTANCE_YAML}" ".style.fonts.size" "${font_size}"
       else
         utils::echo "\n""use-system-font=false" >> "${local_path}"
       fi

@@ -56,6 +56,7 @@ loco::dotfiles_manager(){
 #   CURRENT_USER
 #   EMOJI_YES
 #   INSTANCE_PATH
+#   PROFILE_PATH
 #   PROFILE
 # Arguments:
 #   $@ # an array of dotfiles
@@ -64,13 +65,37 @@ loco::dotfiles_action_install(){
   declare -a dotfiles
   dotfiles=("$@")
 
+  local current_path=$(pwd)
+
   msg::print "${EMOJI_YES} Yes, use " "${PROFILE}" " dotfiles"
   msg::print "Preparing your dotfiles backup"
 
-  INSTANCE_PATH="${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
-  # create the backup folder
-  utils::mkdir ./"$INSTANCE_PATH/dotfiles-backup"
+  if [[ ${INSTANCES_DIR} == "instances" ]]; then
+    # if INSTANCES_DIR is the default value
+    INSTANCE_PATH="${current_path}"/"${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
+  else
+    # if INSTANCES_DIR is a custom value
+    INSTANCE_PATH="${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
+  fi
 
+  if [[ ${PROFILES_DIR} == "profiles" ]]; then
+    # if PROFILES_DIR is the default value
+    PROFILE_PATH="${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"
+  else
+    # if PROFILES_DIR is a custom value
+    PROFILE_PATH="${PROFILES_DIR}"/"${PROFILE}"
+  fi
+
+  # create the backup and dotfiles folders
+  utils::mkdir "${INSTANCE_PATH}/dotfiles-backup"
+  
+  if [[ ${DETACHED} == false ]]; then
+    utils::mkdir "${INSTANCE_PATH}/dotfiles"
+  fi
+
+  # create yaml key in /home/$USER/.loco.yml
+  utils::yq_change "${INSTANCE_YAML}" ".instance.INSTANCE_PATH" "${INSTANCE_PATH}"
+  
   if [[ "${ACTION}" == "update" ]]; then
     loco::dotfiles_action_update
   fi
@@ -100,16 +125,14 @@ loco::dotfiles_action_remove(){
   dotfiles=("$@")
 
   msg::print "${EMOJI_YES} Yes, remove " "${PROFILE}" " dotfiles"   
-  msg::print "Removing " "${PROFILE}" " dotfiles"
+  msg::print "Restoring " "${CURRENT_USER}" " dotfiles"
 
   # remove $PROFILE dotfiles
   for dotfile in "${dotfiles[@]}"; do
     loco::dotfiles_unset "${dotfile}"
+    loco::dotfiles_restore "${dotfile}"
   done
 
-  # restore $CURRENT_USER dotfiles
-  msg::print "Restoring " "${CURRENT_USER}" " dotfiles"
-  loco::dotfiles_restore
 }
 
 #######################################
@@ -146,15 +169,17 @@ loco::dotfiles_action_update(){
 #######################################
 loco::dotfiles_backup(){
   local dotfile="${1-}"
+  local profile_file="$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
+  local user_file=/"${OS_PREFIX}"/"${CURRENT_USER}"/"${dotfile}"
 
   # if the file doesn't exist
-  if [ ! -f /"${OS_PREFIX}"/"${CURRENT_USER}"/"${dotfile}" ]; then
-    msg::debug "/"${OS_PREFIX}"/""${CURRENT_USER}"/"${dotfile}"
+  if [ ! -f "${user_file}" ]; then
+    msg::debug "${user_file}"
     msg::print "No corresponding " "${dotfile}" " file"
   else
+    utils::cp "${user_file}" "${profile_file}"
+    utils::remove "${user_file}"
     msg::debug "${dotfile}" " is backup'd"
-    utils::cp /"${OS_PREFIX}"/"${CURRENT_USER}"/"${dotfile}" ./"$INSTANCE_PATH"/dotfiles-backup/"${dotfile}"
-    utils::remove "/"${OS_PREFIX}"/""${CURRENT_USER}"/"${dotfile}"
   fi
 }
 
@@ -163,22 +188,35 @@ loco::dotfiles_backup(){
 # GLOBALS:
 #   CURRENT_USER
 #   DETACHED
-#   PROFILES_DIR
-#   PROFILE
+#   INSTANCE_PATH
+#   PROFILE_PATH
 #   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
 #######################################
 loco::dotfiles_set(){
   local dotfile="${1-}"
-  local current_path=$(pwd)
-  
+
   if [[ "${DETACHED}" == false ]]; then
     msg::debug "Not detached"
-    ln -sfn "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
+    # duplicate files from profile to instance
+    local profile_file="${PROFILE_PATH}"/dotfiles/"${dotfile}"
+    local instance_path="$INSTANCE_PATH"/dotfiles/
+
+    # bug : for some reason the utils::cp wrapper wouldn't work here 
+    # (maybe paths expansion ?)
+    if ! cp "${profile_file}" "${instance_path}"; then
+      _error "Can not cp "${profile_file}" in "${instance_path}""
+    fi
+
+    ls -la "${instance_path}"
+
+    # create a symlink between the instance dir and the home folder
+    ln -sfn "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
   else
     msg::debug "Detached"
-    utils::cp "${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"/dotfiles/"${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
+    # if detached copy directly the file to home folder
+    utils::cp "${profile_file}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
   fi
 }
 
@@ -188,14 +226,28 @@ loco::dotfiles_set(){
 #   CURRENT_USER
 #   INSTANCE_PATH
 #   OS_PREFIX
+# Arguments:
+#   $1 # a dotfile name
 #######################################
 loco::dotfiles_restore(){
-  if [[ -d ./"$INSTANCE_PATH""/legacy-dotfiles" ]]; then
-    cmd::run_as_user "cp -R ./"$INSTANCE_PATH"/legacy-dotfiles/." "/"${OS_PREFIX}"/"${CURRENT_USER}"/" 
-  elif [[ -d ./"$INSTANCE_PATH""/dotfiles-backup" ]]; then
-    cmd::run_as_user "cp -R ./"$INSTANCE_PATH"/dotfiles-backup/." "/"${OS_PREFIX}"/"${CURRENT_USER}"/" 
-  else 
-    msg::debug "No dotfiles to restore"
+  local dotfile="${1-}"
+  local sub_path
+  local backup_file
+  local dest_path="/"${OS_PREFIX}"/"${CURRENT_USER}"/"
+
+  if [[ -d "${INSTANCE_PATH}/legacy-dotfiles" ]]; then
+    sub_path="legacy-dotfiles"
+  elif [[ -d "${INSTANCE_PATH}/dotfiles-backup" ]]; then
+    sub_path="dotfiles-backup"
+  fi
+
+  backup_file="${INSTANCE_PATH}"/"${sub_path}"/"${dotfiles}"
+  
+  if [[ -f ${backup_file} ]]; then
+    cmd::run_as_user "cp -R "${backup_file}" "${dest_path}""
+  else
+    msg::debug "No dotfile to restore"
+    return 0
   fi
 }
 

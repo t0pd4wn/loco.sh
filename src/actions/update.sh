@@ -6,9 +6,12 @@
 # prompt profiles, if none is set
 loco::prompt_profile
 
+# check watermark information
+msg::say "Checking " "${CURRENT_USER}" " watermark"
+loco::watermark_check
+
 # read and source "${PROFILE}" yaml file
 msg::say "Reading " "${PROFILE}" " YAML"
-loco::yaml_profile
 
 # prompt themes, if none is set
 loco::prompt_theme
@@ -16,9 +19,6 @@ loco::prompt_theme
 # check for available backgrounds, prompt eventually
 loco::background_manager
 
-# check watermark information
-msg::say "Checking " "${CURRENT_USER}" " watermark"
-loco::watermark_check
 
 msg::say "Updating " "${PROFILE}" " profile"
 

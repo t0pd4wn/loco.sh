@@ -39,7 +39,7 @@ loco::meta_action(){
   fi
 }
 
-# todo improve so this function expect a normative array as an input
+# todo : improve so this function expect a normative array as an input
 loco::meta_action_better(){
   msg::debug "${PACKAGE_ACTION_CMD}"
   # if there isn't a specific command, build one
@@ -48,7 +48,6 @@ loco::meta_action_better(){
     msg::debug "${PACKAGE_ACTION_CMD}"
   fi
 
-  # 
   if [[ "${LOCO_OSTYPE}" == "macos" ]] && [[ "${PACKAGE_MANAGER}" == "brew" ]]; then
       cmd::run_as_user "eval "${PACKAGE_ACTION_CMD}""
   else
@@ -76,7 +75,9 @@ loco::meta_package(){
   msg::debug ${PACKAGE_ACTION-}
   msg::debug ${PACKAGE_ACTION_CMD-}
   msg::debug ${PACKAGE-}
+
   local local_package_test_cmd
+  local PROFILE_YAML=/"${OS_PREFIX}"/"${CURRENT_USER}"/.loco.yml
 
   #if no action is defined default to "${ACTION}"
   if [[ -z "${PACKAGE_ACTION-}" ]]; then
@@ -112,6 +113,10 @@ loco::meta_package(){
     if [[ "${ACTION-}" == "remove" ]]; then
       msg::say "Removing " "${PACKAGE_MANAGER} ${PACKAGE}"
       loco::meta_action_better
+
+      # yml2
+      # delete yaml key in /home/$USER/.loco.yml
+      utils::yq_delete "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
     fi
   else
     msg::print "" "${PACKAGE-}" " is not installed."
@@ -119,8 +124,13 @@ loco::meta_package(){
     if [[ "${ACTION-}" == "install" ]]; then
       msg::say "Installing " "${PACKAGE_MANAGER} ${PACKAGE}"
       loco::meta_action_better
+
+      # yml2
+      # create yaml key in /home/$USER/.loco.yml
+      utils::yq_add "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
     fi
   fi
+  
   # clear global variables
   PACKAGE_TEST_CMD=""
   PACKAGE_ACTION_CMD=""
@@ -141,22 +151,35 @@ loco::meta_package_manager(){
   msg::debug "meta_package_manager ..."
   # assign the $1 package managers
   # local packagers="packages_"$1
+  local pkg_type=${1-}
   local packagers
   local packages
   declare -a packagers_array
   declare -a packages_array
-  packagers=$(utils::yaml_get_keys ".packages.${1-}")
+
+  # get the packagers list from either the profile or the instance yaml
+  if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
+    local current_yaml="${PROFILE_YAML}"
+  elif [[ "${ACTION}" == "remove" ]]; then
+    local current_yaml="${INSTANCE_YAML}"
+  fi
+    packagers=$(utils::yaml_get_keys ".packages.${pkg_type}" "${current_yaml}")
 
   # check if packagers are declared
   if [[ -z "${packagers}" ]]; then
     msg::print "No " "$1" " package managers found"
+    return 0
   else
+
     # begin to assign values recursively from descriptors
     packagers_array=($packagers)
     msg::debug "${packagers}"
+    echo "${packagers}"
 
     for i in "${packagers_array[@]}"; do
       msg::debug "${i}"
+
+
       # prepare variables from package manager descriptor
       PACKAGE_ACTION="${ACTION}"
 
@@ -169,8 +192,12 @@ loco::meta_package_manager(){
       else
         utils::source "${packager_path}"
 
+        # add package manager to the instance yaml
+        local yaml_key=".packages.${pkg_type}.${PACKAGE_MANAGER}"
+        utils::yq_add_key "${INSTANCE_YAML}" "${yaml_key}"
+
         # expand variable value 
-        PACKAGE_ACTION=${!PACKAGE_ACTION}   
+        PACKAGE_ACTION=${!PACKAGE_ACTION}
         # update the package manager
         if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
           if [[ "${PACKAGE_MANAGER}" == "brew" ]]; then
@@ -182,12 +209,10 @@ loco::meta_package_manager(){
 
         # parse yaml to get packages names
         local packages_selector=".packages."${1}"."${i}".[]"
-        packages=$(utils::yaml_get_values "${packages_selector}")
-        msg::debug "${packages}"
-
+        packages=$(utils::profile_get_values "${packages_selector}" "${current_yaml}")
         packages_array=($packages)
 
-        # send packages names to metaPackage
+        # send packages names to meta_package
         for i in "${packages_array[@]}"; do
           PACKAGE="${i}"
           loco::meta_package "${PACKAGE}" "${PACKAGE_MANAGER_TEST_CMD}" ;

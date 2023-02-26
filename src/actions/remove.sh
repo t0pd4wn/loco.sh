@@ -7,9 +7,6 @@
 msg::say "Checking " "${CURRENT_USER}" " watermark"
 loco::watermark_check
 
-# read and source "${PROFILE}" yaml file
-loco::yaml_profile
-
 # reset background to OS default
 loco::background_manager
 

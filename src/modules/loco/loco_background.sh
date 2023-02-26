@@ -15,11 +15,14 @@
 #   $1 # "entry" or "exit"
 #######################################
 loco::background_manager(){
+
+  msg::debug "background_manager"
+
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
   local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
   local profile_bg_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
-  local yaml_bg_url=$(utils::yaml_get_values '.style.background')
+  local yaml_bg_url=$(utils::profile_get_values '.style.background')
   local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
   local local_bgs_path=./src/backgrounds/
   local img_basename
@@ -131,6 +134,7 @@ loco::background_manager(){
       # send the image path to config file
       loco::set_background "${final_path}"
     fi
+      utils::yq_change "${INSTANCE_YAML}" ".style.background" "${final_path}"
   fi
 }
 

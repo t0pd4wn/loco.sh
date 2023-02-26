@@ -4,14 +4,16 @@
 #-------------------------------------------------------------------------------
 
 #######################################
-# Build and source the profiles yaml.
+# Assign yaml paths to globals.
 # Globals:
 #   PROFILE
+#   OS_PREFIX
+#   CURRENT_USER
 #   PROFILES_DIR
-#   YAML_PATH
-# Output:
-#   ./src/temp/"${PROFILE}"_yaml_variables.sh
+#   PROFILE_YAML
+#   INSTANCE_YAML
 #######################################
-loco::yaml_profile(){
-  YAML_PATH="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
+loco::yaml_init(){
+  PROFILE_YAML="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
+  INSTANCE_YAML=/"${OS_PREFIX}"/"${CURRENT_USER}"/.loco.yml
 }

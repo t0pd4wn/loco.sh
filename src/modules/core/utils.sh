@@ -224,7 +224,9 @@ utils::GLOBALS_set(){
   MSG_INDEX=0
   # used in prompts
   declare -g USER_ANSWER
-  # used in package manage
+  # used in profile management
+  PROFILE_YAML=""
+  # used in package management
   PACKAGE_MANAGER_TEST_CMD=""
   PACKAGE_TEST_CMD=""
   PACKAGE_ACTION_CMD=""
@@ -241,16 +243,19 @@ utils::GLOBALS_set(){
 # Lock GLOBALS
 #######################################
 utils::GLOBALS_lock(){
-  # can be selected later
+  # can be reset or defined at runtime
   # readonly CURRENT_USER
-  # can be defined at runtime
+  # readonly PROFILE_YAML
+  # readonly INSTANCE_YAML
+  # readonly PROFILE_PATH
+  # readonly INSTANCE_PATH
+  # readonly SHORT_OS_VERSION
   # readonly ACTION
   # readonly PROFILE
   # readonly THEME
-  # readonly YAML_PATH
+  # readonly BACKGROUND_URL
   # readonly IS_NEW_FONT
-  # readonly SHORT_OS_VERSION
-  readonly BACKGROUND_URL
+
   readonly PROFILES_DIR
   readonly INSTANCES_DIR
   readonly CONFIG_PATH
@@ -529,7 +534,7 @@ utils::timestamp(){
 #######################################
 utils::yaml_get_keys(){
   local var="${1-}"
-  local path="${2:-"${YAML_PATH}"}"
+  local path="${2:-"${PROFILE_YAML}"}"
 
   if [[ ! -f "${path}" ]]; then
     msg::debug "${EMOJI_STOP} No " "YAML file" " found"
@@ -547,12 +552,11 @@ utils::yaml_get_keys(){
 #   PROFILES_DIR
 # Arguments:
 #   $1 # a yaml variable ".variable.path"
-#   $2 # an optional yaml file path
+#   $2 # a yaml file path
 #######################################
-utils::yaml_get_values(){
+utils::profile_get_values(){
   local var="${1-}" 
-  local path="${2:-"${YAML_PATH}"}"
-  local options="${3-}"
+  local path="${2:-"${PROFILE_YAML}"}"
   local value
 
   # if file doesn't exist

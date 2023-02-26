@@ -6,19 +6,18 @@
 # prompt profiles, if none is set
 loco::prompt_profile
 
+# check for existing watermark or create one
+msg::say "Checking for a previous " "${CURRENT_USER}" " watermark"
+loco::watermark_check
+
 # read and source "${PROFILE}" yaml file
-msg::say "Reading " "${PROFILE}" " YAML"
-loco::yaml_profile
+msg::say "Sourcing " "${PROFILE}" " YAML"
 
 # prompt themes, if none is set
 loco::prompt_theme
 
 # check for available backgrounds, prompt eventually
 loco::background_manager
-
-# check watermark information
-msg::say "Checking " "${CURRENT_USER}" " watermark"
-loco::watermark_check
 
 msg::say "Installing " "${PROFILE}" " profile"
 
@@ -49,12 +48,8 @@ msg::say "Preparing " "terminal" " configuration"
 loco::term_conf_manager
 
 # install custom exit scripts
-msg::say "Installing " "${LOCO_OSTYPE}" " exit scripts"
+msg::say "Running " "${LOCO_OSTYPE}" " exit scripts"
 loco::custom_exit
-
-# install watermark
-msg::say "Installing " "watermark"
-loco::watermark_set
 
 # record a closing terminal command in loco_finish.sh
 # if no new fonts, exit normally
