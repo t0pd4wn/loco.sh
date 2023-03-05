@@ -79,6 +79,7 @@ vpnConnect(){
   # check status
   if [[ "${vpnStatus}" == *"Connected"* ]]; then 
     # vpn is connected
+    :
   else
     # connect to vpn
     # get a random domain
@@ -104,6 +105,7 @@ wireguardConnect(){
     # wg-quick up ..
   else
     # wg is connected
+    :
   fi
 }
 

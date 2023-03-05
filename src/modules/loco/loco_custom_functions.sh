@@ -48,7 +48,7 @@ loco::custom_function(){
 }
 
 #######################################
-# Source and execute entry custom functions
+# Execute custom entry functions
 # GLOBALS:
 #   PROFILE
 #######################################
@@ -95,11 +95,25 @@ loco::custom_exit(){
 # Execute custom last functions
 #######################################
 loco::custom_last(){
-  loco::custom_action "last"
+  local profile_backup="${PROFILE}"
+  local profile_array=(${PROFILE})
+  local profile_array_length="${#profile_array[@]}"
+
+  # source custom.sh
+  msg::print "Sourcing " "${PROFILE}" " custom functions."
+
+  # reverse the array sequence so to execute commands recursively
+  for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
+    PROFILE="${profile_array[$i]}"
+    loco::custom_source
+    loco::custom_action "last"
+  done
+
+  PROFILE="${profile_backup}"
 }
 
 #######################################
-# Source the custom functions file.
+# Source the custom functions file
 # GLOBALS:
 #   PROFILE
 #   PROFILES_DIR

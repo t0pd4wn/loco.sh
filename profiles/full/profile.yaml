@@ -13,8 +13,10 @@ packages:
       - git
       - vim
       - zsh
+      - tree
   ubuntu:
     apt:
       - git
       - vim
       - zsh
+      - tree

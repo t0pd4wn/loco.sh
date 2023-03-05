@@ -134,7 +134,7 @@ loco::watermark_action_install(){
     ACTION="install"
     PROFILE="${current_profile}"
     # reset the yaml .profile path
-    loco::yaml_profile
+    loco::yaml_init
   ;;
 
   # update the installed instance
@@ -295,7 +295,7 @@ loco::watermark_set(){
     # local home_files=$(ls -d ${home_path}.??*)
 
     utils::list "home_dotfiles" "${home_path}" "hidden"
-    
+
     for file in "${home_dotfiles[@]}"; do
       local filename=$(utils::string_cut_rev "${file}" "/" "1")
       # add filename to ".dotfiles.legacy"

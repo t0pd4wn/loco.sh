@@ -5,10 +5,8 @@ packages:
   macos:
     brew:
       - git
-      - vim
       - zsh
   ubuntu:
     apt:
       - git
-      - vim
       - zsh

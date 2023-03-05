@@ -14,8 +14,8 @@ install_ubuntu_exit(){
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false"
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-position BOTTOM"
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 48"
-    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock autohide true"
-    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock autohide false"
+    cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed true"
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false"
   fi
 }
