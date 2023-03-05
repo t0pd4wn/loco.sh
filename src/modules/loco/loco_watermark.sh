@@ -24,31 +24,20 @@ loco::watermark_check(){
   # meant if $ACTION changes
   local recorded_messages=("${MSG_ARRAY[@]-}")
 
-  # assign yaml files to globals
+  # assign yaml files paths to GLOBALs
   loco::yaml_init
 
-  # if no .loco file is found
+  # if no .loco.yml file is found
   if [[ ! -f "${INSTANCE_YAML}" ]]; then
     msg::print "No " "previous instance" " found."
     if [[ "${ACTION}" == "remove" ]]; then
       _exit
     else
+      # create .loco.yml
       loco::watermark_set
-
-
-      # # tests
-      # local path=/"${OS_PREFIX}"/"${CURRENT_USER}"/locoo
-      # local yaml_val
-      # yaml_val=$(utils::yq_contains "${path}" ".instance.CURRENT_USER" "Ov")
-
-      # local sel=".packages.ubuntu.apt"
-      # local val="zsh"
-
-      # utils::yq_add_key "${path}" ".packages" ".hahaha"
-
     fi
 
-  # if there is a .loco file
+  # if there is a .loco.yml file
   else
     # if install
     if [[ "${ACTION}" == "install" ]]; then
@@ -61,6 +50,44 @@ loco::watermark_check(){
       loco::watermark_action_update
     fi
   fi
+}
+
+#######################################
+# Instance folders creation
+# GLOBALS:
+#   CURRENT_USER
+#   DETACHED
+#   INSTANCES_DIR
+#   INSTANCE_PATH
+#   INSTANCE_YAML
+#   PROFILE
+#######################################
+loco::instance_create(){
+    local current_path=$(pwd)
+
+    if [[ ${INSTANCES_DIR} == "instances" ]]; then
+      # if INSTANCES_DIR is the default value
+      INSTANCE_PATH="${current_path}"/"${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
+    else
+      # if INSTANCES_DIR is a custom value
+      INSTANCE_PATH="${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
+    fi
+
+    echo $INSTANCES_DIR
+    echo $INSTANCE_PATH
+
+    # create the instance folder
+    utils::mkdir "${INSTANCE_PATH}"
+
+    # create sub folders
+    utils::mkdir "${INSTANCE_PATH}/dotfiles-backup"
+
+    if [[ ${DETACHED} == false ]]; then
+      utils::mkdir "${INSTANCE_PATH}/dotfiles"
+    fi
+
+    # create yaml key in /home/$USER/.loco.yml
+    utils::yq_change "${INSTANCE_YAML}" ".instance.INSTANCE_PATH" "${INSTANCE_PATH}"
 }
 
 #######################################
@@ -81,20 +108,15 @@ loco::watermark_action_install(){
   # keep a copy of current messages
   local recorded_messages=("${MSG_ARRAY[@]-}")
 
-
-
-
-
-
   msg::print "${EMOJI_STOP} There is a " "${CURRENT_USER}" " watermark."
-  msg::print "" "Please, remove or update this instance first."
+  msg::print "" "Please, remove or update this instance."
 
-# remove or update
-
-  msg::prompt "Remove (R) or update (U) the " "installed" " instance ?"
+  # remove or update
+  msg::prompt "Remove (r/R) or update (u/U) the " "installed" " instance ?"
   case ${USER_ANSWER:0:1} in
   # in this case, yes is mapped as remove
-  r|R|y )
+  # remove the installed instance, then install the new one
+  r|R|y|Y )
     msg::print "${EMOJI_YES}" " Yes, remove instance."
     # switch to remove
     ACTION="remove"
@@ -115,9 +137,10 @@ loco::watermark_action_install(){
     loco::yaml_profile
   ;;
 
-
+  # update the installed instance
   u|U )
-    # msg::print "${EMOJI_YES}" " Yes, update instance."
+     msg::print "${EMOJI_YES}" " Yes, update instance."
+
     # # switch to remove
     # ACTION="remove"
     # # keep a copy of current finish script
@@ -137,9 +160,6 @@ loco::watermark_action_install(){
     # loco::yaml_profile
   ;;
 
-
-
-
   * )
     msg::print "${EMOJI_NO}" " No, I'll keep current instance."
     _exit
@@ -157,20 +177,22 @@ loco::watermark_action_install(){
 #   $1 # a yaml path "/yaml/path"
 #######################################
 loco::watermark_action_remove(){
-  # utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
-  # msg::print "Profile to be removed : " "${PROFILE}"
-  # msg::print "User to be restored : " "${CURRENT_USER}"
-  # msg::print "Dotfiles path to be restored : " "${INSTANCE_PATH}"
+  local profile_array
+  local profile_prefix
 
-  # utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco.yml
+  PROFILE=$(utils::yq_get "${INSTANCE_YAML}" '.instance.PROFILE')
+  CURRENT_USER=$(utils::yq_get "${INSTANCE_YAML}" '.instance.CURRENT_USER')
+  INSTANCE_PATH=$(utils::yq_get "${INSTANCE_YAML}" '.instance.INSTANCE_PATH')
 
-  local watermark="${@}"
+  profile_array=(${PROFILE})
 
-  PROFILE=$(utils::profile_get_values '.instance.PROFILE' "${watermark}")
-  CURRENT_USER=$(utils::profile_get_values '.instance.CURRENT_USER' "${watermark}")
-  INSTANCE_PATH=$(utils::profile_get_values '.instance.INSTANCE_PATH' "${watermark}")
+  if [[ "${#profile_array[@]}" -eq 1 ]]; then
+    profile_prefix="Profile"
+  else
+    profile_prefix="Profiles"
+  fi
 
-  msg::print "Profile to be removed : " "${PROFILE}"
+  msg::print "${profile_prefix} to be removed : " "${PROFILE}"
   msg::print "User to be restored : " "${CURRENT_USER}"
   msg::print "Dotfiles path to be restored : " "${INSTANCE_PATH}"
 }
@@ -191,6 +213,7 @@ loco::watermark_action_update(){
   local current_profile="${PROFILE-}"
   local current_user="${CURRENT_USER-}"
   local current_path="${INSTANCE_PATH-}"
+
   # other locals
   local old_profile
   local old_user
@@ -203,18 +226,29 @@ loco::watermark_action_update(){
   y|Y )
     msg::print "${EMOJI_YES}" " Yes, update instance."
     # source GLOBALs file
-    utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
-    # keep sourced GLOBALs values
-    old_profile="${PROFILE-}"
-    old_user="${CURRENT_USER-}"
-    old_path="${INSTANCE_PATH-}"
-    # keep an old instance path GLOBAL copy
-    OLD_INSTANCE_PATH="${old_path}"
-    # restore previous GLOBALs values
-    PROFILE="${current_profile}"
-    CURRENT_USER="${current_user}"
-    INSTANCE_PATH="${current_path}"
-    loco::watermark_unset
+
+    # get yaml value for instance path
+    local path_selector=".instance.INSTANCE_PATH"
+    INSTANCE_PATH=$(utils::yq_get "${INSTANCE_YAML}" "${path_selector}")
+
+    # add curent profile to instance yaml
+    local profile_selector=".instance.PROFILE"
+    local previous_profile=$(utils::yq_get "${INSTANCE_YAML}" "${profile_selector}")
+    utils::yq_change "${INSTANCE_YAML}" "${selector}" "${previous_profile} ${PROFILE}"
+
+    # utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
+    # # keep sourced GLOBALs values
+    # old_profile="${PROFILE-}"
+    # old_user="${CURRENT_USER-}"
+    # old_path="${INSTANCE_PATH-}"
+
+    # # keep an old instance path GLOBAL copy
+    # OLD_INSTANCE_PATH="${old_path}"
+    # # restore previous GLOBALs values
+    # PROFILE="${current_profile}"
+    # CURRENT_USER="${current_user}"
+    # INSTANCE_PATH="${current_path}"
+    # loco::watermark_unset
   ;;
   * )
     msg::print "${EMOJI_NO}" " No, I'll keep current instance."
@@ -238,27 +272,6 @@ loco::watermark_unset(){
 }
 
 #######################################
-# Set a post script watermark.
-# GLOBALS:
-#   CURRENT_USER
-#   PROFILE
-#   INSTANCE_PATH
-#   WATERMARK
-#   ACTION
-#   OS_PREFIX
-# Output:
-#   Writes .loco file to /"${OS_PREFIX}"/"${CURRENT_USER}"
-#######################################
-# loco::watermark_set(){
-#   if [[ "${WATERMARK}" == true ]]; then
-#     utils::echo '#loco.sh instance infos...' > /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
-#     utils::echo 'CURRENT_USER='${CURRENT_USER} >> /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
-#     utils::echo 'PROFILE='${PROFILE} >> /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
-#     utils::echo 'INSTANCE_PATH='${INSTANCE_PATH-} >> /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
-#   fi
-# }
-
-#######################################
 # Init the .yml watermark.
 # GLOBALS:
 #   CURRENT_USER
@@ -276,5 +289,17 @@ loco::watermark_set(){
     utils::echo '  INSTANCE_PATH: ' >> "${INSTANCE_YAML}"
     utils::echo 'style:' >> "${INSTANCE_YAML}"
     utils::echo 'packages:' >> "${INSTANCE_YAML}"
+    utils::echo 'dotfiles:' >> "${INSTANCE_YAML}"
+
+    local home_path=/"${OS_PREFIX}"/"${CURRENT_USER}"
+    # local home_files=$(ls -d ${home_path}.??*)
+
+    utils::list "home_dotfiles" "${home_path}" "hidden"
+    
+    for file in "${home_dotfiles[@]}"; do
+      local filename=$(utils::string_cut_rev "${file}" "/" "1")
+      # add filename to ".dotfiles.legacy"
+      utils::yq_add "${INSTANCE_YAML}" ".dotfiles.legacy" "${filename}"
+    done
   fi
 }

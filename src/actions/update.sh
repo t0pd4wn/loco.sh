@@ -19,7 +19,6 @@ loco::prompt_theme
 # check for available backgrounds, prompt eventually
 loco::background_manager
 
-
 msg::say "Updating " "${PROFILE}" " profile"
 
 # install custom "${PROFILE}" entry function
@@ -52,12 +51,10 @@ loco::term_conf_manager
 msg::say "Updating " "${LOCO_OSTYPE}" " exit scripts"
 loco::custom_exit
 
-# install watermark
-msg::say "Updating " "watermark"
-loco::watermark_set
-
 # record a closing terminal command in loco_finish.sh
 # if no new fonts, exit normally
 if [[ "${IS_NEW_FONT-}" != "true" ]]; then
 	cmd::record "exit 2&>/dev/null"
+else
+	return 0
 fi

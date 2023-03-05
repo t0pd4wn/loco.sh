@@ -3,47 +3,21 @@
 # loco_meta.sh | loco.sh meta functions
 #-------------------------------------------------------------------------------
 
+# todo : improve so this function expect a normative array as an input
 #######################################
 # apply the defined cmd over the package
 # GLOBALS:
+#   LOCO_OSTYPE
 #   PACKAGE_ACTION_CMD
 #   PACKAGE_MANAGER
 #   PACKAGE_ACTION
 #   PACKAGE
 #######################################
-loco::meta_action(){
-  local local_package_action_cmd
-
-  # if there isn't a specific command, build one
-  if [[ -z "${PACKAGE_ACTION_CMD-}" ]]; then 
-    local_package_action_cmd="${PACKAGE_MANAGER} ${PACKAGE_ACTION} ${PACKAGE}"
-    msg::debug "${local_package_action_cmd}"
-    if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-      cmd::run_as_user "eval "${local_package_action_cmd}""
-    else
-      eval "${local_package_action_cmd}"
-    fi
-    eval "${local_package_action_cmd}"
-
-  # if there is a specific command, execute it
-  else
-    if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-      msg::debug "macos"
-      msg::debug "${PACKAGE_ACTION_CMD}"
-      cmd::run_as_user "eval "${PACKAGE_ACTION_CMD}""
-    else
-      msg::debug "not macos"
-      msg::debug "${PACKAGE_ACTION_CMD}"
-      eval "${PACKAGE_ACTION_CMD}"
-    fi
-  fi
-}
-
-# todo : improve so this function expect a normative array as an input
 loco::meta_action_better(){
   msg::debug "${PACKAGE_ACTION_CMD}"
   # if there isn't a specific command, build one
   if [[ -z "${PACKAGE_ACTION_CMD-}" ]]; then 
+
     PACKAGE_ACTION_CMD="${PACKAGE_MANAGER} ${PACKAGE_ACTION} ${PACKAGE}"
     msg::debug "${PACKAGE_ACTION_CMD}"
   fi
@@ -114,18 +88,16 @@ loco::meta_package(){
       msg::say "Removing " "${PACKAGE_MANAGER} ${PACKAGE}"
       loco::meta_action_better
 
-      # yml2
       # delete yaml key in /home/$USER/.loco.yml
       utils::yq_delete "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
     fi
   else
     msg::print "" "${PACKAGE-}" " is not installed."
     # install package
-    if [[ "${ACTION-}" == "install" ]]; then
+    if [[ "${ACTION-}" == "install" ]] || [[ "${ACTION-}" == "update" ]]; then
       msg::say "Installing " "${PACKAGE_MANAGER} ${PACKAGE}"
       loco::meta_action_better
 
-      # yml2
       # create yaml key in /home/$USER/.loco.yml
       utils::yq_add "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
     fi
@@ -181,7 +153,11 @@ loco::meta_package_manager(){
 
 
       # prepare variables from package manager descriptor
-      PACKAGE_ACTION="${ACTION}"
+      if [[ "${ACTION}" == "update" ]]; then
+        PACKAGE_ACTION="install"
+      else 
+        PACKAGE_ACTION="${ACTION}"
+      fi
 
       local packager_path="./src/descriptors/${i}.sh"
       # check for descriptor file

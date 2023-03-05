@@ -15,9 +15,16 @@
 #######################################
 loco::custom_action(){
   local custom_function_path="./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh"
+
   if [[ -f "${custom_function_path}" ]]; then
     local step="${1-}"
-    local generic_function="${ACTION}_${step}"
+    if [[ "${ACTION}" == "update" ]]; then
+      #if action is "update", then use the "install" custom functions
+      local generic_function="install_${step}"
+    else
+      # else call dynamically
+      local generic_function="${ACTION}_${step}"
+    fi
     local os_specific_function="${ACTION}_${LOCO_OSTYPE}_${step}"
     loco::custom_function "${generic_function}"
     loco::custom_function "${os_specific_function}"
@@ -46,17 +53,42 @@ loco::custom_function(){
 #   PROFILE
 #######################################
 loco::custom_entry(){
+  local profile_backup="${PROFILE}"
+  local profile_array=(${PROFILE})
+  local profile_array_length="${#profile_array[@]}"
+
   # source custom.sh
   msg::print "Sourcing " "${PROFILE}" " custom functions."
-  loco::custom_source
-  loco::custom_action "entry"
+
+  # reverse the array sequence so to execute commands recursively
+  for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
+    PROFILE="${profile_array[$i]}"
+    loco::custom_source
+    loco::custom_action "entry"
+  done
+
+  PROFILE="${profile_backup}"
 }
 
 #######################################
 # Execute custom exit functions
 #######################################
 loco::custom_exit(){
-  loco::custom_action "exit"
+  local profile_backup="${PROFILE}"
+  local profile_array=(${PROFILE})
+  local profile_array_length="${#profile_array[@]}"
+
+  # source custom.sh
+  msg::print "Sourcing " "${PROFILE}" " custom functions."
+
+  # reverse the array sequence so to execute commands recursively
+  for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
+    PROFILE="${profile_array[$i]}"
+    loco::custom_source
+    loco::custom_action "exit"
+  done
+
+  PROFILE="${profile_backup}"
 }
 
 #######################################

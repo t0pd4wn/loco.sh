@@ -22,28 +22,27 @@ loco::prompt_action(){
 #   BACKGROUND
 #######################################
 loco::prompt_background(){
-  local style_background
-  style_background=$(utils::profile_get_values '.style.background')
+  local profile_bkg
+  profile_bkg=$(utils::yq_get "${PROFILE_YAML}" '.style.background')
 
   # if action "update", check for existing background
   if [[ "${ACTION}" == "update" ]]; then
-    local watermark=/"${OS_PREFIX}"/"${CURRENT_USER}"/.loco.yml
-    local watermark_bkg=$(utils::yq '.style.background' "${watermark}")
+    local watermark_bkg=$(utils::yq_get "${INSTANCE_YAML}" '.style.background')
     if [[ "${watermark_bkg}" != "" ]]; then
-      msg::prompt "Do you want to update your " "current background " "? (y/n) "
+      msg::prompt "Do you want to keep your " "current background " "? (y/n) "
       case ${USER_ANSWER:0:1} in
       y|Y )
-        msg::print "${EMOJI_YES} Yes, I'll update my " "current background"
+        msg::print "${EMOJI_YES} Yes, I'll keep my " "current background"
+        return 0
       ;;
       * )
-        msg::print "${EMOJI_NO} No, I'll keep my " "current background"
-        return 0
+        msg::print "${EMOJI_NO} No, I'll update my " "current background"
       ;;
       esac
     fi
   fi
 
-  if [ -z "${style_background:-"${BACKGROUND}"}" ]; then
+  if [ -z "${profile_bkg:-"${BACKGROUND}"}" ]; then
     prompt::build "BACKGROUND" "./src/backgrounds/" "Choose a background:" false
     prompt::call "BACKGROUND"
 
@@ -66,7 +65,6 @@ loco::prompt_overlay(){
     prompt::call "OVERLAY_PATH"
   fi
 }
-
 
 #######################################
 # Call the profiles prompt
@@ -91,23 +89,22 @@ loco::prompt_theme(){
   # if macos, exit
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
     msg::print "Themes are not supported over macOS"
-    return 0
+    return 1
   fi
 
   # if action "update", check for existing style
   if [[ "${ACTION}" == "update" ]]; then
-    local watermark=/"${OS_PREFIX}"/"${CURRENT_USER}"/.loco.yml
-    local watermark_style=$(utils::yq '.style.colors.theme' "${watermark}")
+    local watermark_style=$(utils::yq_get "${INSTANCE_YAML}" '.style.colors.theme')
     if [[ "${watermark_style}" != "" ]]; then
-      msg::prompt "Do you want to update your current " "style " "? (y/n) "
+      msg::prompt "Do you want to keep your current " "style " "? (y/n) "
       case ${USER_ANSWER:0:1} in
       y|Y )
-        msg::print "${EMOJI_YES} Yes, I'll update my current " "style"
-      ;;
-      * )
-        msg::print "${EMOJI_NO} No, I'll keep my current " "style"
+        msg::print "${EMOJI_YES} Yes, I'll keep my current " "style"
         THEME="${watermark_style}"
         return 0
+      ;;
+      * )
+        msg::print "${EMOJI_NO} No, I'll update my current " "style"
       ;;
       esac
     fi

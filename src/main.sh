@@ -75,7 +75,7 @@ main(){
   msg::end
 
   # display countdown
-  utils::countdown "Terminal will reset in" "3"
+  utils::countdown "" "1"
 
   # trap custom last function
   if ! trap 'loco::custom_last' 0; then

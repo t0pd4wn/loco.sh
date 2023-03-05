@@ -136,9 +136,12 @@ utils::clean_temp(){
 utils::countdown(){
   local message="${1-}"
   local duration="${2-}"
-  local seconds=$((1 * "${duration}"))
+  # local seconds=$((1 * "${duration}"))
+  local seconds="${duration}"
   while [ $seconds -gt 0 ]; do
+    if [[ "${message}" != "" ]]; then
      echo -ne "${message}" "$seconds\033[0K\r"
+    fi
      sleep 1
      : $((seconds--))
   done
@@ -156,6 +159,72 @@ utils::cp(){
 
   if ! cmd::run_as_user "cp -RL "${from}" "${to}""; then
     _error "Unable to copy ${from} in ${to}"
+  fi
+}
+
+#######################################
+# Chmod a path
+# Arguments:
+#   $1 # command argument "666 -R"
+#   $2 # /path/to/
+#######################################
+utils::chmod(){
+  local arg="${1-}"
+  local path="${2-}"
+
+  if ! chmod "${arg}" ${path}; then
+    _error "Unable to chmod ${path} with ${arg}"
+  fi
+}
+
+#######################################
+# Chown a path
+# Arguments:
+#   $1 # command argument "user_name"
+#   $2 # /path/to/
+#######################################
+utils::chown(){
+  local arg="${1-}"
+  local path="${2-}"
+
+  if ! chown "${arg}" ${path}; then
+    _error "Unable to chown ${path} to ${arg}"
+  fi
+}
+
+#######################################
+# Cut a string
+# Arguments:
+#   $1 # a string ex: "Hello/world"
+#   $2 # delimeter ex: "/"
+#   $3 # part to be retrieved ex: "1"
+#######################################
+utils::string_cut(){
+  local string="${1-}"
+  local delimeter="${2-}"
+  local part="${3-}"
+  local command="echo "${string}" | cut -d "${delimeter}" -f "${part}""
+
+  if ! cmd::run_as_user ${command}; then
+    _error "Unable to cut ${string}"
+  fi
+}
+
+#######################################
+# Cut a string (reverse)
+# Arguments:
+#   $1 # a string ex: "Hello/world"
+#   $2 # delimeter ex: "/"
+#   $3 # part to be retrieved ex: "3"
+#######################################
+utils::string_cut_rev(){
+  local string="${1-}"
+  local delimeter="${2-}"
+  local part="${3-}"
+  local command="echo "${string}" | rev | cut -d "${delimeter}" -f "${part}" | rev"
+
+  if ! cmd::run_as_user ${command}; then
+    _error "Unable to reverse cut ${string}"
   fi
 }
 
@@ -196,7 +265,6 @@ utils::encode_URI(){
   fi
 }
 
-
 #######################################
 # Decode an URI to a path
 # Arguments:
@@ -233,6 +301,7 @@ utils::GLOBALS_set(){
   # used in wget installation
   # LOCO_DIST=""
   # emojis
+
   readonly EMOJI_LOGO="\U1f335"
   readonly EMOJI_STOP="\U1F6A8"
   readonly EMOJI_YES="\U1F44D"
@@ -322,24 +391,59 @@ utils::image_overlay(){
 }
 
 #######################################
+# Create a symbolic link
+# Arguments:
+#   $1 # from /path/from/file
+#   $2 # to /path/to/
+# 
+#######################################
+utils::link(){
+  local from="${1-}"
+  local to="${2-}"
+
+  if ! utils::run_as_user "ln -s "${from}" "${to}""; then
+    _error "Unable to link "${from}" "${to}""
+  fi
+}
+
+#######################################
 # List files and folders within an array
 # Arguments:
 #   $1 # a normative array name
 #   $2 # a path
+#   $3 # an option [clear, hidden, all (default)]
+# 
 #######################################
 utils::list(){
   local -n list_name="${1-}"
   local list_path="${2-}"
+  local option="${3-"all"}"
+
+  local paths
   local element_name
+
+  # meant to clean a previously existing array
+  list_name=()
+
+  # check $option and set paths
+  if [[ "${option}" == "all" ]]; then
+    paths="${list_path}/.??* ${list_path}/*"
+  elif [[ "${option}" == "clear" ]]; then
+    paths="${list_path}/*"
+  elif [[ "${option}" == "hidden" ]]; then
+    paths="${list_path}/.??*"
+  fi
 
   # prevail empty folders
   shopt -s nullglob
+
   # iterate over aguments paths
-  for element_path in "${list_path}"/.??* "${list_path}"/*; do
+  for element_path in ${paths}; do
     # substitute a / ?
     element_name=${element_path##*/}
     list_name+=("${element_name}")
   done
+
   shopt -u nullglob
 }
 
@@ -572,6 +676,49 @@ utils::profile_get_values(){
   utils::echo "${value}"
 }
 
+
+#######################################
+# Return yaml values
+# Arguments:
+#   $1 # a yaml file path
+#   $2 # a yaml selector ".variable.path"
+#######################################
+utils::yq_get(){
+  # local options="${1-}"
+  local yaml="${1-}"
+  local selector="${2-}" 
+  local value
+
+  value=$(utils::yq2 "${yaml}" "${selector}")
+
+  if [[ "${value}" == "" ]] || [[ "${value}" == "null" ]]; then
+    return 1
+  else
+    utils::echo "${value}"
+  fi
+}
+
+
+#######################################
+# Return yaml values
+# Arguments:
+#   $1 # a yaml file path
+#   $2 # a yaml selector ".variable.path"
+#######################################
+utils::yq2(){
+  # local options="${1-}"
+  local yaml="${1-}"
+  local selector="${2-}" 
+
+  # check if selector exist in file
+  # utils::yq_has_selector "${selector}" "${yaml}"
+    # if yes, tries to recover value
+  if ! cat "${yaml}" | yq "${selector}"; then
+    echo "Unable to yq ${selector} in ${yaml}"
+  fi
+}
+
+
 #######################################
 # Return yaml values
 # Arguments:
@@ -730,7 +877,7 @@ utils::yq_change(){
   local selector="${2-}" 
   local value="${3-}"
   
-  local arg="${selector}"' += "'"${value}"'"'
+  local arg="${selector}"' = "'"${value}"'"'
 
   # check if value exist
   local hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
