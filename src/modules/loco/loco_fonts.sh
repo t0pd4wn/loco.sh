@@ -18,7 +18,7 @@
 loco::fonts_manager(){
   local font
   local fonts_path
-  local yaml_fonts=$(utils::profile_get_values '.style.fonts.urls.[]')
+  local yaml_fonts=$(utils::yq_get "${PROFILE_YAML}" '.style.fonts.urls.[]')
   declare -a yaml_fonts_array
   yaml_fonts_array=("${yaml_fonts}")
 

@@ -185,7 +185,7 @@ loco::meta_package_manager(){
 
         # parse yaml to get packages names
         local packages_selector=".packages."${1}"."${i}".[]"
-        packages=$(utils::profile_get_values "${packages_selector}" "${current_yaml}")
+        packages=$(utils::yq_get "${current_yaml}" "${packages_selector}")
         packages_array=($packages)
 
         # send packages names to meta_package

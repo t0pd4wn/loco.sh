@@ -22,7 +22,7 @@ loco::background_manager(){
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
   local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
   local profile_bg_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
-  local yaml_bg_url=$(utils::profile_get_values '.style.background')
+  local yaml_bg_url=$(utils::yq_get "${PROFILE_YAML}" '.style.background')
   local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
   local local_bgs_path=./src/backgrounds/
   local img_basename

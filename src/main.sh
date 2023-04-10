@@ -17,6 +17,7 @@ utils::source ./src/modules/core/cli.sh
 utils::source ./src/modules/core/cmd.sh
 utils::source ./src/modules/core/msg.sh
 utils::source ./src/modules/core/prompt.sh
+utils::source ./src/modules/core/yaml.sh
 
 # source loco modules
 utils::source ./src/modules/loco/loco_background.sh
