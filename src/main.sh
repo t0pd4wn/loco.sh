@@ -7,30 +7,31 @@ set -eu
 
 # source core modules
 # source the utils module
-if ! source ./src/modules/core/utils.sh; then
-  echo "Can not source ./src/modules/utils.sh" >&2
+if ! source ./src/code/modules/core/utils.sh; then
+  echo "Can not source ./src/code/utils.sh" >&2
   exit 1
 fi
 
 # source other core modules
-utils::source ./src/modules/core/cli.sh
-utils::source ./src/modules/core/cmd.sh
-utils::source ./src/modules/core/msg.sh
-utils::source ./src/modules/core/prompt.sh
-utils::source ./src/modules/core/yaml.sh
+utils::source ./src/code/modules/core/cli.sh
+utils::source ./src/code/modules/core/cmd.sh
+utils::source ./src/code/modules/core/msg.sh
+utils::source ./src/code/modules/core/prompt.sh
+utils::source ./src/code/modules/core/yaml.sh
 
 # source loco modules
-utils::source ./src/modules/loco/loco_background.sh
-utils::source ./src/modules/loco/loco_custom_functions.sh 
-utils::source ./src/modules/loco/loco_dotfiles.sh
-utils::source ./src/modules/loco/loco_fonts.sh
-utils::source ./src/modules/loco/loco_meta.sh
-utils::source ./src/modules/loco/loco_overlay.sh
-utils::source ./src/modules/loco/loco_prompts.sh
-utils::source ./src/modules/loco/loco_startup.sh
-utils::source ./src/modules/loco/loco_terminal.sh 
-utils::source ./src/modules/loco/loco_watermark.sh
-utils::source ./src/modules/loco/loco_yaml.sh
+utils::source ./src/code/modules/loco_background.sh
+utils::source ./src/code/modules/loco_custom_functions.sh 
+utils::source ./src/code/modules/loco_dotfiles.sh
+utils::source ./src/code/modules/loco_fonts.sh
+utils::source ./src/code/modules/loco_meta.sh
+utils::source ./src/code/modules/loco_multi_profiles.sh
+utils::source ./src/code/modules/loco_overlay.sh
+utils::source ./src/code/modules/loco_prompts.sh
+utils::source ./src/code/modules/loco_startup.sh
+utils::source ./src/code/modules/loco_terminal.sh 
+utils::source ./src/code/modules/loco_watermark.sh
+utils::source ./src/code/modules/loco_yaml.sh
 
 #######################################
 # main
@@ -70,7 +71,7 @@ main(){
   loco::startup "${@-}"
 
   # source main action script
-  utils::source ./src/actions/"${ACTION}.sh"
+  utils::source ./src/code/actions/"${ACTION}.sh"
 
   # display end message
   msg::end

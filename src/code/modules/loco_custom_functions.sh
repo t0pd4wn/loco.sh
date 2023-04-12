@@ -58,7 +58,7 @@ loco::custom_entry(){
   local profile_array_length="${#profile_array[@]}"
 
   # source custom.sh
-  msg::print "Sourcing " "${PROFILE}" " custom functions."
+  msg::print "Sourcing " "${PROFILE}" " entry custom functions."
 
   # reverse the array sequence so to execute commands recursively
   for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
@@ -79,7 +79,7 @@ loco::custom_exit(){
   local profile_array_length="${#profile_array[@]}"
 
   # source custom.sh
-  msg::print "Sourcing " "${PROFILE}" " custom functions."
+  msg::print "Sourcing " "${PROFILE}" " exit custom functions."
 
   # reverse the array sequence so to execute commands recursively
   for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
@@ -100,7 +100,7 @@ loco::custom_last(){
   local profile_array_length="${#profile_array[@]}"
 
   # source custom.sh
-  msg::print "Sourcing " "${PROFILE}" " custom functions."
+  msg::print "Sourcing " "${PROFILE}" " last custom functions."
 
   # reverse the array sequence so to execute commands recursively
   for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do

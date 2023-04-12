@@ -7,10 +7,11 @@ set -eu
 
 function dev_build(){
 	local commit_message="${@-}"
-	source ./src/utils/clean_profiles
+	source ./src/code/utils/clean_profiles
 	git rm ./dist/loco-dist.zip
-	source ./src/utils/build_release
-	git add .
+	source ./src/code/utils/build_release
+	# git add .
+	git add ./dist/loco-dist.zip
 	git commit -m "${commit_message}"
 	git push
 }

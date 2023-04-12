@@ -16,13 +16,13 @@
 loco::overlay_manager(){
   local bg_path="${1-}"
 
-  local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
+  local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/assets/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
   local profile_ovl_path=$(find "${ab_path}"/"${assets_path}" -name 'overlay.png' 2>/dev/null)
   local yaml_ovl_path=$(utils::yq_get "${PROFILE_YAML}" '.style.overlay')
   local ovl_path="${OVERLAY_PATH:-"${yaml_ovl_path}"}"
-  local local_ovls_path=./src/background-overlays/
+  local local_ovls_path=./src/assets/background-overlays/
   local final_path
 
   # if action is install
@@ -38,9 +38,9 @@ loco::overlay_manager(){
       msg::print "Overlay file found in assets."
       final_path="${profile_ovl_path}"
       msg::debug "${final_path}"
-    # else, if background(s) file(s) are present in /src/backgrounds
+    # else, if background(s) file(s) are present in /src/assets/backgrounds
     elif [[ ! -z "$(ls -A "${local_ovls_path}" 2>/dev/null)" ]]; then
-      msg::print "Overlay files found in /src/background-overlays/."
+      msg::print "Overlay files found in /src/assets/background-overlays/."
       # launch a prompt to select background
       loco::prompt_overlay
       # 
@@ -84,7 +84,7 @@ loco::apply_overlay(){
 
   # output name
   output_name="${bg_basename}""_""${ovl_basename}"".jpg"
-  output_path="${ab_path}""/src/backgrounds/""${output_name}"
+  output_path="${ab_path}""/src/assets/backgrounds/""${output_name}"
 
   # apply overlay to background
   utils::image_overlay "${bg_path}" "${ovl_path}" "${output_path}"

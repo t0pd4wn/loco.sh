@@ -1,9 +1,5 @@
-style:  
+style:
   background: https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/assets/backgrounds/ashim-d-silva@unsplash.com.jpg
-  colors:
-    theme: nord
   fonts:
     name: MesloLGS NF
     size: 11
-    urls:
-      - https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf

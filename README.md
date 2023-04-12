@@ -180,7 +180,7 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 
 ### Add an action
 
-To create an action, simply duplicate one available in ```/src/actions/``` and start editing it as you please.
+To create an action, simply duplicate one available in ```/src/code/actions/``` and start editing it as you please.
 
 *Actions* can be set through the ```-a``` option.
 
@@ -208,7 +208,7 @@ style:
       └── background.[image extension] # background image (optional)
 ```
 
-4. prompt: a prompt will be launched to choose a background from the ones available in ```/src/backgrounds/```
+4. prompt: a prompt will be launched to choose a background from the ones available in ```/src/assets/backgrounds/```
 
 ```bash
 .
@@ -235,7 +235,7 @@ If more than one method is set the priority goes from 1. to 4.
 
 ### Add a theme
 
-To create a theme, simply duplicate one available in ```/src/themes/``` and start editing it as you please.
+To create a theme, simply duplicate one available in ```/src/assets/themes/``` and start editing it as you please.
 
 ```bash
 background-color='[color code]'
@@ -274,7 +274,7 @@ style:
       └── overlay.png # overlay image (optional)
 ```
 
-4. prompt: a prompt will be launched to choose an overlay from the ones available in ```/src/background-overlays/```
+4. prompt: a prompt will be launched to choose an overlay from the ones available in ```/src/assets/background-overlays/```
 
 ```bash
 .
@@ -307,7 +307,7 @@ If more than one method is set the priority goes from 1. to 4.
 | Name | Command | Description |  Type |  Options |  Default |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | ACTION | a | Define the loco action | string | install, remove | - |
-| BACKGROUND | b | Define the user background (from /src/backgrounds) | string | filenames fom available /src/backgrounds/ | - |
+| BACKGROUND | b | Define the user background (from /src/assets/backgrounds) | string | filenames fom available /src/assets/backgrounds/ | - |
 | BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |
 | CONFIG_PATH | c | Define a path to the configuration file |  string | [user defined] | "./src/loco.conf" |
 | PROFILES_DIR | d | Define a path for profiles directories | string |  [user defined] | "profiles" |
@@ -342,7 +342,7 @@ The first point you need to keep in mind is security. SSH and GPG keys shall not
 - for Gitlab.com or private Gitlab instances
 1. Retrieve your [API private token](https://gitlab.com/-/profile/personal_access_tokens)
 2. Retrieve the [project ID]
-3. Update ```./src/utils/install``` with your information:
+3. Update ```./src/code/utils/install``` with your information:
 ```bash
 # modify below with your infos #
 local branch_name="gh-main"
@@ -351,7 +351,7 @@ local project_ID="1234"
 local secret_key="ABC-123"
 # # # # end of modifications
 ```
-4. modify function call in ```./src/utils/install``` from 
+4. modify function call in ```./src/code/utils/install``` from 
   ```bash
   retrieve_public_archive "$@"
   ``` 
@@ -379,7 +379,7 @@ bash <(echo '[secret key]' 'https://[git server]/api/v4/projects/[project ID]/re
 ```
 
 ### Build a release
-As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/utils/build_release```.
+As it is complicated to archive correctly ```git sub-modules``` in *profiles*, ```loco``` provides a release archive in ```/dist/```. To update it, launch ```./src/code/utils/build_release```.
 
 ## Troubleshooting
 

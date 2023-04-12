@@ -5,7 +5,7 @@
 LOCO_DEV="false"
 
 # source utils methods
-source ./src/modules/core/utils.sh
+source ./src/code/modules/core/utils.sh
 
 # check operating system
 utils::check_operating_system

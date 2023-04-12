@@ -123,7 +123,7 @@ loco::watermark_action_install(){
     # keep a copy of current finish script
     utils::cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
     # source the $ACTION.sh file
-    utils::source ./src/actions/"${ACTION}".sh
+    utils::source ./src/code/actions/"${ACTION}".sh
     # remove the newly created finish.sh
     utils::remove "./src/temp/finish.sh"
     # put the copy back
@@ -146,7 +146,7 @@ loco::watermark_action_install(){
     # # keep a copy of current finish script
     # utils::cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
     # # source the $ACTION.sh file
-    # utils::source ./src/actions/"${ACTION}".sh
+    # utils::source ./src/code/actions/"${ACTION}".sh
     # # remove the newly created finish.sh
     # utils::remove "./src/temp/finish.sh"
     # # put the copy back

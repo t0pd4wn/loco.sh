@@ -159,7 +159,7 @@ loco::meta_package_manager(){
         PACKAGE_ACTION="${ACTION}"
       fi
 
-      local packager_path="./src/descriptors/${i}.sh"
+      local packager_path="./src/code/descriptors/${i}.sh"
       # check for descriptor file
       if [[ ! -f  "${packager_path}" ]]; then
         msg::print "No " "$1" " package manager descriptor found"

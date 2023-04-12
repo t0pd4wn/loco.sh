@@ -13,3 +13,8 @@ git log --pretty=format: --name-only --diff-filter=A  | sort -u
 ```bash
 git filter-branch --index-filter 'git rm --cached --ignore-unmatch [file_path]' HEAD
 ```
+
+- find first commit for a given file
+```bash
+git log --diff-filter=A -- [filename]
+```

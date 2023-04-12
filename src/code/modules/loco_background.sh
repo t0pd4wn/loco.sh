@@ -20,11 +20,11 @@ loco::background_manager(){
 
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
-  local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
+  local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/assets/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
   local profile_bg_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
   local yaml_bg_url=$(utils::yq_get "${PROFILE_YAML}" '.style.background')
   local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
-  local local_bgs_path=./src/backgrounds/
+  local local_bgs_path=./src/assets/backgrounds/
   local img_basename
   local domain_name
   local uri_first_part
@@ -57,7 +57,7 @@ loco::background_manager(){
           msg::print "Duckduckgo images are not supported over macOS."
           msg::print "Downgrading to custom default background."
           # download image
-          utils::get_url "./src/backgrounds" "${custom_default_bg_url}"
+          utils::get_url "./src/assets/backgrounds" "${custom_default_bg_url}"
           # find ase name to get exact filename and path
           img_basename=$(find "src/backgrounds/" -name "*${img_basename}")
           final_path="${ab_path}"/"${img_basename}"
@@ -80,7 +80,7 @@ loco::background_manager(){
           fi
           
           # download image
-          utils::get_url "./src/backgrounds" "${bg_url}"
+          utils::get_url "./src/assets/backgrounds" "${bg_url}"
           # find ase name to get exact filename and path
           img_basename=$(find "src/backgrounds/" -name "*${img_basename}")
           final_path="${ab_path}"/"${img_basename}"
@@ -89,9 +89,9 @@ loco::background_manager(){
       # else if the image comes from an other domain
       else
         # download image
-        utils::get_url "./src/backgrounds" "${bg_url}"
+        utils::get_url "./src/assets/backgrounds" "${bg_url}"
         img_basename=$( utils::decode_URI "${img_basename}" )
-        final_path="${ab_path}"/src/backgrounds/"${img_basename}"
+        final_path="${ab_path}"/src/assets/backgrounds/"${img_basename}"
       fi
 
     # or, if a background file is present in /assets/
@@ -99,12 +99,12 @@ loco::background_manager(){
       msg::print "Local assets background found."
       final_path="${profile_bg_path}" 
 
-    # or, if background(s) file(s) are present in /src/backgrounds
+    # or, if background(s) file(s) are present in /src/assets/backgrounds
     elif [[ ! -z "$(ls -A "${local_bgs_path}" 2>/dev/null)" ]]; then
-      msg::print "Backgrounds found in /src/backgrounds/."
+      msg::print "Backgrounds found in /src/assets/backgrounds/."
       # launch a prompt to select background
       loco::prompt_background
-      final_path=$( find "${ab_path}""/src/backgrounds" -name "${BACKGROUND}.*" | tail -n 1)
+      final_path=$( find "${ab_path}""/src/assets/backgrounds" -name "${BACKGROUND}.*" | tail -n 1)
       
     fi
 

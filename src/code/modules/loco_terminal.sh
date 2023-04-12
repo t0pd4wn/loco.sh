@@ -75,7 +75,7 @@ loco::term_conf_set(){
   local osa_content
   local osa_file
 
-  local colors_theme_file=./src/themes/"${THEME}".conf
+  local colors_theme_file=./src/assets/themes/"${THEME}".conf
 
   font_name=$(utils::profile_get_values '.style.fonts.name')
   if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then

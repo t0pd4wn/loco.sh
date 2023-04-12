@@ -10,7 +10,7 @@
 #######################################
 loco::prompt_action(){
   if [ -z "${ACTION}" ]; then
-    prompt::build "ACTION" "./src/actions" "Choose an action :" true
+    prompt::build "ACTION" "./src/code/actions" "Choose an action :" true
     prompt::call "ACTION"
   fi
 }
@@ -43,7 +43,7 @@ loco::prompt_background(){
   fi
 
   if [ -z "${profile_bkg:-"${BACKGROUND}"}" ]; then
-    prompt::build "BACKGROUND" "./src/backgrounds/" "Choose a background:" false
+    prompt::build "BACKGROUND" "./src/assets/backgrounds/" "Choose a background:" false
     prompt::call "BACKGROUND"
 
     msg::debug "${BACKGROUND}"
@@ -61,7 +61,7 @@ loco::prompt_overlay(){
   style_overlay=$(utils::profile_get_values '.style.overlay')
 
   if [ -z "${style_overlay:-"${OVERLAY_PATH}"}" ]; then
-    prompt::build "OVERLAY_PATH" "./src/background-overlays/" "Choose an overlay:" false
+    prompt::build "OVERLAY_PATH" "./src/assets/background-overlays/" "Choose an overlay:" false
     prompt::call "OVERLAY_PATH"
   fi
 }
@@ -72,9 +72,22 @@ loco::prompt_overlay(){
 #   PROFILE
 #######################################
 loco::prompt_profile(){
+  # if no $PROFILE option is set
   if [ -z "${PROFILE}" ]; then
     prompt::build "PROFILE" "./"${PROFILES_DIR}"" "Choose a profile :" true
     prompt::call "PROFILE"
+  else
+    # if a $PROFILE option is set
+    # split the option on the "," character 
+    declare -a profile_option
+    profile_option=($(echo "${PROFILE}" | tr "," " "))
+
+    local profile_length=${#profile_option[@]}
+
+    # if there is more than one profile, merge profiles
+    if [[ "${profile_length}" -gt 1 ]]; then
+      loco::multi_prepare "${profile_option[@]}"
+    fi
   fi
 }
 
@@ -119,7 +132,7 @@ loco::prompt_theme(){
 
   # if no theme is set, launch a prompt
   if [ -z "${profile_style:-"${THEME}"}" ] &&  [ ! -f "${local_theme}" ] ; then
-    prompt::build "THEME" "./src/themes" "Choose a color theme :" false
+    prompt::build "THEME" "./src/assets/themes" "Choose a color theme :" false
     prompt::call "THEME"
   else
     THEME="${THEME:-${profile_style}}"
