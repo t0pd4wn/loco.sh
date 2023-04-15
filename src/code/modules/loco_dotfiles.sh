@@ -149,6 +149,54 @@ loco::dotfiles_backup(){
 }
 
 #######################################
+# Merge two dotfiles together
+# GLOBALS:
+#   CURRENT_USER
+#   INSTANCE_PATH
+#   OS_PREFIX
+# Arguments:
+#   $1 # a yaml to be merged from (A)
+#   $2 # a yaml to be merged with (B)
+#   $3 # a yaml to keep the result
+#######################################
+loco::dotfile_merge(){
+
+  local dotfile_from="${1-}"
+  local dotfile_to="${2-}"
+  local result_yaml="${3-}"
+
+  yq '. *=load("'"${dotfile_from}"'")' "${dotfile_to}" > "${result_yaml}"
+
+  # remove the packages key
+
+  utils::yq_delete_key "${result_yaml}" ".packages"
+
+  # get the packages from A
+  from_list=$(utils::yq_get "${dotfile_from}" ".packages.$OS_PREFIX")
+  to_list=$(utils::yq_get "${dotfile_to}" ".packages.$OS_PREFIX")
+
+  # compare to b
+
+  echo ${from_list}
+  echo ${to_list}
+
+
+  # add to b if doesn't exist
+
+  local sub_path="dotfiles-backup"
+  local backup_file="${INSTANCE_PATH}"/"${sub_path}"/"${dotfile}"
+  local dest_path="/"${OS_PREFIX}"/"${CURRENT_USER}"/"
+  
+  if [[ -f ${backup_file} ]]; then
+    cmd::run_as_user "cp -R "${backup_file}" "${dest_path}""
+  else
+    msg::debug "No dotfile to restore found."
+    return 0
+  fi
+
+}
+
+#######################################
 # Set dotfiles to /"${OS_PREFIX}"/"${CURRENT_USER}"
 # GLOBALS:
 #   CURRENT_USER

@@ -1,5 +1,5 @@
 #######################################
-# Return yaml keys
+# Return yaml keys (deprecated?)
 # Globals:
 #   PROFILE
 #   PROFILES_DIR
@@ -177,31 +177,66 @@ utils::yq_contains(){
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
 #   $3 # a yaml value
+#   $4 # addition type "key|raw"
 #######################################
 utils::yq_add(){
   local yaml="${1-}"
   local selector="${2-}" 
   local value="${3-}"
-  
-  local arg="${selector}"' = ["'"${value}"'"] + '"${selector}"
+  local option="${4-"key"}"
+  local hasValue
 
-  # check if list value exist
-  local hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
+  if [[ "${option}" == "key" ]]; then
+    local arg="${selector}"' = ["'"${value}"'"] + '"${selector}"
+    hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
+  elif [[ "${option}" == "raw" ]]; then
+    local arg="${selector}"' = "'"${value}"'" + '"${selector}"
+    hasValue=false
+  fi
 
-  if "${hasValue}"; then
-    # value already exist
-    :
-  else
-      # tries to add list value
+  if [[ "${hasValue}" == false ]]; then
+    # tries to add value
     if ! cat "${yaml}" | yq "${arg}" > src/temp/yaml.local; then
-      echo "Unable to yq add ${value} in ${selector} in ${yaml}"
+      echo "Unable to yq add ${value} in ${selector} in yaml.local"
     else
-      # if succeeds, overwrites original yaml
+      # if success, overwrite original yaml
       # condition used to ensure yaml.local is written by yq
       if [[ -f src/temp/yaml.local ]]; then
         cat src/temp/yaml.local > "${yaml}"
+        if [[ "${option}" == "raw" ]]; then
+          # if "raw" is set, perform an extra clean up
+          utils::remove_string_in_file " |-" "${yaml}"
+          # for some reasons an extra trailing "null" appears
+          utils::remove_string_in_file "null" "${yaml}"
+        fi
       fi
     fi
+  fi
+}
+
+#######################################
+# Merge two yaml selectors
+# Arguments:
+#   $1 # a yaml file path
+#   $2 # a yaml selector ".variable.pathA"
+#   $3 # a yaml selector ".variable.pathB"
+#   $4 # merge type "classic|array"
+#######################################
+yaml::merge(){
+  local yaml="${1-}"
+  local selecA="${2-}" 
+  local selecB="${3-}"
+  local option="${4-"classic"}"
+  local operator
+
+  if [[ "${option}" == "classic" ]]; then
+      operator="*"
+  elif [[ "${option}" == "array" ]]; then
+      operator="*?+"
+  fi
+  
+  if ! cat "${yaml}" | yq ''"${selecA}"' '"${operator}"' '"${selecB}"''; then
+    echo "Unable to yq merge ${selecA} with ${selecB} in ${yaml}"
   fi
 }
 
@@ -276,13 +311,20 @@ utils::yq_change(){
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".parent.path"
 #   $3 # a yaml value ".childpath"
+#   $4 # addition type "key|raw"
 #######################################
 utils::yq_add_key(){
   local yaml="${1-}"
   local selector="${2-}"
   local value="${3-}"
+  local option="${4-"key"}"
   
-  local arg="${selector}""${value}"' += []'
+  if [[ "${option}" == "key" ]]; then
+    #statements
+    local arg="${selector}""${value}"' += []'
+  elif [[ "${option}" == "raw" ]]; then
+    local arg="${selector}""${value}"' += '
+  fi
 
   # tries to add key
   # check if key exists already

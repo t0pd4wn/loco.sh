@@ -540,6 +540,21 @@ utils::remove_file(){
 }
 
 #######################################
+# Remove a string from a file
+# Arguments:
+#   $1 # a string
+#   $2 # a file path
+#######################################
+utils::remove_string_in_file(){
+  local string="${1-}"
+  local file="${2-}"
+
+  if ! sed -i 's/'"${string}"'//' "${file}"; then
+    _error "Unable to remove ${string} in ${file}"
+  fi
+}
+
+#######################################
 # Remove a path
 # Arguments:
 #   $1 # a path
