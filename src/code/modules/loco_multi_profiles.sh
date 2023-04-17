@@ -23,8 +23,9 @@ loco::multi_prepare(){
   for profile in "${profiles[@]}"; do
     echo "before installing ${profile}"
     loco::multi_assets "${profile}"
-    # loco::multi_dotfiles "${profile}"
+    loco::multi_dotfiles "${profile}"
     loco::multi_yaml "${profile}"
+    # loco::multi_custom_functions "${profile}"
     echo "after installing ${profile}"
   done
   _exit
@@ -53,9 +54,19 @@ loco::multi_assets(){
 # Arguments:
 #   $1 # "entry" or "exit"
 #######################################
-# loco::multi_dotfiles(){
+ loco::multi_dotfiles(){
+  local profile="${1-}"
+  local from_path=./${PROFILES_DIR}/"${profile}"/dotfiles
+  local dest_path=./${PROFILES_DIR}/.Multi/dotfiles
 
-# }
+  if [[ $(ls -A ${dest_path}) ]]; then
+  # if destination folder is not empty
+    loco::dotfiles_merge "${from_path}" "${dest_path}"
+  else
+  # if empty, copy files in destination folder
+    utils::cp "${from_path}/." "${dest_path}/"
+  fi
+ }
 
 #######################################
 # Merge profiles yaml

@@ -148,6 +148,19 @@ utils::countdown(){
 }
 
 #######################################
+# Cat
+# Arguments:
+#   $1 # command argument
+#######################################
+utils::cat(){
+  local arg="${@-}"
+
+  if ! cat "${arg}"; then
+    _error "Unable to cat ${arg}"
+  fi
+}
+
+#######################################
 # Copy from to
 # Arguments:
 #   $1 # from
@@ -191,6 +204,54 @@ utils::chown(){
     _error "Unable to chown ${path} to ${arg}"
   fi
 }
+
+#######################################
+# Compare two files
+# Arguments:
+#   $1 # /path/to/a/file
+#   $2 # /path/to/a/second/file
+# Output:
+#    a boolean
+#######################################
+utils::compare(){
+  local file_A="${1-}"
+  local file_B="${2-}"
+  local file_A_size=$(utils::file_size "${file_A}")
+  local file_B_size=$(utils::file_size "${file_B}")
+
+  if [[ "${file_A_size}" -eq "${file_B_size}"  ]]; then
+    if ! $(cmp -s ${file_A} ${file_B}); then
+    _error "Unable to cmp ${file_A} with ${file_B}"
+    fi
+
+    if (( $? != 0 )); then
+      # if not 0
+      echo false
+    else
+      # if 0, files are the same
+      echo true
+    fi
+
+  else
+    # files sizes are different
+    echo false
+  fi
+}
+
+#######################################
+# Get the size of a file
+# Arguments:
+#   $1 # /path/to/a/file
+#######################################
+utils::file_size(){
+  local file="${1-}"
+
+  if ! stat -c%s "${file}"; then
+    _error "Unable to stat ${file}"
+  fi
+}
+
+
 
 #######################################
 # Cut a string

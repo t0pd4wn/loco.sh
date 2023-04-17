@@ -149,7 +149,7 @@ loco::dotfiles_backup(){
 }
 
 #######################################
-# Merge two dotfiles together
+# Merge two dotfiles folders together
 # GLOBALS:
 #   CURRENT_USER
 #   INSTANCE_PATH
@@ -159,41 +159,38 @@ loco::dotfiles_backup(){
 #   $2 # a yaml to be merged with (B)
 #   $3 # a yaml to keep the result
 #######################################
-loco::dotfile_merge(){
+loco::dotfiles_merge(){
+  local dotfiles_from="${1-}"
+  local dotfiles_to="${2-}"
+  local prev
+  local new
+  local is_same
 
-  local dotfile_from="${1-}"
-  local dotfile_to="${2-}"
-  local result_yaml="${3-}"
+  # list dotfiles
+  utils::list "dotfiles_list_A" "${dotfiles_from}" "all"
+  utils::list "dotfiles_list_B" "${dotfiles_to}" "all"
 
-  yq '. *=load("'"${dotfile_from}"'")' "${dotfile_to}" > "${result_yaml}"
+  for dotfile in "${dotfiles_list_A[@]}"; do
+      prev="${dotfiles_to}/${dotfile}"
+      new="${dotfiles_from}/${dotfile}"
 
-  # remove the packages key
+    if [[ -f "${dotfiles_to}/${dotfile}" ]]; then
+      # filenames are similar
+      # compare files sizes and content
+      is_same=$(utils::compare "${prev}" "${new}")
 
-  utils::yq_delete_key "${result_yaml}" ".packages"
-
-  # get the packages from A
-  from_list=$(utils::yq_get "${dotfile_from}" ".packages.$OS_PREFIX")
-  to_list=$(utils::yq_get "${dotfile_to}" ".packages.$OS_PREFIX")
-
-  # compare to b
-
-  echo ${from_list}
-  echo ${to_list}
-
-
-  # add to b if doesn't exist
-
-  local sub_path="dotfiles-backup"
-  local backup_file="${INSTANCE_PATH}"/"${sub_path}"/"${dotfile}"
-  local dest_path="/"${OS_PREFIX}"/"${CURRENT_USER}"/"
-  
-  if [[ -f ${backup_file} ]]; then
-    cmd::run_as_user "cp -R "${backup_file}" "${dest_path}""
-  else
-    msg::debug "No dotfile to restore found."
-    return 0
-  fi
-
+      if [[ "${is_same}" == false ]]; then
+        # files sizes are different
+        # copy $new file content in $prev file
+        utils::echo "\n\n### from ${new}" >> "${prev}"
+        utils::cat "${new}" >> "${prev}"
+      fi
+    else
+      # file doesn't exist
+      # copy file in destination
+      utils::cp "${new}" "${dotfiles_to}"
+    fi
+  done
 }
 
 #######################################
