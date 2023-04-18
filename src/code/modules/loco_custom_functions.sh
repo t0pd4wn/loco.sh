@@ -72,6 +72,8 @@ loco::custom_entry(){
 
 #######################################
 # Execute custom exit functions
+# GLOBALS:
+#   PROFILE
 #######################################
 loco::custom_exit(){
   local profile_backup="${PROFILE}"
@@ -93,6 +95,8 @@ loco::custom_exit(){
 
 #######################################
 # Execute custom last functions
+# GLOBALS:
+#   PROFILE
 #######################################
 loco::custom_last(){
   local profile_backup="${PROFILE}"
@@ -123,4 +127,64 @@ loco::custom_source(){
   if [ $? -ne 0 ]; then
     msg::print "Can not source custom.sh file."
   fi
+}
+
+#######################################
+# Merge custom functions
+# Arguments:
+#   $1 # a custom file to be merged from (A)
+#   $2 # a custom file to be merged with (B)
+#   $3 # a custom file to keep the result
+#######################################
+loco::custom_merge(){
+  local custom_from="${1-}"
+  local custom_to="${2-}"
+  local prev
+  local new
+  local is_same
+  declare -a new_functions
+  declare -a prev_functions
+
+  # list functions from both files
+  new_functions=($(utils::list_bash_functions "${custom_from}"))
+  prev_functions=($(utils::list_bash_functions "${custom_to}"))
+
+
+  for function in "${new_functions[@]}"; do
+
+    if [[  "${prev_functions[*]}" =~ "${function}"  ]]; then
+      # function exists in file
+      new=$(utils::dump_bash_function "${function}" "${custom_from}")
+      prev=$(utils::dump_bash_function "${function}" "${custom_to}")
+
+      if [[ "${new}" == "${prev}" ]]; then
+        # functions are identical
+        utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+      else
+        # functions are different
+        prev="${prev}\n${new}"
+        utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+      fi
+
+      # remove function name from prev array
+      "${prev_functions[@]/$function}"
+
+    else
+      # function doesn't exist
+      new=$(utils::dump_bash_function "${function}" "${custom_from}")
+      utils::echo "${function}(){\n${new}\n}\n" >> ./src/temp/custom.tmp
+    fi
+  done
+
+  # dump remaining previous functions in temp file
+  for function in "${prev_functions[@]}"; do
+      prev=$(utils::dump_bash_function "${function}" "${custom_to}")
+      utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+  done
+
+  # replace dest file with cleaned temp one
+  utils::remove "${custom_to}"
+  utils::replace_string_in_file '";' '"' ./src/temp/custom.tmp
+  utils::replace_string_in_file 'fi;' 'fi' ./src/temp/custom.tmp
+  utils::cp ./src/temp/custom.tmp "${custom_to}"
 }

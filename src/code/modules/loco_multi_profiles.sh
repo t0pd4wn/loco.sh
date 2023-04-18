@@ -21,14 +21,13 @@ loco::multi_prepare(){
 
   # iterate over profiles directories
   for profile in "${profiles[@]}"; do
-    echo "before installing ${profile}"
     loco::multi_assets "${profile}"
     loco::multi_dotfiles "${profile}"
     loco::multi_yaml "${profile}"
-    # loco::multi_custom_functions "${profile}"
-    echo "after installing ${profile}"
+    loco::multi_custom_functions "${profile}"
   done
-  _exit
+
+  PROFILE=".Multi"
 }
 
 #######################################
@@ -93,8 +92,18 @@ loco::multi_assets(){
 # Merge profiles custom functions files
 # GLOBALS:
 # Arguments:
-#   $1 # "entry" or "exit"
+#   $1 # from profile
 #######################################
-# loco::multi_custom_functions(){
+loco::multi_custom_functions(){
+  local profile="${1-}"
+  local from_custom=./${PROFILES_DIR}/"${profile}"/custom.sh
+  local dest_custom=./${PROFILES_DIR}/.Multi/custom.sh
 
-# }
+  if [[ -f "${dest_custom}" ]]; then
+  # if destination file exists, merge files
+    loco::custom_merge "${from_custom}" "${dest_custom}"
+  else
+  # if not, copy file as destination file
+    utils::cp "${from_custom}" "${dest_custom}"
+  fi
+}

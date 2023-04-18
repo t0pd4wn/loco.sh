@@ -251,7 +251,38 @@ utils::file_size(){
   fi
 }
 
+#######################################
+# Dump a bash function
+# Arguments:
+#   $1 # a function name"
+#   $2 # /path/to/a/script.sh
+#######################################
+utils::dump_bash_function(){
+  local name="${1-}"
+  local path="${2-}"
 
+  source "${path}"
+
+  if [[ $(type -t "${name}") == function ]]; then
+    if ! type "${name}" | sed '1,3d;$d'; then
+      _error "Unable to dump ${name} from ${path}"
+    fi
+  fi
+}
+
+#######################################
+# Get the function names in bash script
+# Arguments:
+#   $1 # /path/to/a/file
+#######################################
+utils::list_bash_functions(){
+  local file="${1-}"
+  local grep_arg='^[[:space:]]*([[:alnum:]_]+[[:space:]]*\(\)+)'
+
+  if ! grep -E  "${grep_arg}" "${file}" | cut -d"(" -f 1; then
+    _error "Unable to get functions names from ${file}"
+  fi
+}
 
 #######################################
 # Cut a string
@@ -670,7 +701,26 @@ utils::replace_in_file(){
 }
 
 #######################################
+# Replace a string within a file
+# Arguments:
+#   $1 # searched string
+#   $2 # replace string
+#   $4 # file to be modified path 
+#######################################
+utils::replace_string_in_file(){
+  local search="${1-}"
+  local replace="${2-}"
+  local path="${3-}"
+
+  if ! sed -i -e 's/'"${search}"'/'"${replace}"'/g' "${path}"; then
+    _error "Unable to replace text in "${file_path}""
+  fi
+}
+
+#######################################
 # Set system clock (needed in  virtual hosts)
+# Globals:
+#   LOCO_OSTYPE
 #######################################
 utils::set_clock(){
   if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then

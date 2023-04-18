@@ -150,14 +150,9 @@ loco::dotfiles_backup(){
 
 #######################################
 # Merge two dotfiles folders together
-# GLOBALS:
-#   CURRENT_USER
-#   INSTANCE_PATH
-#   OS_PREFIX
 # Arguments:
-#   $1 # a yaml to be merged from (A)
-#   $2 # a yaml to be merged with (B)
-#   $3 # a yaml to keep the result
+#   $1 # a dotfiles path to be merged from (A)
+#   $2 # a dotfiles path to be merged with (B)
 #######################################
 loco::dotfiles_merge(){
   local dotfiles_from="${1-}"
