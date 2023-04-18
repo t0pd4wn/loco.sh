@@ -1,23 +1,26 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, overlays, and perform custom pre and post script configuration tasks.
+***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, overlays, and perform custom ```pre``` and ```post``` script configuration tasks.
+
+***Loco.sh*** is based over **profiles** made of either a YAML file or a folder-tree structure ; users can define everything in a single YAML or build their profiles with separate files in folders. The library supports multi profiles installation for better modularity.
 
 <img alt="Loco.sh Ubuntu demo" src="dist/loco_demo_0.7_Ubuntu.gif" width="1080">
 
 ***Loco.sh*** can be useful to:
 
-- **regular users**, who can easily manage their desktop style
-- **developers**, who need to manage various environments and machines, with the same look and feel
-- **system administrators**, who need to manage their users profiles in a single place
+- **regular users**, who can easily define their desktop style
+- **developers**, for various environments and machines with the same look and feel
+- **system administrators**, to manage their users profiles in a single place
 - **security consultants**, to deal with a variety of identities and security access
+- **data scientists**, for setting up complex machine learning environments
 
 ***Loco.sh*** comes with 5 example profiles :
 
 - **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure
 - **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
-- **vim-only**: fully configured ```vim```
-- **shell-only**: fully configured ```zsh``` with ```p10K```
-- **style-only**: custom themed terminal and OS (dock, background)
+- **vim**: fully configured ```vim```
+- **shell**: fully configured ```zsh``` with ```p10K```
+- **style**: custom themed terminal and OS (dock, background)
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -387,11 +390,10 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 When you install ```loco``` a watermark file ```~/.loco.yml``` is installed. It stores the original dotfiles backup path. Wen you try to remove a profile ```loco``` tries to find the watermark path to restore the original user dotfiles. If the path is broken, either correct the ```~/.loco``` watermark with the correct one or put your dotftiles at the expected path.
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
-## Backlog
+## Wishlist
 - actions: add init, save
 - actions: add a "change_background" action
-- bug: using remote /profiles/ dir doesn't work with remove
-- code: add an img module class ?
+- code: add an "img" module class ?
 - documentation: add an example row in the options table
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
