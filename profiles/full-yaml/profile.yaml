@@ -1,0 +1,78 @@
+style:
+  background: https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/assets/backgrounds/christoph-von-gellhorn@unsplash.com.jpg
+  overlay: https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/assets/background-overlays/Loco-logo-small-trsp.png
+  colors:
+    theme: monokai
+  fonts:
+    name: MesloLGS NF
+    size: 11
+    urls:
+      - https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+packages:
+  macos:
+    brew:
+      - git
+      - vim
+      - zsh
+      - tree
+  ubuntu:
+    apt:
+      - git
+      - vim
+      - zsh
+      - tree
+custom_functions:
+  install_exit:
+    - cmd::run_as_user git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    - cmd::run_as_user vim +PluginInstall +qall
+    - cmd::run_as_user git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.zsh-plugins/powerlevel10k
+  remove_exit:
+    - utils::remove ~/.vim/bundle/*
+    - utils::remove ~/.zsh-plugins/powerlevel10k
+  install_macos_exit:
+    - cmd::record defaults write com.apple.dock static-only -bool TRUE; killall Dock
+    - cmd::record defaults write NSGlobalDomain _HIHideMenuBar -bool TRUE; killall Finder
+    - cmd::record osascript -e 'tell application \"System Events\" to set the autohide of the dock preferences to true'
+    - cmd::record defaults write com.apple.Terminal NSQuitAlwaysKeepsWindows -bool false
+    - cmd::record env POSIX=$HOME/.profile /bin/sh
+  update_macos_exit:
+    - cmd::record defaults write com.apple.dock static-only -bool TRUE; killall Dock
+    - cmd::record defaults write NSGlobalDomain _HIHideMenuBar -bool TRUE; killall Finder
+    - cmd::record osascript -e 'tell application \"System Events\" to set the autohide of the dock preferences to true'
+    - cmd::record defaults write com.apple.Terminal NSQuitAlwaysKeepsWindows -bool false
+    - cmd::record env POSIX=$HOME/.profile /bin/sh
+  remove_macos_exit:
+    - cmd::record defaults write com.apple.dock static-only -bool FALSE; killall Dock
+    - cmd::record defaults write NSGlobalDomain _HIHideMenuBar -bool FALSE; killall Finder
+    - cmd::record osascript -e 'tell application \"System Events\" to set the autohide of the dock preferences to false'
+    - cmd::record defaults write com.apple.Terminal NSQuitAlwaysKeepsWindows -bool true
+    - cmd::record unset POSIX
+  install_ubuntu_exit:
+    - cmd::record gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true;
+    - cmd::record gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 5750;
+    - cmd::record gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false;
+    - cmd::record gsettings set org.gnome.shell.extensions.dash-to-dock dock-position BOTTOM;
+    - cmd::record gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 60;
+    - cmd::record gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view';
+    - cmd::record gsettings set org.gnome.nautilus.list-view use-tree-view true;
+    - cmd::record gsettings set org.gnome.nautilus.preferences default-sort-order 'type';
+  update_ubuntu_exit:
+    - cmd::record gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true;
+    - cmd::record gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 5750;
+    - cmd::record gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false;
+    - cmd::record gsettings set org.gnome.shell.extensions.dash-to-dock dock-position BOTTOM;
+    - cmd::record gsettings set org.gnome.shell.extensions.dash-to-dock dash-max-icon-size 60;
+    - cmd::record gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view';
+    - cmd::record gsettings set org.gnome.nautilus.list-view use-tree-view true;
+    - cmd::record gsettings set org.gnome.nautilus.preferences default-sort-order 'type';
+  remove_ubuntu_exit:
+    - cmd::record gsettings reset org.gnome.settings-daemon.plugins.color night-light-enabled;
+    - cmd::record gsettings reset org.gnome.shell.extensions.dash-to-dock extend-height;
+    - cmd::record gsettings reset org.gnome.shell.extensions.dash-to-dock dock-position;
+    - cmd::record gsettings reset org.gnome.shell.extensions.dash-to-dock dash-max-icon-size;
+    - cmd::record gsettings reset org.gnome.shell.extensions.dash-to-dock autohide;
+    - cmd::record gsettings reset org.gnome.shell.extensions.dash-to-dock dock-fixed;
+    - cmd::record gsettings reset org.gnome.shell.extensions.dash-to-dock intellihide;
+    - cmd::record gsettings reset org.gnome.nautilus.preferences default-folder-viewer;
+    - cmd::record gsettings reset org.gnome.nautilus.list-view use-tree-view;
+    - cmd::record gsettings reset org.gnome.nautilus.preferences default-sort-order;

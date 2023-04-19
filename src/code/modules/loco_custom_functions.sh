@@ -14,10 +14,11 @@
 #   $1 # "entry" or "exit"
 #######################################
 loco::custom_action(){
+  local step="${1-}"
   local custom_function_path="./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh"
+  local custom_function_yaml="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
 
-  if [[ -f "${custom_function_path}" ]]; then
-    local step="${1-}"
+  if [[ -f "${custom_function_path}" || -f "${custom_function_yaml}" ]]; then
     if [[ "${ACTION}" == "update" ]]; then
       #if action is "update", then use the "install" custom functions
       local generic_function="install_${step}"
@@ -29,7 +30,7 @@ loco::custom_action(){
     loco::custom_function "${generic_function}"
     loco::custom_function "${os_specific_function}"
   else
-    msg::debug "No custom.sh file found." 
+    msg::debug "No custom.sh or yaml file found." 
   fi
 }
 
@@ -40,10 +41,23 @@ loco::custom_action(){
 #######################################
 loco::custom_function(){
   local custom_function=${1-}
+
   if [[ $(type -t "${custom_function}") == function ]]; then
     "${custom_function}"
   else
-    msg::debug "No "${custom_function}" function found."
+    msg::debug "No "${custom_function}" function found in custom.sh."
+  fi
+
+  local has_selector
+  local selector=".custom_functions.${custom_function}"
+  local yaml_path="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
+
+  has_selector=$(yaml::has_child_selector "${selector}" "${yaml_path}")
+
+  if [[ ${has_selector} == true ]]; then
+    yaml::execute "${yaml_path}" "${selector}"
+  else 
+    msg::debug "No "${custom_function}" function found in profile.yaml."
   fi
 }
 
@@ -148,7 +162,6 @@ loco::custom_merge(){
   # list functions from both files
   new_functions=($(utils::list_bash_functions "${custom_from}"))
   prev_functions=($(utils::list_bash_functions "${custom_to}"))
-
 
   for function in "${new_functions[@]}"; do
 

@@ -180,9 +180,9 @@ loco::watermark_action_remove(){
   local profile_array
   local profile_prefix
 
-  PROFILE=$(utils::yq_get "${INSTANCE_YAML}" '.instance.PROFILE')
-  CURRENT_USER=$(utils::yq_get "${INSTANCE_YAML}" '.instance.CURRENT_USER')
-  INSTANCE_PATH=$(utils::yq_get "${INSTANCE_YAML}" '.instance.INSTANCE_PATH')
+  PROFILE=$(yaml::get "${INSTANCE_YAML}" '.instance.PROFILE')
+  CURRENT_USER=$(yaml::get "${INSTANCE_YAML}" '.instance.CURRENT_USER')
+  INSTANCE_PATH=$(yaml::get "${INSTANCE_YAML}" '.instance.INSTANCE_PATH')
 
   profile_array=(${PROFILE})
 
@@ -229,11 +229,11 @@ loco::watermark_action_update(){
 
     # get yaml value for instance path
     local path_selector=".instance.INSTANCE_PATH"
-    INSTANCE_PATH=$(utils::yq_get "${INSTANCE_YAML}" "${path_selector}")
+    INSTANCE_PATH=$(yaml::get "${INSTANCE_YAML}" "${path_selector}")
 
     # add curent profile to instance yaml
     local profile_selector=".instance.PROFILE"
-    local previous_profile=$(utils::yq_get "${INSTANCE_YAML}" "${profile_selector}")
+    local previous_profile=$(yaml::get "${INSTANCE_YAML}" "${profile_selector}")
     utils::yq_change "${INSTANCE_YAML}" "${selector}" "${previous_profile} ${PROFILE}"
 
     # utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
@@ -299,7 +299,7 @@ loco::watermark_set(){
     for file in "${home_dotfiles[@]}"; do
       local filename=$(utils::string_cut_rev "${file}" "/" "1")
       # add filename to ".dotfiles.legacy"
-      utils::yq_add "${INSTANCE_YAML}" ".dotfiles.legacy" "${filename}"
+      yaml::add "${INSTANCE_YAML}" ".dotfiles.legacy" "${filename}"
     done
   fi
 }

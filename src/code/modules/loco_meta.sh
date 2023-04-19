@@ -99,7 +99,7 @@ loco::meta_package(){
       loco::meta_action_better
 
       # create yaml key in /home/$USER/.loco.yml
-      utils::yq_add "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
+      yaml::add "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
     fi
   fi
   
@@ -170,7 +170,7 @@ loco::meta_package_manager(){
 
         # add package manager to the instance yaml
         local yaml_key=".packages.${pkg_type}.${PACKAGE_MANAGER}"
-        utils::yq_add_key "${INSTANCE_YAML}" "${yaml_key}"
+        yaml::add_key "${INSTANCE_YAML}" "${yaml_key}"
 
         # expand variable value 
         PACKAGE_ACTION=${!PACKAGE_ACTION}
@@ -185,7 +185,7 @@ loco::meta_package_manager(){
 
         # parse yaml to get packages names
         local packages_selector=".packages."${1}"."${i}".[]"
-        packages=$(utils::yq_get "${current_yaml}" "${packages_selector}")
+        packages=$(yaml::get "${current_yaml}" "${packages_selector}")
         packages_array=($packages)
 
         # send packages names to meta_package

@@ -13,11 +13,12 @@
 cmd::record(){
   local command="${@-}"
   local script_path="./src/temp/finish.sh"
+
   if [[ ! -f "${script_path}" ]]; then
-    echo "${command}" > "${script_path}"
+    utils::echo "${command}" > "${script_path}"
     chmod +x "${script_path}"
   else 
-    echo "${command}" >> "${script_path}"
+    utils::echo "${command}" >> "${script_path}"
   fi
 }
 

@@ -46,7 +46,7 @@ loco::dotfiles_manager(){
 
       # $ACTION == "remove"
     if [[ "${ACTION}" == "remove" ]]; then  
-        dotfiles_list=$(utils::yq_get "${INSTANCE_YAML}" ".dotfiles.installed[]") 
+        dotfiles_list=$(yaml::get "${INSTANCE_YAML}" ".dotfiles.installed[]") 
         loco::dotfiles_action_remove "${dotfiles_list}"
     fi
 
@@ -143,7 +143,7 @@ loco::dotfiles_backup(){
     utils::cp "${user_file}" "${profile_file}"
     utils::remove "${user_file}"
     # add entry to instance yaml
-    utils::yq_add "${INSTANCE_YAML}" ".dotfiles.backup" "${dotfile}"
+    yaml::add "${INSTANCE_YAML}" ".dotfiles.backup" "${dotfile}"
     msg::debug "${dotfile}" " is backup'd"
   fi
 }
@@ -226,7 +226,7 @@ loco::dotfiles_set(){
     utils::cp "${profile_file}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
   fi
   # add entry to instance yaml
-  utils::yq_add "${INSTANCE_YAML}" ".dotfiles.installed" "${dotfile}"
+  yaml::add "${INSTANCE_YAML}" ".dotfiles.installed" "${dotfile}"
 }
 
 #######################################

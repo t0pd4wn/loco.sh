@@ -20,7 +20,7 @@ loco::overlay_manager(){
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
   local profile_ovl_path=$(find "${ab_path}"/"${assets_path}" -name 'overlay.png' 2>/dev/null)
-  local yaml_ovl_path=$(utils::yq_get "${PROFILE_YAML}" '.style.overlay')
+  local yaml_ovl_path=$(yaml::get "${PROFILE_YAML}" '.style.overlay')
   local ovl_path="${OVERLAY_PATH:-"${yaml_ovl_path}"}"
   local local_ovls_path=./src/assets/background-overlays/
   local final_path

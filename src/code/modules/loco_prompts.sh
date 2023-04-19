@@ -23,11 +23,11 @@ loco::prompt_action(){
 #######################################
 loco::prompt_background(){
   local profile_bkg
-  profile_bkg=$(utils::yq_get "${PROFILE_YAML}" '.style.background')
+  profile_bkg=$(yaml::get "${PROFILE_YAML}" '.style.background')
 
   # if action "update", check for existing background
   if [[ "${ACTION}" == "update" ]]; then
-    local watermark_bkg=$(utils::yq_get "${INSTANCE_YAML}" '.style.background')
+    local watermark_bkg=$(yaml::get "${INSTANCE_YAML}" '.style.background')
     if [[ "${watermark_bkg}" != "" ]]; then
       msg::prompt "Do you want to keep your " "current background " "? (y/n) "
       case ${USER_ANSWER:0:1} in
@@ -107,7 +107,7 @@ loco::prompt_theme(){
 
   # if action "update", check for existing style
   if [[ "${ACTION}" == "update" ]]; then
-    local watermark_style=$(utils::yq_get "${INSTANCE_YAML}" '.style.colors.theme')
+    local watermark_style=$(yaml::get "${INSTANCE_YAML}" '.style.colors.theme')
     if [[ "${watermark_style}" != "" ]]; then
       msg::prompt "Do you want to keep your current " "style " "? (y/n) "
       case ${USER_ANSWER:0:1} in

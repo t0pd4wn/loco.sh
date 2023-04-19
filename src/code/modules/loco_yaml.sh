@@ -35,16 +35,16 @@ loco::yaml_merge(){
   local packages_part
 
   # grab the yaml values from the two files
-  from_style_list=$(utils::yq_get "${yaml_from}" ".style")
-  to_style_list=$(utils::yq_get "${yaml_to}" ".style")
-  from_packages_list=$(utils::yq_get "${yaml_from}" ".packages")
-  to_packages_list=$(utils::yq_get "${yaml_to}" ".packages")
+  from_style_list=$(yaml::get "${yaml_from}" ".style")
+  to_style_list=$(yaml::get "${yaml_to}" ".style")
+  from_packages_list=$(yaml::get "${yaml_from}" ".packages")
+  to_packages_list=$(yaml::get "${yaml_to}" ".packages")
 
   # add the yaml values temporarily in the destination file
-  utils::yq_add "${yaml_to}" ".styleA" "${from_style_list}" "raw"
-  utils::yq_add "${yaml_to}" ".styleB" "${to_style_list}" "raw"
-  utils::yq_add "${yaml_to}" ".packagesA" "${from_packages_list}" "raw"
-  utils::yq_add "${yaml_to}" ".packagesB" "${to_packages_list}" "raw"
+  yaml::add "${yaml_to}" ".styleA" "${from_style_list}" "raw"
+  yaml::add "${yaml_to}" ".styleB" "${to_style_list}" "raw"
+  yaml::add "${yaml_to}" ".packagesA" "${from_packages_list}" "raw"
+  yaml::add "${yaml_to}" ".packagesB" "${to_packages_list}" "raw"
 
   # merge values together and keep them in variables
   style_part=$(yaml::merge "${yaml_to}" ".styleA" ".styleB" "classic")
@@ -56,6 +56,6 @@ loco::yaml_merge(){
   # write merged values in new destination file
   utils::echo "style:" > ${yaml_to}
   utils::echo "packages:" >> ${yaml_to}
-  utils::yq_add "${yaml_to}" ".style" "${style_part}" "raw"
-  utils::yq_add "${yaml_to}" ".packages" "${packages_part}" "raw"
+  yaml::add "${yaml_to}" ".style" "${style_part}" "raw"
+  yaml::add "${yaml_to}" ".packages" "${packages_part}" "raw"
 }

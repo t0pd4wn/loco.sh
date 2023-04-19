@@ -47,14 +47,13 @@ utils::profile_get_values(){
   utils::echo "${value}"
 }
 
-
 #######################################
 # Return yaml values
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
 #######################################
-utils::yq_get(){
+yaml::get(){
   # local options="${1-}"
   local yaml="${1-}"
   local selector="${2-}" 
@@ -69,7 +68,6 @@ utils::yq_get(){
   fi
 }
 
-
 #######################################
 # Return yaml values
 # Arguments:
@@ -82,13 +80,12 @@ utils::yq2(){
   local selector="${2-}" 
 
   # check if selector exist in file
-  # utils::yq_has_selector "${selector}" "${yaml}"
+  # yaml::has_selector "${selector}" "${yaml}"
     # if yes, tries to recover value
   if ! cat "${yaml}" | yq "${selector}"; then
     echo "Unable to yq ${selector} in ${yaml}"
   fi
 }
-
 
 #######################################
 # Return yaml values
@@ -100,12 +97,13 @@ utils::yq(){
   # local options="${1-}"
   local selector="${1-}" 
   local yaml="${2-}"
+  local has_selector 
 
   # check if selector exist in file
-  utils::yq_has_selector "${selector}" "${yaml}"
+  has_selector=$(yaml::has_child_selector "${selector}" "${yaml}")
 
-  # check if error code is 0
-  if (( $? != 0 )); then
+  # check if selector exists
+  if [[ "${has_selector}" == false ]]; then
     # if not, propagates a 1 exit code
     return 1
   else
@@ -125,9 +123,45 @@ utils::yq(){
 #   $1 # a yaml selector ".variable.path"
 #   $2 # a yaml file path
 #######################################
-utils::yq_has_selector(){ 
+# yaml::has_selector(){ 
+#   local selector="${1-}" 
+#   local yaml="${2-}"
+#   # local child_selector=$(utils::echo "${selector}" | grep -oE "[^.]+$")
+#   local child_selector=$(utils::echo "${selector}" | rev | cut -d. -f1 | rev)
+#   local parent_selector="${selector%."${child_selector}"}"
+  
+#   # in the case where an array is asked
+#   if [[ "${child_selector}" == "[]" ]]; then
+#     child_selector=$(utils::echo "${selector}" | rev | cut -d. -f2 | rev)
+#     parent_selector="${selector%."${child_selector}.[]"}"
+#   fi
+  
+#   local has_selector=""${parent_selector}" | has(\""${child_selector}"\")"
+#   local selector_exist=$(cat "${yaml}" | yq "${has_selector}") 
+
+#   if [[ "${selector_exist}" == false ]]; then
+#     # selector doesn't exist
+#     return 1
+#   elif [[ "${selector_exist}" == true ]]; then
+#     # selector does exist
+#     return 0
+#   fi
+# }
+
+
+#######################################
+# Check if a child selector is present in yaml
+# Globals:
+#   PROFILE
+#   PROFILES_DIR
+# Arguments:
+#   $1 # a yaml selector ".variable.path"
+#   $2 # a yaml file path
+#######################################
+yaml::has_child_selector(){ 
   local selector="${1-}" 
   local yaml="${2-}"
+  
   # local child_selector=$(utils::echo "${selector}" | grep -oE "[^.]+$")
   local child_selector=$(utils::echo "${selector}" | rev | cut -d. -f1 | rev)
   local parent_selector="${selector%."${child_selector}"}"
@@ -143,10 +177,10 @@ utils::yq_has_selector(){
 
   if [[ "${selector_exist}" == false ]]; then
     # selector doesn't exist
-    return 1
+    echo false
   elif [[ "${selector_exist}" == true ]]; then
     # selector does exist
-    return 0
+    echo true
   fi
 }
 
@@ -179,7 +213,7 @@ utils::yq_contains(){
 #   $3 # a yaml value
 #   $4 # addition type "key|raw"
 #######################################
-utils::yq_add(){
+yaml::add(){
   local yaml="${1-}"
   local selector="${2-}" 
   local value="${3-}"
@@ -255,9 +289,9 @@ utils::yq_delete(){
   local arg="${selector}"'.[] | select(. == "'"${value}"'")'
 
   # check if list value exist
-  local hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
+  local has_value=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
 
-  if "${hasValue}"; then
+  if "${has_value}"; then
     # tries to delete list value
     if ! cat "${yaml}" | yq 'del('"${arg}"')' > src/temp/yaml.local; then
       echo "Unable to yq delete ${selector}[${value}] in ${yaml}"
@@ -286,9 +320,9 @@ utils::yq_change(){
   local arg="${selector}"' = "'"${value}"'"'
 
   # check if value exist
-  local hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
+  local has_value=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
 
-  if "${hasValue}"; then
+  if "${has_value}"; then
     # value already exist
     :
   else
@@ -313,11 +347,12 @@ utils::yq_change(){
 #   $3 # a yaml value ".childpath"
 #   $4 # addition type "key|raw"
 #######################################
-utils::yq_add_key(){
+yaml::add_key(){
   local yaml="${1-}"
   local selector="${2-}"
   local value="${3-}"
   local option="${4-"key"}"
+  local has_selector
   
   if [[ "${option}" == "key" ]]; then
     #statements
@@ -328,8 +363,9 @@ utils::yq_add_key(){
 
   # tries to add key
   # check if key exists already
-  utils::yq_has_selector "${selector}""${value}" "${yaml}"
-  if (( $? != 0 )); then
+  has_selector=$(yaml::has_child_selector "${selector}""${value}" "${yaml}")
+
+  if [[ "${has_selector}" == false ]]; then
     # if the key desn't exist, create one
     if ! cat "${yaml}" | yq "${arg}" > src/temp/yaml.local; then
       echo "Unable to yq add key ${value} in ${selector} in ${yaml}"
@@ -354,14 +390,15 @@ utils::yq_delete_key(){
   local yaml="${1-}"
   local selector="${2-}"
   local value="${3-}"
+  local has_selector
   
   local arg='del('"${selector}""${value}"')'
 
   # tries to delete key
   # check if key exists already
-  utils::yq_has_selector "${selector}""${value}" "${yaml}"
+  has_selector=$(yaml::has_child_selector "${selector}""${value}" "${yaml}")
 
-  if (( $? == 0 )); then
+  if [[ "${has_selector}" == true ]]; then
     # if the key exists, delete it
     if ! cat "${yaml}" | yq "${arg}" > src/temp/yaml.local; then
       echo "Unable to yq delete key ${value} in ${selector} in ${yaml}"
@@ -373,4 +410,29 @@ utils::yq_delete_key(){
       fi
     fi
   fi
+}
+
+#######################################
+# Execute commands from a yaml array
+# Arguments:
+#   $1 # a yaml file
+#   $2 # a yaml selector
+#######################################
+yaml::execute(){
+  local path="${1-}"
+  local function="${2-}"
+  local function_body
+
+  # get function body
+  function_body=$(yaml::get "${path}" "${function}.[]")
+
+  # make an array from commands
+  IFS=$'\n' read -r -d '' -a functions <<< "${function_body}"
+
+  for function in "${functions[@]}"; do
+    # for each function create an array on space delimeter
+    IFS=' ' read -r -a command_arr <<< "${function}"
+    # expand function array to execute it
+    "${command_arr[@]}"
+  done
 }

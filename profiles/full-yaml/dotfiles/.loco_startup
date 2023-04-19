@@ -1,0 +1,126 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# .loco_startup | Effort to provide startup custom commands
+#-------------------------------------------------------------------------------
+
+# over ubuntu, below variables will become GLOBALS
+# over macosx, they will be classical instance variables
+set_system_ENV(){
+  # add some GLOBAL environment variables below
+  export LOCO_ENV=true
+  # this is specific to macosX to disable bash sessions
+  export SHELL_SESSION_HISTORY=0
+}
+
+# over ubuntu, below variables will be limited to current shell
+set_shell_ENV(){
+  # add some shell environment variables below
+  export LOCO_SHELL=true
+}
+
+# on ubuntu, this function will be called if .bashrc is sourced for the first time
+session_start(){
+  echo -e "Installed with loco.sh \U1f335. You can edit this text in ~/.loco_startup"
+  # add some session commands below (keyboard configurations, vpn...)
+}
+
+# on macOS, function will be called each time zsh is launched (?)
+session_start_macos(){
+  echo -e "Installed with loco.sh \U1f335 You can edit this text in ~/.loco_startup"
+  # add some startup commands below
+}
+
+# on ubuntu, this function will be called every time a shell is opened
+shell_start(){
+  # print a cactus if not first start
+  if [[ ! -f ~/.is_started ]]; then echo -e "\U1f335"; fi
+  set_shell_ENV
+  # add some shell commands below 
+}
+
+# on ubuntu, function will be called if .bashrc is sourced for the second time
+system_start(){
+  set_system_ENV
+  # create lock file
+  touch ~/.is_started
+}
+
+#######################################
+# Count number of times .bashrc is sourced
+#######################################
+shell_status(){
+  # if start flag is present
+  if [[ -f ~/.is_started ]]; then
+    # todo : check if true on macOS
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+      session_start_macos
+    else
+      session_start
+    fi
+    shell_start
+    # remove lock file
+    rm -fr .is_started
+  
+  # in all other cases
+  else
+    shell_start
+  fi
+}
+
+#######################################
+# Set up a nordvpn connection
+#######################################
+nordvpnConnect(){
+  # grep current status
+  local vpnStatus=$(nordvpn status | grep "Status: ") 
+  declare -a optionsArray
+  optionsArray=(fr nl de)
+
+  # check status
+  if [[ "${vpnStatus}" == *"Connected"* ]]; then 
+    # vpn is connected
+    :
+  else
+    # connect to vpn
+    # get a random domain
+    local connexionDomain=$(shuffleDomains "${optionsArray[@]}")
+    nordvpn c "${connexionDomain}"
+  fi
+}
+
+#######################################
+# Set up a wireguard connection
+#######################################
+wireguardConnect(){
+  # grep current status
+  local wgStatus=$(wg)
+  declare -a optionsArray
+  optionsArray=(fr1 fr2 fr3)
+
+  # check status
+  if [[ "${wgStatus}" == "" ]]; then 
+    # connect to vpn
+    # get a random domain
+    local connectionDomain=$(shuffleDomains "${optionsArray[@]}")
+    # wg-quick up ..
+  else
+    # wg is connected
+    :
+  fi
+}
+
+#######################################
+# Return a VPN domain
+#######################################
+shuffleDomains(){
+  local -a opt_arr=("$@")
+  
+  local optionsLength=$(echo ${#opt_arr[@]})
+  local randomNum=$RANDOM
+  
+  # provide a number between 1 and optionsLength
+  local randomIndex=$(echo $((1 + ${randomNum} % ${optionsLength})))
+
+  # return the corresponding indexed array reference
+  echo ${opt_arr[${randomIndex}]}
+}
