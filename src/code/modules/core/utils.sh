@@ -34,9 +34,9 @@ utils::check_if_start(){
 utils::check_if_root(){
   if [[ "${ROOT_YES}" == false ]]; then
     if [[ "${IS_ROOT}" -ne 0 ]]; then
-      msg::print "................................................................"
-      msg::print "..............You need to run this script as " "sudo" "..............."
-      msg::print "................................................................"
+      msg::centered ""
+      msg::centered 'Password is needed to run this script as "sudo"'
+      msg::centered ""
       # remove then stores current user name in a file
       # if ! rm ./src/temp/conf_CURRENT_USER; then
       #     echo "Unable to rm ./src/temp/conf_CURRENT_USER" >&2
