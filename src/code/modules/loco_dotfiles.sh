@@ -286,7 +286,7 @@ loco::dotfiles_unset(){
   local dotfile="${1-}"
   local yaml="${INSTANCE_YAML}"
   local selector=".dotfiles.backup"
-  local has_backup=$(utils::yq_contains "${yaml}" "${selector}" "${dotfile}")
+  local has_backup=$(yaml::contains "${yaml}" "${selector}" "${dotfile}")
 
   utils::remove "/${OS_PREFIX}/${CURRENT_USER}/${dotfile}"
 

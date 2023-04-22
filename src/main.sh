@@ -7,14 +7,15 @@ set -eu
 
 # source core modules
 # source the utils module
-if ! source ./src/code/modules/core/basic.sh; then
-  echo "Can not source ./src/code/basic.sh" >&2
+if ! source ./src/code/modules/core/base.sh; then
+  echo "Can not source ./src/code/base.sh" >&2
   exit 1
 fi
 
 # source other core modules
 _source ./src/code/modules/core/cli.sh
 _source ./src/code/modules/core/cmd.sh
+_source ./src/code/modules/core/globals.sh
 _source ./src/code/modules/core/msg.sh
 _source ./src/code/modules/core/prompt.sh
 _source ./src/code/modules/core/utils.sh
@@ -25,9 +26,10 @@ _source ./src/code/modules/loco_background.sh
 _source ./src/code/modules/loco_custom_functions.sh 
 _source ./src/code/modules/loco_dotfiles.sh
 _source ./src/code/modules/loco_fonts.sh
-_source ./src/code/modules/loco_meta.sh
+_source ./src/code/modules/loco_globals.sh
 _source ./src/code/modules/loco_multi_profiles.sh
 _source ./src/code/modules/loco_overlay.sh
+_source ./src/code/modules/loco_packages.sh
 _source ./src/code/modules/loco_prompts.sh
 _source ./src/code/modules/loco_startup.sh
 _source ./src/code/modules/loco_terminal.sh 
@@ -39,15 +41,19 @@ _source ./src/code/modules/loco_yaml.sh
 # main
 # GLOBALS:
 #   ACTION
+#   CONFIG_PATH
 # Arguments:
-#   $@ // script options
+#   $@ # script options
 #######################################
 main(){
-  # source the globals from check_os
+  # source the globals from loco::check_os
   _source "./src/temp/conf_OS_GLOBALS"
 
   # set globals
-  utils::GLOBALS_set
+  # core ones
+  globals::set
+  # loco ones
+  loco::GLOBALS_set
 
   # set options, build and source the cli file
   cli::set_options
@@ -58,7 +64,7 @@ main(){
   _source "${CONFIG_PATH}"  
 
   # lock globals
-  utils::GLOBALS_lock 
+  loco::GLOBALS_lock 
 
   # init debug message
   msg::debug "Verbose mode" 

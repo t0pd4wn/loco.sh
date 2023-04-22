@@ -58,7 +58,7 @@ loco::prompt_background(){
 #######################################
 loco::prompt_overlay(){
   local style_overlay
-  style_overlay=$(utils::profile_get_values '.style.overlay')
+  style_overlay=$(yaml::get_child_values '.style.overlay')
 
   if [ -z "${style_overlay:-"${OVERLAY_PATH}"}" ]; then
     prompt::build "OVERLAY_PATH" "./src/assets/background-overlays/" "Choose an overlay:" false
@@ -125,7 +125,7 @@ loco::prompt_theme(){
 
   # check for profile style
   local profile_style
-  profile_style=$(utils::profile_get_values '.style.colors.theme')
+  profile_style=$(yaml::get_child_values '.style.colors.theme')
 
   # check for profile terminal file
   local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
@@ -139,5 +139,5 @@ loco::prompt_theme(){
   fi
 
   # writes theme to watermark
-  utils::yq_change "${INSTANCE_YAML}" ".style.colors.theme" "${THEME}"
+  yaml::change "${INSTANCE_YAML}" ".style.colors.theme" "${THEME}"
 }

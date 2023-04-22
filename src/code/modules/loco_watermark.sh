@@ -84,7 +84,7 @@ loco::instance_create(){
     fi
 
     # create yaml key in /home/$USER/.loco.yml
-    utils::yq_change "${INSTANCE_YAML}" ".instance.INSTANCE_PATH" "${INSTANCE_PATH}"
+    yaml::change "${INSTANCE_YAML}" ".instance.INSTANCE_PATH" "${INSTANCE_PATH}"
 }
 
 #######################################
@@ -234,7 +234,7 @@ loco::watermark_action_update(){
     # add curent profile to instance yaml
     local profile_selector=".instance.PROFILE"
     local previous_profile=$(yaml::get "${INSTANCE_YAML}" "${profile_selector}")
-    utils::yq_change "${INSTANCE_YAML}" "${selector}" "${previous_profile} ${PROFILE}"
+    yaml::change "${INSTANCE_YAML}" "${selector}" "${previous_profile} ${PROFILE}"
 
     # _source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
     # # keep sourced GLOBALs values

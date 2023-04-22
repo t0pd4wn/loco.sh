@@ -446,17 +446,18 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 When you install ```loco``` a watermark file ```~/.loco.yml``` is installed. It stores the original dotfiles backup path. Wen you try to remove a profile ```loco``` tries to find the watermark path to restore the original user dotfiles. If the path is broken, either correct ```~/.loco.yml``` with the correct path or put your dotftiles at the expected path.
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
-## Wishlist
+## Backlog
 - actions: add init, save
 - code: add an "img" module class ?
 - code: add BATS tests
 - code: add some CI to help with integration
+- code: custom functions could have dynamic steps
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
 - options : ghost mode leaving no assets prior to action
 - options : add long options support
 - packagers: better package managers abstraction
-- packagers: remove eval
+- packagers: remove eval (cmd::execute)
 - profiles: add devops, data-scientist...
 - UI: display prompts options as table rows
 

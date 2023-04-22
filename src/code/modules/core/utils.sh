@@ -184,67 +184,6 @@ utils::decode_URI(){
 }
 
 #######################################
-# Set GLOBALS
-#######################################
-utils::GLOBALS_set(){
-  # readonly ?
-  IS_ROOT=$(id -u)
-  # used in cli
-  declare -ga CLI_OPT_PARAMETERS
-  declare -ga CLI_OPT_DESCRIPTIONS
-  declare -ga HELP_TEXT
-  # used in messages
-  declare -ga MSG_ARRAY
-  MSG_INDEX=0
-  # used in prompts
-  declare -g USER_ANSWER
-  # used in profile management
-  PROFILE_YAML=""
-  # used in package management
-  PACKAGE_MANAGER_TEST_CMD=""
-  PACKAGE_TEST_CMD=""
-  PACKAGE_ACTION_CMD=""
-  # used in wget installation
-  # LOCO_DIST=""
-  # emojis
-
-  readonly EMOJI_LOGO="\U1f335"
-  readonly EMOJI_STOP="\U1F6A8"
-  readonly EMOJI_YES="\U1F44D"
-  readonly EMOJI_NO="\U1F44E"
-}
-
-#######################################
-# Lock GLOBALS
-#######################################
-utils::GLOBALS_lock(){
-  # can be reset or defined at runtime
-  # readonly CURRENT_USER
-  # readonly PROFILE_YAML
-  # readonly INSTANCE_YAML
-  # readonly PROFILE_PATH
-  # readonly INSTANCE_PATH
-  # readonly SHORT_OS_VERSION
-  # readonly ACTION
-  # readonly PROFILE
-  # readonly THEME
-  # readonly BACKGROUND_URL
-  # readonly IS_NEW_FONT
-
-  readonly PROFILES_DIR
-  readonly INSTANCES_DIR
-  readonly CONFIG_PATH
-  readonly WATERMARK
-  readonly DETACHED
-  readonly LOCO_YES
-  readonly VERBOSE
-  readonly VERSION
-  readonly OS_PREFIX
-  readonly SHORT_OS_VERSION
-  readonly LOCO_OS_TYPE
-}
-
-#######################################
 # Add a transparent image over another
 # Arguments:
 #   $1 # a normal image path
@@ -417,7 +356,7 @@ utils::remove_string_in_file(){
 #   $3 # template content
 #   $4 # file to be modified path 
 #######################################
-utils::replace_in_file(){
+utils::replace_block_in_file(){
   local template_first_part="${1-}"
   local template_last_part="${2-}"
   local new_content="${3-}"

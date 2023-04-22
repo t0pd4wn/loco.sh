@@ -72,12 +72,12 @@ loco::term_conf_set(){
   local osascript_opt
   local osascript_fontname
   local osascript_fontsize
-  local osa_content
-  local osa_file
+  local content
+  local file
 
   local colors_theme_file=./src/assets/themes/"${THEME}".conf
 
-  font_name=$(utils::profile_get_values '.style.fonts.name')
+  font_name=$(yaml::get_child_values '.style.fonts.name')
   if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
     #statements
     font_name="${font_name}"
@@ -89,7 +89,7 @@ loco::term_conf_set(){
     fi
   fi
 
-  font_size=$(utils::profile_get_values '.style.fonts.size')
+  font_size=$(yaml::get_child_values '.style.fonts.size')
   font_size="${font_size:-"10"}"
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
@@ -112,12 +112,12 @@ loco::term_conf_set(){
     osa_fontsize='  osascript -e '"${single_quote}""${osa_opt}""${osa_fontsize}""${single_quote}"
 
     # write osascript commands to .zprofile to make them persistent
-    osa_content="${osa_fontname}""${line_carriage}""${osa_fontsize}"
-    osa_content='### MacOS font setup'"${line_carriage}""${osa_content}""${line_carriage}"'  ###'
-    osa_file='./'"${PROFILES_DIR}"/"${PROFILE}"'/dotfiles/.zprofile'
+    content="${osa_fontname}""${line_carriage}""${osa_fontsize}"
+    content='### MacOS font setup'"${line_carriage}""${content}""${line_carriage}"'  ###'
+    file='./'"${PROFILES_DIR}"/"${PROFILE}"'/dotfiles/.zprofile'
 
     # find the block of text in .zprofile and replace it
-    utils::replace_in_file "### MacOS font" "###" "${osa_content}" "${osa_file}"
+    utils::replace_block_in_file "### MacOS font" "###" "${content}" "${file}"
     
     # as terminal configuration is limited over macosx, end here
     return 0
@@ -145,13 +145,13 @@ loco::term_conf_set(){
     # if there is a colors theme set, build the conf file
     if [[ ! -z "${THEME}" ]]; then
       _echo "[/]" > "${local_path}"
-      cat "${colors_theme_file}" >> "${local_path}"
+      _cat "${colors_theme_file}" >> "${local_path}"
       # for some reasons, an extra "\n" needs to be applied here
       if [[ ! -z "${font_name}" ]]; then
         _echo "\n""font='"${font_name}" "${font_size}"'" >> "${local_path}"
         _echo "use-system-font=false" >> "${local_path}"
-        utils::yq_change "${INSTANCE_YAML}" ".style.fonts.name" "${font_name}"
-        utils::yq_change "${INSTANCE_YAML}" ".style.fonts.size" "${font_size}"
+        yaml::change "${INSTANCE_YAML}" ".style.fonts.name" "${font_name}"
+        yaml::change "${INSTANCE_YAML}" ".style.fonts.size" "${font_size}"
       else
         _echo "\n""use-system-font=false" >> "${local_path}"
       fi

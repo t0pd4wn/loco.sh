@@ -134,7 +134,7 @@ loco::background_manager(){
       # send the image path to config file
       loco::set_background "${final_path}"
     fi
-      utils::yq_change "${INSTANCE_YAML}" ".style.background" "${final_path}"
+      yaml::change "${INSTANCE_YAML}" ".style.background" "${final_path}"
   fi
 }
 

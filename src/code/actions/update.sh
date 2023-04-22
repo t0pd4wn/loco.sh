@@ -30,11 +30,11 @@ msg::play
 
 # install "${LOCO_OSTYPE}" packages
 msg::say "Updating " "${LOCO_OSTYPE}" " packages"
-loco::meta_package_manager "${LOCO_OSTYPE}"
+loco::package_managers "${LOCO_OSTYPE}"
 
 # install generic packages
 msg::say "Updating " "generic" " packages"
-loco::meta_package_manager "generic"
+loco::package_managers "generic"
 
 # link "${PROFILE}" .dotfiles to $USER
 loco::dotfiles_manager "Update your dotfiles with " "${PROFILE}" " ones (y/n)?"

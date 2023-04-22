@@ -22,11 +22,11 @@ msg::play
 
 # remove operating system packages
 msg::say "Removing operating system packages"
-loco::meta_package_manager "${LOCO_OSTYPE}"
+loco::package_managers "${LOCO_OSTYPE}"
 
 # remove custom or linguage specific packages
 msg::say "Removing custom or linguage specific packages"
-loco::meta_package_manager "generic"
+loco::package_managers "generic"
 
 # todo : remove fonts from system
 msg::say "Removing fonts"

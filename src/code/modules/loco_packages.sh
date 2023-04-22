@@ -3,7 +3,6 @@
 # loco_meta.sh | loco.sh meta functions
 #-------------------------------------------------------------------------------
 
-# todo : improve so this function expect a normative array as an input
 #######################################
 # apply the defined cmd over the package
 # GLOBALS:
@@ -13,11 +12,10 @@
 #   PACKAGE_ACTION
 #   PACKAGE
 #######################################
-loco::meta_action_better(){
-  msg::debug "${PACKAGE_ACTION_CMD}"
+loco::package_action(){
+
   # if there isn't a specific command, build one
   if [[ -z "${PACKAGE_ACTION_CMD-}" ]]; then 
-
     PACKAGE_ACTION_CMD="${PACKAGE_MANAGER} ${PACKAGE_ACTION} ${PACKAGE}"
     msg::debug "${PACKAGE_ACTION_CMD}"
   fi
@@ -42,8 +40,8 @@ loco::meta_action_better(){
 #   PACKAGE
 #   ACTION
 #######################################
-loco::meta_package(){
-  msg::debug "metaPackage ..."
+loco::package_prepare(){
+  msg::debug "Package ..."
   msg::debug ${PACKAGE_MANAGER-}
   msg::debug ${PACKAGE_MANAGER_TEST_CMD-}
   msg::debug ${PACKAGE_ACTION-}
@@ -86,17 +84,17 @@ loco::meta_package(){
     # remove package
     if [[ "${ACTION-}" == "remove" ]]; then
       msg::say "Removing " "${PACKAGE_MANAGER} ${PACKAGE}"
-      loco::meta_action_better
+      loco::package_action
 
       # delete yaml key in /home/$USER/.loco.yml
-      utils::yq_delete "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
+      yaml::delete "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
     fi
   else
     msg::print "" "${PACKAGE-}" " is not installed."
     # install package
     if [[ "${ACTION-}" == "install" ]] || [[ "${ACTION-}" == "update" ]]; then
       msg::say "Installing " "${PACKAGE_MANAGER} ${PACKAGE}"
-      loco::meta_action_better
+      loco::package_action
 
       # create yaml key in /home/$USER/.loco.yml
       yaml::add "${PROFILE_YAML}" ".packages.${LOCO_OSTYPE}.${PACKAGE_MANAGER}" "${PACKAGE}"
@@ -119,8 +117,8 @@ loco::meta_package(){
 # Output:
 #   Writes the bash variables file from yaml 
 #######################################
-loco::meta_package_manager(){
-  msg::debug "meta_package_manager ..."
+loco::package_managers(){
+  msg::debug "package_manager ..."
   # assign the $1 package managers
   # local packagers="packages_"$1
   local pkg_type=${1-}
@@ -135,7 +133,7 @@ loco::meta_package_manager(){
   elif [[ "${ACTION}" == "remove" ]]; then
     local current_yaml="${INSTANCE_YAML}"
   fi
-    packagers=$(utils::yaml_get_keys ".packages.${pkg_type}" "${current_yaml}")
+    packagers=$(yaml::get_keys ".packages.${pkg_type}" "${current_yaml}")
 
   # check if packagers are declared
   if [[ -z "${packagers}" ]]; then
@@ -191,7 +189,7 @@ loco::meta_package_manager(){
         # send packages names to meta_package
         for i in "${packages_array[@]}"; do
           PACKAGE="${i}"
-          loco::meta_package "${PACKAGE}" "${PACKAGE_MANAGER_TEST_CMD}" ;
+          loco::package_prepare "${PACKAGE}" "${PACKAGE_MANAGER_TEST_CMD}" ;
         done
       fi
     done

@@ -308,5 +308,4 @@ cli::set_options(){
     [CMD]=""
   )
   cli::define_option overlay_option_array
-
 }
