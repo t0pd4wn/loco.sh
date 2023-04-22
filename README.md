@@ -1,6 +1,6 @@
 # Loco.sh
 
-***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, overlays, and perform custom ```pre``` and ```post``` script configuration tasks.
+***Loco.sh*** is an Unix **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, overlays, and execute custom scripts.
 
 <img alt="Loco.sh Ubuntu demo" src="dist/loco_demo_0.7_Ubuntu.gif" width="1080">
 
@@ -12,16 +12,16 @@
 - **security consultants**, to deal with a variety of identities and security access
 - **data scientists**, for setting up complex machine learning environments
 
-***Loco.sh*** is based over **profiles** made of either a YAML file or a folder-tree structure ; users can define everything in a single YAML or build their profiles with separate files in folders.
+***Loco.sh*** is based on **profiles** made of a YAML file and/or a tree folder structure ; users can define everything in a single YAML and/or build their profiles with separate files in folders. Profiles can be installed, updated or removed. Multiple profiles can be installed at once, and new profiles can be installed over old ones.
 
 ***Loco.sh*** comes with 6 example profiles :
 
-- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure
+- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure and yaml file
 - **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
 - **vim**: fully configured ```vim```
-- **shell**: fully configured ```zsh``` with ```p10K```
+- **zsh**: fully configured ```zsh``` with ```p10K```
 - **style**: custom themed terminal and OS (dock, background)
-- **full-yaml**: same as **full** but only in yaml.
+- **full-yaml**: same as **full** but yaml only
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -135,13 +135,13 @@ custom_functions:
 
 - custom functions pattern: ```./profiles/[profile]/custom.sh``` 
 
-Custom functions allow users to define specific commands at various steps of the execution, *entry* which executes at the beginning of loco actions, *exit* at the end of the action, and *last* at the end of the script execution.
+Custom functions allow users to define specific commands at various steps of the execution : *entry* which executes at the beginning of a loco **action**, *exit* at the end of the **action**, and *last* at the end of the script execution.
 
-Using the ```cmd::record``` function allows to record commands that will be executed after script execution (though ```/src/temp/finish.sh```).
+Using the ```cmd::record``` function allows to record commands that will be executed after script execution (though ```/src/temp/finish.sh```). This may be useful to escape some shell or $USER related limitations.
 
-Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed (```custom.sh``` first, then ```profile.yaml``` ones). 
+Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed.
 
-```bash
+1. ```bash
 #!bin/bash
 #-------------------------------------------------------------------------------
 # custom.sh | custom user scripts
@@ -173,7 +173,7 @@ remove_ubuntu_last(){
 }
 ```
 
-```yaml
+2. ```yaml
 custom_functions:
   [action]_[entry/exit/last]:
   install_entry:
@@ -184,6 +184,8 @@ custom_functions:
   remove_ubuntu_last:
     - # command goes here
 ```
+
+If more than one method is set both are used from 1 to 2.
 
 ### Add a profile
 
@@ -246,6 +248,31 @@ style:
 ```
 
 If more than one method is set the priority goes from 1. to 4.
+
+## Dotfiles
+
+*Dotfiles* are user configuration files.
+
+### Add a dotfile
+
+*Dotfiles* can be set through two methods :
+1. profile yaml: an url can be provided to set a dotfile
+
+```yaml
+dotfiles:
+  - [dotfile url]
+```
+2. profile dotfiles folder: a folder can be provided to set dotfiles
+
+```bash
+.
+└── profiles
+  └── [profile]
+    └── dotfiles #store specific files (optional)
+      └── .[dotfile name] # a dotfile (optional)
+```
+
+If more than one method is set the priority goes from 1. to 2. Be aware that dotfiles set through urls in the yaml file will overwrite existing files in the /dotfiles/ folder.
 
 ## Themes
 
@@ -412,15 +439,18 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 ## Troubleshooting
 
 ### ```Dotfiles backup``` is not found
-When you install ```loco``` a watermark file ```~/.loco.yml``` is installed. It stores the original dotfiles backup path. Wen you try to remove a profile ```loco``` tries to find the watermark path to restore the original user dotfiles. If the path is broken, either correct the ```~/.loco``` watermark with the correct one or put your dotftiles at the expected path.
+When you install ```loco``` a watermark file ```~/.loco.yml``` is installed. It stores the original dotfiles backup path. Wen you try to remove a profile ```loco``` tries to find the watermark path to restore the original user dotfiles. If the path is broken, either correct ```~/.loco.yml``` with the correct path or put your dotftiles at the expected path.
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
 ## Wishlist
 - actions: add init, save
 - code: add an "img" module class ?
+- code: add BATS tests
+- code: add some CI to help with integration
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
 - options : ghost mode leaving no assets prior to action
+- options : add long options support
 - packagers: better package managers abstraction
 - packagers: remove eval
 - profiles: add devops, data-scientist...

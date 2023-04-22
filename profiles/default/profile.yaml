@@ -6,3 +6,16 @@ packages :
   ubuntu :
     apt :
       - tree
+dotfiles:
+  - https://github.com/t0pd4wn/loco.sh/blob/gh-main/profiles/default/dotfiles/.example_dotfile
+custom_functions:
+  install_entry: 
+    - echo "Hello, can you see me ?"
+  install_macos_entry:
+    - echo "You are using Macosx."  
+  install_ubuntu_entry:
+    - echo "You are using Ubuntu."
+  install_exit: 
+    - echo "About to depart.."  
+  install_last: 
+    - echo "Bye bye !"
