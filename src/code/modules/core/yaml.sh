@@ -56,7 +56,7 @@ utils::profile_get_values(){
 yaml::get(){
   # local options="${1-}"
   local yaml="${1-}"
-  local selector="${2-}" 
+  local selector="${2-}"
   local value
 
   value=$(utils::yq2 "${yaml}" "${selector}")
@@ -225,6 +225,7 @@ yaml::add(){
     hasValue=$(utils::yq_contains "${yaml}" "${selector}" "${value}" )
   elif [[ "${option}" == "raw" ]]; then
     local arg="${selector}"' = "'"${value}"'" + '"${selector}"
+    # set hasvalue to false for raw content
     hasValue=false
   fi
 
@@ -248,6 +249,7 @@ yaml::add(){
   fi
 }
 
+
 #######################################
 # Merge two yaml selectors
 # Arguments:
@@ -265,9 +267,21 @@ yaml::merge(){
 
   if [[ "${option}" == "classic" ]]; then
       operator="*"
-  elif [[ "${option}" == "array" ]]; then
+  elif [[ "${option}" == "array-merge" ]]; then
+      operator="*?n"
+  elif [[ "${option}" == "array-append" ]]; then
       operator="*?+"
   fi
+
+  # # tweak : if one of the value is empty, make values identical
+  # if [[ "${selecA}" == "" ]]; then
+  #   selecA="${selecB}"
+  # elif [[ "${selecB}" == "" ]]; then
+  #   selecB="${selecA}"
+  # elif [[ "${selecA}" || "${selecB}" == "" ]]; then
+  #   # both values are empty
+  #   return 1
+  # fi
   
   if ! cat "${yaml}" | yq ''"${selecA}"' '"${operator}"' '"${selecB}"''; then
     echo "Unable to yq merge ${selecA} with ${selecB} in ${yaml}"

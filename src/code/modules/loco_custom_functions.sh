@@ -137,9 +137,13 @@ loco::custom_last(){
 #   PROFILES_DIR
 #######################################
 loco::custom_source(){
-  utils::source ./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh
-  if [ $? -ne 0 ]; then
-    msg::print "Can not source custom.sh file."
+  local path="./${PROFILES_DIR}/${PROFILE}/custom.sh"
+  
+  if [[ -f "${path}" ]]; then
+    utils::source "${path}"
+    if [ $? -ne 0 ]; then
+      msg::print "Can not source custom.sh file."
+    fi
   fi
 }
 
@@ -164,8 +168,7 @@ loco::custom_merge(){
   prev_functions=($(utils::list_bash_functions "${custom_to}"))
 
   for function in "${new_functions[@]}"; do
-
-    if [[  "${prev_functions[*]}" =~ "${function}"  ]]; then
+    if [[ "${prev_functions[*]}" =~ "${function}" ]]; then
       # function exists in file
       new=$(utils::dump_bash_function "${function}" "${custom_from}")
       prev=$(utils::dump_bash_function "${function}" "${custom_to}")
@@ -178,10 +181,6 @@ loco::custom_merge(){
         prev="${prev}\n${new}"
         utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
       fi
-
-      # remove function name from prev array
-      "${prev_functions[@]/$function}"
-
     else
       # function doesn't exist
       new=$(utils::dump_bash_function "${function}" "${custom_from}")
@@ -191,8 +190,14 @@ loco::custom_merge(){
 
   # dump remaining previous functions in temp file
   for function in "${prev_functions[@]}"; do
+    # check if function has been processed already
+    if [[ "${new_functions[*]}" =~ "${function}" ]]; then
+      msg::debug "Function exists already"
+    else
+      # if not, copy the function
       prev=$(utils::dump_bash_function "${function}" "${custom_to}")
       utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+    fi
   done
 
   # replace dest file with cleaned temp one

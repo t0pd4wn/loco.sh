@@ -21,6 +21,8 @@
 loco::dotfiles_manager(){
   local dotfiles_dir
   local dotfiles_list
+  local dotfiles_yaml
+  local yaml_urls
 
   # prompt a dotfiles related y/n question
   msg::prompt "$1" "$2" "$3"
@@ -34,13 +36,25 @@ loco::dotfiles_manager(){
     # $ACTION == "install || update"
     if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" ==  "update" ]]; then
         dotfiles_dir="./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles"
+        dotfiles_yaml="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
+        yaml_urls=$(yaml::get "${dotfiles_yaml}" ".dotfiles[]")
+
+        # if there are urls in yaml download them into "${PROFILE}"/dotfiles"
+        if [[ -n "${yaml_urls}" ]]; then
+            # make an array from commands
+            IFS=$'\n' read -r -d '' -a urls <<< "${yaml_urls}"
+            for url in "${urls[@]}"; do
+              utils::get_url "${dotfiles_dir}" "${url}"
+            done
+        fi
+
         # check if there are dotfiles in $PROFILE
         if [[ -d "${dotfiles_dir}" ]]; then
-        # list profile dotfiles (todo: dump/retrieve from/to .loco)
         utils::list dotfiles "${dotfiles_dir}"
         loco::dotfiles_action_install "${dotfiles[@]}"
         fi
       # empty the normative list (array ?)
+      # meant for multi actions (?)
       dotfiles=()
     fi
 
@@ -97,7 +111,7 @@ loco::dotfiles_action_install(){
   utils::chown "${CURRENT_USER}" "${INSTANCE_PATH}/dotfiles/.*"
 
   msg::say "${CURRENT_USER}" " dotfiles were backup'd here :"
-  msg::say "/"$INSTANCE_PATH"/dotfiles-backup"
+  msg::say "${INSTANCE_PATH}/dotfiles-backup"
 }
 
 #######################################

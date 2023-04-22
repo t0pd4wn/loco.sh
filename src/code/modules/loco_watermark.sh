@@ -73,9 +73,6 @@ loco::instance_create(){
       INSTANCE_PATH="${INSTANCES_DIR}"/"${CURRENT_USER}"-"${PROFILE}"-$(utils::timestamp)
     fi
 
-    echo $INSTANCES_DIR
-    echo $INSTANCE_PATH
-
     # create the instance folder
     utils::mkdir "${INSTANCE_PATH}"
 
@@ -195,6 +192,9 @@ loco::watermark_action_remove(){
   msg::print "${profile_prefix} to be removed : " "${PROFILE}"
   msg::print "User to be restored : " "${CURRENT_USER}"
   msg::print "Dotfiles path to be restored : " "${INSTANCE_PATH}"
+
+  # reset the yaml .profile path
+  loco::yaml_init
 }
 
 #######################################

@@ -21,6 +21,17 @@ packages:
       - vim
       - zsh
       - tree
+dotfiles:
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.bashrc
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.loco_startup
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.p10K.zsh
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.profile
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.shell_history
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.vimrc
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.zcompdump
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.zprofile
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.zshrc
+      - https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/profiles/full/dotfiles/.zshrc.zni
 custom_functions:
   install_exit:
     - cmd::run_as_user git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim

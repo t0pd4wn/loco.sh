@@ -2,8 +2,6 @@
 
 ***Loco.sh*** is a **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, overlays, and perform custom ```pre``` and ```post``` script configuration tasks.
 
-***Loco.sh*** is based over **profiles** made of either a YAML file or a folder-tree structure ; users can define everything in a single YAML or build their profiles with separate files in folders. The library supports multi profiles installation for better modularity.
-
 <img alt="Loco.sh Ubuntu demo" src="dist/loco_demo_0.7_Ubuntu.gif" width="1080">
 
 ***Loco.sh*** can be useful to:
@@ -14,13 +12,16 @@
 - **security consultants**, to deal with a variety of identities and security access
 - **data scientists**, for setting up complex machine learning environments
 
-***Loco.sh*** comes with 5 example profiles :
+***Loco.sh*** is based over **profiles** made of either a YAML file or a folder-tree structure ; users can define everything in a single YAML or build their profiles with separate files in folders.
+
+***Loco.sh*** comes with 6 example profiles :
 
 - **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure
 - **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
 - **vim**: fully configured ```vim```
 - **shell**: fully configured ```zsh``` with ```p10K```
 - **style**: custom themed terminal and OS (dock, background)
+- **full-yaml**: same as **full** but only in yaml.
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
@@ -34,23 +35,23 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, macOS)
 ```bash
-bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l));
+bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l));
 ```
 
 ##### Options
 You can pass options like this:
 ```bash
-bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options];
+bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options];
 ```
 
 For example, you can launch an interactive session with a custom background like this:
 ```bash
-bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -B "[image url]";
+bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -B "[image url]";
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on :
 ```bash
-bash <(echo https://bit.ly/3lfqopL|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
+bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
 ```
 
 Once installed, you can simply interact with ```loco``` like this: 
@@ -125,9 +126,20 @@ packages:
       - [package or ppa-package name]
     snap:
       - [package name]
+dotfiles:
+      - [dotfile url]
+custom_functions:
+  [function name]:
+    - [function command]
 ```
 
 - custom functions pattern: ```./profiles/[profile]/custom.sh``` 
+
+Custom functions allow users to define specific commands at various steps of the execution, *entry* which executes at the beginning of loco actions, *exit* at the end of the action, and *last* at the end of the script execution.
+
+Using the ```cmd::record``` function allows to record commands that will be executed after script execution (though ```/src/temp/finish.sh```).
+
+Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed (```custom.sh``` first, then ```profile.yaml``` ones). 
 
 ```bash
 #!bin/bash
@@ -138,8 +150,9 @@ packages:
 # function name pattern - All OS
 [action]_[entry/exit/last](){
     # insert commands below
+}
 
-}# example for an all OS entry function 
+# example for an all OS entry function 
 install_entry(){
     # insert commands below
 }
@@ -158,6 +171,18 @@ install_macos_exit(){
 remove_ubuntu_last(){
     # insert commands below
 }
+```
+
+```yaml
+custom_functions:
+  [action]_[entry/exit/last]:
+  install_entry:
+    - # command goes here
+  [action]_[os_type]_[entry/exit/last]:
+  install_macos_exit:
+    - # command goes here
+  remove_ubuntu_last:
+    - # command goes here
 ```
 
 ### Add a profile
@@ -319,7 +344,7 @@ If more than one method is set the priority goes from 1. to 4.
 | INSTANCES_DIR | i | Define a path for profiles instances | string | [user defined] | "instances" |
 | OVERLAY | o | Define if the overlay option is activated | boolean | true/false | false |
 | OVERLAY_PATH | O | Define a path for an overlay image  | string | local path | - |
-| PROFILE | p | Define the loco profile | string | default, loco-vim, loco-nvim, loco-full | - |
+| PROFILE | p | Define the loco profile | string | available profiles | you can pass multiple profiles by separating them with a comma ```,```, for example : ```-p vim,zsh```.|
 | ROOT | R | Remove the sudo prompt (experimental) | flag | - | - |
 | THEME | t | Define the loco color theme | string | monokai, monokai-light, nord, nord-light | - |
 | CURRENT_USER | u | Define the current user name (default: \`$USER\`) | string | [user defined] | $USER |
@@ -392,16 +417,13 @@ If for some reasons, you don't have access to these files, simply remove the ```
 
 ## Wishlist
 - actions: add init, save
-- actions: add a "change_background" action
 - code: add an "img" module class ?
-- documentation: add an example row in the options table
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
 - options : ghost mode leaving no assets prior to action
 - packagers: better package managers abstraction
+- packagers: remove eval
 - profiles: add devops, data-scientist...
-- themes: implement 16 colors themes (insted of the plain 8)
-- UI: display modes (yes, detached...)
 - UI: display prompts options as table rows
 
 ## Thanks
