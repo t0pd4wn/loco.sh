@@ -5,7 +5,7 @@
 
 #######################################
 # Build cli file
-# note: echo is preferred to utils::echo here,
+# note: echo is preferred to _echo here,
 # because it doesn't require su rights
 # GLOBALS:
 #   CLI_OPT_PARAMETERS
@@ -23,12 +23,12 @@ cli::build(){
   joined_descriptions=$(IFS=; echo "${CLI_OPT_DESCRIPTIONS[*]}");
   # create temp folder
   mkdir -p "./src/temp"
-  utils::echo "while getopts ${joined_parameters} flag" > "${cli_file}"
-  utils::echo "do" >> "${cli_file}"
-  utils::echo "case "'"${flag}"'" in" >> "${cli_file}"
-  utils::echo "${joined_descriptions}" >> "${cli_file}"              
-  utils::echo "esac" >> "${cli_file}"
-  utils::echo "done" >> "${cli_file}"
+  _echo "while getopts ${joined_parameters} flag" > "${cli_file}"
+  _echo "do" >> "${cli_file}"
+  _echo "case "'"${flag}"'" in" >> "${cli_file}"
+  _echo "${joined_descriptions}" >> "${cli_file}"              
+  _echo "esac" >> "${cli_file}"
+  _echo "done" >> "${cli_file}"
 }
 
 #######################################
@@ -39,7 +39,7 @@ cli::build(){
 cli::call(){
   local cli_path=./src/temp/cli.sh
   local cli_args="${@-}"
-  utils::source "${cli_path}" "${cli_args}"
+  _source "${cli_path}" "${cli_args}"
 }
 
 #######################################
@@ -83,8 +83,8 @@ cli::define_option(){
 cli::print_help(){
   local joined_help_text
   joined_help_text=$(IFS=; echo "${HELP_TEXT[*]}");
-  utils::echo "${joined_help_text}"
-  utils::echo "loco.sh ${EMOJI_LOGO}"
+  _echo "${joined_help_text}"
+  _echo "loco.sh ${EMOJI_LOGO}"
 }
 
 #######################################
@@ -94,7 +94,7 @@ cli::print_help(){
 #   VERSION
 #######################################
 cli::print_version(){
-  utils::echo "loco.sh ${EMOJI_LOGO} version ${VERSION}"
+  _echo "loco.sh ${EMOJI_LOGO} version ${VERSION}"
 }
 
 #######################################

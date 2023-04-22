@@ -14,13 +14,13 @@
 #######################################
 loco::startup(){
   # check dependencies (yaml)
-  utils::check_dependencies
+  loco::check_dependencies
   
   # remove temp files
   utils::clean_temp
 
   # set system clock
-  utils::set_clock
+  loco::set_clock
 
   # print the warning message
   msg::warning

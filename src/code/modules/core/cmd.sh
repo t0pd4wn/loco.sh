@@ -15,10 +15,10 @@ cmd::record(){
   local script_path="./src/temp/finish.sh"
 
   if [[ ! -f "${script_path}" ]]; then
-    utils::echo "${command}" > "${script_path}"
+    _echo "${command}" > "${script_path}"
     chmod +x "${script_path}"
   else 
-    utils::echo "${command}" >> "${script_path}"
+    _echo "${command}" >> "${script_path}"
   fi
 }
 

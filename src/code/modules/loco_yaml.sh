@@ -107,10 +107,10 @@ loco::yaml_merge(){
 
   # write merged values in new destination file
   # create selectors
-  utils::echo "style:" > ${yaml_to}
-  utils::echo "packages:" >> ${yaml_to}
-  utils::echo "dotfiles:" >> ${yaml_to}  
-  utils::echo "custom_functions:" >> ${yaml_to}
+  _echo "style:" > ${yaml_to}
+  _echo "packages:" >> ${yaml_to}
+  _echo "dotfiles:" >> ${yaml_to}  
+  _echo "custom_functions:" >> ${yaml_to}
   
   # write yaml values to selectorsq 
   yaml::add "${yaml_to}" ".style" "${style_part}" "raw"

@@ -144,23 +144,23 @@ loco::term_conf_set(){
 
     # if there is a colors theme set, build the conf file
     if [[ ! -z "${THEME}" ]]; then
-      utils::echo "[/]" > "${local_path}"
+      _echo "[/]" > "${local_path}"
       cat "${colors_theme_file}" >> "${local_path}"
       # for some reasons, an extra "\n" needs to be applied here
       if [[ ! -z "${font_name}" ]]; then
-        utils::echo "\n""font='"${font_name}" "${font_size}"'" >> "${local_path}"
-        utils::echo "use-system-font=false" >> "${local_path}"
+        _echo "\n""font='"${font_name}" "${font_size}"'" >> "${local_path}"
+        _echo "use-system-font=false" >> "${local_path}"
         utils::yq_change "${INSTANCE_YAML}" ".style.fonts.name" "${font_name}"
         utils::yq_change "${INSTANCE_YAML}" ".style.fonts.size" "${font_size}"
       else
-        utils::echo "\n""use-system-font=false" >> "${local_path}"
+        _echo "\n""use-system-font=false" >> "${local_path}"
       fi
       
-      utils::echo "use-theme-colors=false" >> "${local_path}"
-      utils::echo "use-theme-transparency=false" >> "${local_path}"
-      utils::echo "use-transparent-background=true" >> "${local_path}"
-      utils::echo "bold-color-same-as-fg=false" >> "${local_path}"
-      utils::echo "visible-name='loco-profile'" >> "${local_path}"
+      _echo "use-theme-colors=false" >> "${local_path}"
+      _echo "use-theme-transparency=false" >> "${local_path}"
+      _echo "use-transparent-background=true" >> "${local_path}"
+      _echo "bold-color-same-as-fg=false" >> "${local_path}"
+      _echo "visible-name='loco-profile'" >> "${local_path}"
       loco::term_conf_record_command "${gnome_path}" "${gnome_UUID}" "${local_path}"
     fi
   # only supported over ubuntu

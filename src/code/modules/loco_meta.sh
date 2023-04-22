@@ -166,7 +166,7 @@ loco::meta_package_manager(){
       
       # if there is a descriptor file
       else
-        utils::source "${packager_path}"
+        _source "${packager_path}"
 
         # add package manager to the instance yaml
         local yaml_key=".packages.${pkg_type}.${PACKAGE_MANAGER}"

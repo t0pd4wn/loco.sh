@@ -48,7 +48,7 @@ loco::background_manager(){
       # there are few problems related to URLs special characters decoding 
       # as duckduckgo proxies original URLs which can include sub-URLs
       # it is hard to get the correct path to install them dynamically
-      local domain_name=$( utils::echo "${bg_url}" | awk -F/ '{print $3}')
+      local domain_name=$( _echo "${bg_url}" | awk -F/ '{print $3}')
 
       # if the image comes from duckduckgo images
       if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
@@ -70,9 +70,9 @@ loco::background_manager(){
             # substitution to find the sub-URL
             img_basename="${img_basename/"%3F"/"?"}"
             # get the first part of the uri
-            uri_first_part=$( utils::echo "${img_basename}" | cut -d'?' -f2 )
+            uri_first_part=$( _echo "${img_basename}" | cut -d'?' -f2 )
             # get the second part of the uri (which is encoded)
-            uri_second_part=$( utils::echo "${img_basename}" | cut -d'?' -f3 )
+            uri_second_part=$( _echo "${img_basename}" | cut -d'?' -f3 )
             # decodes the second part
             uri_second_part=$( utils::decode_URI "${uri_second_part}" )
             # rebuilds pathname

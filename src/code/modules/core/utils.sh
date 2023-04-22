@@ -4,123 +4,6 @@
 #-------------------------------------------------------------------------------
 
 #######################################
-# Check if the current user is root
-# GLOBALS:
-#   LOCO_DIST
-# Output:
-#   ./src/temp/conf_is_start
-#######################################
-utils::check_if_start(){
-  # check if first start (stores $USER without sudo)
-  if [ -f "./src/temp/conf_is_start" ]; then
-    # program is started
-    utils::remove ./src/temp/conf_is_start
-  else
-    msg::start
-    # save current $USER in a GLOBAL variable
-    CURRENT_USER=$USER
-  fi
-}
-
-#######################################
-# Check if the current user is root and source CURRENT_USER
-# Arguments:
-#   IS_ROOT
-#   CURRENT_USER
-# Output:
-#   ./src/temp/conf_is_start
-#   ./src/temp/conf_CURRENT_USER
-#######################################
-utils::check_if_root(){
-  if [[ "${ROOT_YES}" == false ]]; then
-    if [[ "${IS_ROOT}" -ne 0 ]]; then
-      msg::centered ""
-      msg::centered 'Password is needed to run this script as "sudo"'
-      msg::centered ""
-      # remove then stores current user name in a file
-      # if ! rm ./src/temp/conf_CURRENT_USER; then
-      #     echo "Unable to rm ./src/temp/conf_CURRENT_USER" >&2
-      # fi
-      echo "CURRENT_USER=""${CURRENT_USER}" > ./src/temp/conf_CURRENT_USER
-      sudo -k 
-      # once root write start flag
-      echo "local is_start=true" > ./src/temp/conf_is_start
-      [[ "$UID" -eq 0 ]] || exec sudo bash "$0" "${@-}"
-    else
-      utils::source ./src/temp/conf_CURRENT_USER
-    fi
-  fi
-}
-
-#######################################
-# Check $OSTYPE and defines current OS
-# GLOBALS:
-#   LOCO_OSTYPE
-# Arguments:
-#   $1 # output visibility true / false
-# Output:
-#   ./src/temp/globals.conf
-# Note : only methods from this file should be called.
-#######################################
-utils::check_operating_system(){
-  # if a linux platform
-  if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    LOCO_OSTYPE="ubuntu"
-    SHORT_OS_VERSION=$(lsb_release -r -s | cut -f1 -d'.')
-    OS_PREFIX="home"
-  # if a macos platform
-  elif [[ "$OSTYPE" == "darwin"* ]]; then
-    LOCO_OSTYPE="macos"
-    OS_PREFIX="Users"
-    # check if mac has brew
-    utils::mac_has_brew
-    # check if mac has bash 4+
-    utils::mac_has_bash
-    # get version information, then grep version line, cut full semver, cut main version "e.g 12"
-    SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
-  
-  else 
-    _error "Operating System not supported." 
-    _exit "Operating System not supported."
-  fi
-  
-  echo "LOCO_OSTYPE=${LOCO_OSTYPE}" > "./src/temp/conf_OS_GLOBALS"
-  echo "SHORT_OS_VERSION=${SHORT_OS_VERSION}" >> "./src/temp/conf_OS_GLOBALS"
-  echo "OS_PREFIX=${OS_PREFIX}" >> "./src/temp/conf_OS_GLOBALS"
-}
-
-#######################################
-# Check if dependencies are met
-# GLOBALS:
-#   LOCO_OS_VERSION
-#######################################
-utils::check_dependencies(){
-  if [[ $(command -v yq) ]]; then
-    msg::say "yq is installed."
-  else
-    msg::say "Installing yq."
-    if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
-      snap install yq
-    elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-      cmd::run_as_user "brew install yq"
-    fi
-  fi
-  # if OVERLAY flag is set, 
-  if [[ "${OVERLAY}" == true ]]; then
-    if [[ $(command -v convert) ]]; then
-      msg::say "imagemagick is installed."
-    else
-      msg::say "Installing imagemagick."
-      if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
-        apt --yes install imagemagick
-      elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-        cmd::run_as_user "brew install imagemagick"
-      fi
-    fi
-  fi
-}
-
-#######################################
 # Removes temp files.
 #######################################
 utils::clean_temp(){
@@ -148,64 +31,6 @@ utils::countdown(){
 }
 
 #######################################
-# Cat
-# Arguments:
-#   $1 # command argument
-#######################################
-utils::cat(){
-  local arg="${@-}"
-
-  if ! cat "${arg}"; then
-    _error "Unable to cat ${arg}"
-  fi
-}
-
-#######################################
-# Copy from to
-# Arguments:
-#   $1 # from
-#   $2 # to
-#######################################
-utils::cp(){
-  local from="${1-}"
-  local to="${2-}"
-
-  if ! cmd::run_as_user "cp -RL "${from}" "${to}""; then
-    _error "Unable to copy ${from} in ${to}"
-  fi
-}
-
-#######################################
-# Chmod a path
-# Arguments:
-#   $1 # command argument "666 -R"
-#   $2 # /path/to/
-#######################################
-utils::chmod(){
-  local arg="${1-}"
-  local path="${2-}"
-
-  if ! chmod "${arg}" ${path}; then
-    _error "Unable to chmod ${path} with ${arg}"
-  fi
-}
-
-#######################################
-# Chown a path
-# Arguments:
-#   $1 # command argument "user_name"
-#   $2 # /path/to/
-#######################################
-utils::chown(){
-  local arg="${1-}"
-  local path="${2-}"
-
-  if ! chown "${arg}" ${path}; then
-    _error "Unable to chown ${path} to ${arg}"
-  fi
-}
-
-#######################################
 # Compare two files
 # Arguments:
 #   $1 # /path/to/a/file
@@ -216,8 +41,8 @@ utils::chown(){
 utils::compare(){
   local file_A="${1-}"
   local file_B="${2-}"
-  local file_A_size=$(utils::file_size "${file_A}")
-  local file_B_size=$(utils::file_size "${file_B}")
+  local file_A_size=$(_file_size "${file_A}")
+  local file_B_size=$(_file_size "${file_B}")
 
   if [[ "${file_A_size}" -eq "${file_B_size}"  ]]; then
     if ! $(cmp -s ${file_A} ${file_B}); then
@@ -235,19 +60,6 @@ utils::compare(){
   else
     # files sizes are different
     echo false
-  fi
-}
-
-#######################################
-# Get the size of a file
-# Arguments:
-#   $1 # /path/to/a/file
-#######################################
-utils::file_size(){
-  local file="${1-}"
-
-  if ! stat -c%s "${file}"; then
-    _error "Unable to stat ${file}"
   fi
 }
 
@@ -321,15 +133,17 @@ utils::string_cut_rev(){
 }
 
 #######################################
-# Echo a message
+# Get the last part of a string
 # Arguments:
-#   $1 # from
-#   $2 # to
+#   $1 # a string
+#   $2 # a delimeter
 #######################################
-utils::echo(){
-  local message="${@-}"
-  if ! echo -e "${message}"; then
-    _error "Unable to echo -e ${message}"
+utils::get_string_last(){
+  local string="${1-}"
+  local delimeter="${2-}"
+
+  if ! echo "${url}" | rev  | cut -d "${delimeter}" -f1 | rev; then
+    _error "Can not get ${string} last part"
   fi
 }
 
@@ -460,7 +274,7 @@ utils::image_overlay(){
     msg::print "Original background doesn't fit."
     msg::print "It will be backup'd and resized."
     # backup orginal background
-    utils::cp "${img_path}" "${img_path}.temp"
+    _cp "${img_path}" "${img_path}.temp"
     # modify original background resolution
     cmd::run_as_user "convert "${img_path}" -resize 3840x2160^ -gravity Center -extent 3840x2160 "${img_path}""
   fi 
@@ -477,24 +291,8 @@ utils::image_overlay(){
   # restore original background and clean temp files
   if [[ "${ratio_flag}" == true ]]; then
     utils::remove "${img_path}"
-    utils::cp "${img_path}.temp" "${img_path}"
+    _cp "${img_path}.temp" "${img_path}"
     utils::remove "${img_path}.temp"
-  fi
-}
-
-#######################################
-# Create a symbolic link
-# Arguments:
-#   $1 # from /path/from/file
-#   $2 # to /path/to/
-# 
-#######################################
-utils::link(){
-  local from="${1-}"
-  local to="${2-}"
-
-  if ! utils::run_as_user "ln -s "${from}" "${to}""; then
-    _error "Unable to link "${from}" "${to}""
   fi
 }
 
@@ -540,69 +338,29 @@ utils::list(){
 }
 
 #######################################
-# For macOS check if brew is installed or install it
-# GLOBALS:
-#   PACKAGE_ACTION_CMD
-#   PACKAGE_MANAGER
-#   PACKAGE_ACTION
-#   PACKAGE
-#######################################
-utils::mac_has_brew(){
-  # if on macOS
-  if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
-    # if brew is not installed
-    if [[ $(command -v brew) == "" ]]; then
-      echo -e "🌵 Homebrew needs to be installed."
-      echo -e "🌵 Your password will be asked several times."
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    else
-      echo -e "🌵 Homebrew is installed."
-    fi
-  fi
-}
-
-#######################################
-# for macOS check if bash 4.* is installed or install it
-# GLOBALS:
-#   ACTION
-#   PACKAGE
-#   PACKAGE_MANAGER
-#######################################
-utils::mac_has_bash(){
-  # if bash version is equal to 3.x
-  if [[ ${BASH_VERSINFO[0]} -eq 3 ]];  then
-
-    # if there is a binary in the brew/bash path
-    if [[ -f /usr/local/bin/bash ]]; then
-      echo -e "🌵 An other version of bash is installed."
-      echo -e "🌵 You may want to use the command below:"
-      echo -e "/usr/local/bin/bash ./loco"
-
-    # if brew/bash is not installed
-    else
-      echo -e "🌵 Bash 4+ will be installed."
-      $(brew install bash)
-    fi
-  else
-    echo -e "🌵 Bash ${BASH_VERSINFO[0]} is installed."
-  fi
-}
-
-#######################################
-# Make a directory
+# Remove a path
 # Arguments:
 #   $1 # a path
 #######################################
-utils::mkdir(){
+utils::remove(){
   local path="${@-}"
+  declare -a clean_path
+  clean_path=($(echo $path))
 
-  # check if directory exists
-  if [[ -d "${path}" ]]; then
-    msg::debug "${path} already exists"
-  else
-    if ! cmd::run_as_user "mkdir -p ""${path}"; then
-      _error "Unable to create ${path}"
+  # try three different expansions 
+  if ! rm -Rr "${clean_path[@]}"; then
+    if ! rm -Rr $clean_path; then
+      if ! rm -Rr "$clean_path"; then
+        msg::debug "Unable to remove $clean_path"
+        _error "Unable to remove $clean_path"
+      else 
+        msg::debug "Managed to remove "$clean_path" (3)"
+      fi
+    else
+      msg::debug "Managed to remove $clean_path (2)"
     fi
+  else 
+    msg::debug "Managed to remove "${clean_path[@]}" (1)"
   fi
 }
 
@@ -643,33 +401,6 @@ utils::remove_string_in_file(){
 
   if ! sed -i 's/'"${string}"'//' "${file}"; then
     _error "Unable to remove ${string} in ${file}"
-  fi
-}
-
-#######################################
-# Remove a path
-# Arguments:
-#   $1 # a path
-#######################################
-utils::remove(){
-  local path="${@-}"
-  declare -a clean_path
-  clean_path=($(echo $path))
-
-  # try three different expansions 
-  if ! rm -Rr "${clean_path[@]}"; then
-    if ! rm -Rr $clean_path; then
-      if ! rm -Rr "$clean_path"; then
-        msg::debug "Unable to remove $clean_path"
-        _error "Unable to remove $clean_path"
-      else 
-        msg::debug "Managed to remove "$clean_path" (3)"
-      fi
-    else
-      msg::debug "Managed to remove $clean_path (2)"
-    fi
-  else 
-    msg::debug "Managed to remove "${clean_path[@]}" (1)"
   fi
 }
 
@@ -718,34 +449,6 @@ utils::replace_string_in_file(){
 }
 
 #######################################
-# Set system clock (needed in  virtual hosts)
-# Globals:
-#   LOCO_OSTYPE
-#######################################
-utils::set_clock(){
-  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
-    if ! sudo hwclock --hctosys; then
-      _error "Unable to set clock"
-    fi
-  fi
-}
-
-#######################################
-# Source a file
-# Arguments:
-#   $1 # a path
-#   $2 # options
-#######################################
-utils::source(){
-  local path="${1-}"
-  local arg="${2-}"
-
-  if ! source "${path}" $arg; then
-    _error "Unable to source $path"
-  fi
-}
-
-#######################################
 # Print a timestamp.
 #######################################
 utils::timestamp(){
@@ -786,36 +489,4 @@ utils::get_url(){
     msg::debug "curl is used"
     cmd::run_as_user "curl ${curl_options} " "${path}" "'"${url}"'"
   fi
-}
-
-#######################################
-# Get the last part of a string
-# Arguments:
-#   $1 # a string
-#   $2 # a delimeter
-#######################################
-utils::get_string_last(){
-  local string="${1-}"
-  local delimeter="${2-}"
-
-  if ! echo "${url}" | rev  | cut -d "${delimeter}" -f1 | rev; then
-    _error "Can not get ${string} last part"
-  fi
-}
-
-
-
-#######################################
-# Print an error message in STDERR
-#######################################
-_error() {
-  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: ${@-}" >&2 ":: $*"
-}
-
-#######################################
-# Print an error and exit
-#######################################
-_exit() {
-  _error "${@-}"
-  exit 1
 }

@@ -140,7 +140,7 @@ loco::custom_source(){
   local path="./${PROFILES_DIR}/${PROFILE}/custom.sh"
   
   if [[ -f "${path}" ]]; then
-    utils::source "${path}"
+    _source "${path}"
     if [ $? -ne 0 ]; then
       msg::print "Can not source custom.sh file."
     fi
@@ -175,16 +175,16 @@ loco::custom_merge(){
 
       if [[ "${new}" == "${prev}" ]]; then
         # functions are identical
-        utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+        _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
       else
         # functions are different
         prev="${prev}\n${new}"
-        utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+        _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
       fi
     else
       # function doesn't exist
       new=$(utils::dump_bash_function "${function}" "${custom_from}")
-      utils::echo "${function}(){\n${new}\n}\n" >> ./src/temp/custom.tmp
+      _echo "${function}(){\n${new}\n}\n" >> ./src/temp/custom.tmp
     fi
   done
 
@@ -196,7 +196,7 @@ loco::custom_merge(){
     else
       # if not, copy the function
       prev=$(utils::dump_bash_function "${function}" "${custom_to}")
-      utils::echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+      _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
     fi
   done
 
@@ -204,5 +204,5 @@ loco::custom_merge(){
   utils::remove "${custom_to}"
   utils::replace_string_in_file '";' '"' ./src/temp/custom.tmp
   utils::replace_string_in_file 'fi;' 'fi' ./src/temp/custom.tmp
-  utils::cp ./src/temp/custom.tmp "${custom_to}"
+  _cp ./src/temp/custom.tmp "${custom_to}"
 }

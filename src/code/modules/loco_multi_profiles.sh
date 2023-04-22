@@ -16,9 +16,9 @@ loco::multi_prepare(){
   PROFILE=".Multi-$(utils::timestamp)"
 
   # create a .Multi folder
-  utils::mkdir "./${PROFILES_DIR}/${PROFILE}"
-  utils::mkdir "./${PROFILES_DIR}/${PROFILE}/assets"
-  utils::mkdir "./${PROFILES_DIR}/${PROFILE}/dotfiles"
+  _mkdir "./${PROFILES_DIR}/${PROFILE}"
+  _mkdir "./${PROFILES_DIR}/${PROFILE}/assets"
+  _mkdir "./${PROFILES_DIR}/${PROFILE}/dotfiles"
 
   # iterate over profiles directories
   for profile in "${profiles[@]}"; do
@@ -42,7 +42,7 @@ loco::multi_assets(){
   
   # if $profile/assets/ exists copy content in .Multi/assets/
   if [[ -d "${from}" ]]; then
-    utils::cp "${from}/*" "${to}"
+    _cp "${from}/*" "${to}"
   fi
 }
 
@@ -62,7 +62,7 @@ loco::multi_assets(){
     loco::dotfiles_merge "${from_path}" "${dest_path}"
   else
   # if empty, copy files in destination folder
-    utils::cp "${from_path}/." "${dest_path}/"
+    _cp "${from_path}/." "${dest_path}/"
   fi
  }
 
@@ -82,7 +82,7 @@ loco::multi_assets(){
     loco::yaml_merge "${from_yaml}" "${dest_yaml}"
   else
   # if not, copy file as destination file
-    utils::cp "${from_yaml}" "${dest_yaml}"
+    _cp "${from_yaml}" "${dest_yaml}"
   fi
  }
 
@@ -102,6 +102,6 @@ loco::multi_custom_functions(){
     loco::custom_merge "${from_custom}" "${dest_custom}"
   else
   # if not, copy file as destination file
-    utils::cp "${from_custom}" "${dest_custom}"
+    _cp "${from_custom}" "${dest_custom}"
   fi
 }

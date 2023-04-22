@@ -44,7 +44,7 @@ utils::profile_get_values(){
   fi
 
   # sends back the value
-  utils::echo "${value}"
+  _echo "${value}"
 }
 
 #######################################
@@ -64,7 +64,7 @@ yaml::get(){
   if [[ "${value}" == "" ]] || [[ "${value}" == "null" ]]; then
     return 1
   else
-    utils::echo "${value}"
+    _echo "${value}"
   fi
 }
 
@@ -126,13 +126,13 @@ utils::yq(){
 # yaml::has_selector(){ 
 #   local selector="${1-}" 
 #   local yaml="${2-}"
-#   # local child_selector=$(utils::echo "${selector}" | grep -oE "[^.]+$")
-#   local child_selector=$(utils::echo "${selector}" | rev | cut -d. -f1 | rev)
+#   # local child_selector=$(_echo "${selector}" | grep -oE "[^.]+$")
+#   local child_selector=$(_echo "${selector}" | rev | cut -d. -f1 | rev)
 #   local parent_selector="${selector%."${child_selector}"}"
   
 #   # in the case where an array is asked
 #   if [[ "${child_selector}" == "[]" ]]; then
-#     child_selector=$(utils::echo "${selector}" | rev | cut -d. -f2 | rev)
+#     child_selector=$(_echo "${selector}" | rev | cut -d. -f2 | rev)
 #     parent_selector="${selector%."${child_selector}.[]"}"
 #   fi
   
@@ -162,13 +162,13 @@ yaml::has_child_selector(){
   local selector="${1-}" 
   local yaml="${2-}"
   
-  # local child_selector=$(utils::echo "${selector}" | grep -oE "[^.]+$")
-  local child_selector=$(utils::echo "${selector}" | rev | cut -d. -f1 | rev)
+  # local child_selector=$(_echo "${selector}" | grep -oE "[^.]+$")
+  local child_selector=$(_echo "${selector}" | rev | cut -d. -f1 | rev)
   local parent_selector="${selector%."${child_selector}"}"
   
   # in the case where an array is asked
   if [[ "${child_selector}" == "[]" ]]; then
-    child_selector=$(utils::echo "${selector}" | rev | cut -d. -f2 | rev)
+    child_selector=$(_echo "${selector}" | rev | cut -d. -f2 | rev)
     parent_selector="${selector%."${child_selector}.[]"}"
   fi
   

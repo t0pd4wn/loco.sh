@@ -116,7 +116,7 @@ loco::dotfiles_action_install(){
   done
 
   # change rights to $CURRENT_USER so dotfiles are editable
-  utils::chown "${CURRENT_USER}" "${INSTANCE_PATH}/dotfiles/.*"
+  _chown "${CURRENT_USER}" "${INSTANCE_PATH}/dotfiles/.*"
 
   msg::say "${CURRENT_USER}" " dotfiles were backup'd here :"
   msg::say "${INSTANCE_PATH}/dotfiles-backup"
@@ -162,7 +162,7 @@ loco::dotfiles_backup(){
     msg::debug "${user_file}"
     msg::print "No corresponding " "${dotfile}" " file"
   else
-    utils::cp "${user_file}" "${profile_file}"
+    _cp "${user_file}" "${profile_file}"
     utils::remove "${user_file}"
     # add entry to instance yaml
     yaml::add "${INSTANCE_YAML}" ".dotfiles.backup" "${dotfile}"
@@ -199,13 +199,13 @@ loco::dotfiles_merge(){
       if [[ "${is_same}" == false ]]; then
         # files sizes are different
         # copy $new file content in $prev file
-        utils::echo "\n\n### from ${new}" >> "${prev}"
-        utils::cat "${new}" >> "${prev}"
+        _echo "\n\n### from ${new}" >> "${prev}"
+        _cat "${new}" >> "${prev}"
       fi
     else
       # file doesn't exist
       # copy file in destination
-      utils::cp "${new}" "${dotfiles_to}"
+      _cp "${new}" "${dotfiles_to}"
     fi
   done
 }
@@ -230,7 +230,7 @@ loco::dotfiles_set(){
     local profile_file="${PROFILE_PATH}"/dotfiles/"${dotfile}"
     local instance_path="$INSTANCE_PATH"/dotfiles/
 
-    # bug : for some reason the utils::cp wrapper wouldn't work here 
+    # bug : for some reason the _cp wrapper wouldn't work here 
     # (maybe paths expansion ?)
     if ! cp "${profile_file}" "${instance_path}"; then
       _error "Can not cp "${profile_file}" in "${instance_path}""
@@ -238,14 +238,14 @@ loco::dotfiles_set(){
 
     # create a symlink between the instance file and the home folder
     ln -sfn "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
-    # todo : utils::link ??
+    # todo : _link ??
     # ln -n "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
-    # utils::link "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
+    # _link "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
 
   else
     msg::debug "Detached"
     # if detached copy directly the file to home folder
-    utils::cp "${profile_file}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
+    _cp "${profile_file}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
   fi
   # add entry to instance yaml
   yaml::add "${INSTANCE_YAML}" ".dotfiles.installed" "${dotfile}"

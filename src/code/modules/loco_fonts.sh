@@ -75,7 +75,7 @@ loco::fonts_manager(){
 loco::fonts_action_install_yaml(){
   local fonts_path="${1-}"
   local font="${2-}"
-  utils::mkdir "${fonts_path}"
+  _mkdir "${fonts_path}"
   # download the font
   utils::get_url "${fonts_path}" "${font}"
   # refresh fonts cache
@@ -129,8 +129,8 @@ loco::fonts_action_remove_yaml(){
 loco::fonts_action_install_local(){
   local fonts_path="${1-}"
   local from_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/*
-  utils::mkdir "${fonts_path}"
-  utils::cp "${from_path}" "${fonts_path}"
+  _mkdir "${fonts_path}"
+  _cp "${from_path}" "${fonts_path}"
 }
 
 #######################################

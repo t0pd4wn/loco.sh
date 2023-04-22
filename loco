@@ -4,11 +4,11 @@
 #-------------------------------------------------------------------------------
 LOCO_DEV="false"
 
-# source utils methods
-source ./src/code/modules/core/utils.sh
+# source loco_various methods
+source ./src/code/modules/loco_various.sh
 
 # check operating system
-utils::check_operating_system
+loco::check_operating_system
 
 # launch the main.sh script and the finish.sh one 
 # needed to execute main.sh as root, finish.sh as $USER and close terminal

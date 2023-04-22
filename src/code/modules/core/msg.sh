@@ -45,7 +45,7 @@ msg::play(){
 msg::print(){
   local b=$(tput bold)
   local n=$(tput sgr0)
-  utils::echo "${n}"${1-}"${b}"${2-}"${n}"${3-}
+  _echo "${n}"${1-}"${b}"${2-}"${n}"${3-}
 }
 
 #######################################

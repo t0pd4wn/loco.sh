@@ -36,25 +36,25 @@ prompt::build(){
     argCases+="$prompt_index) printf -v ""${local_GLOBAL}"" '%s' '"${prompt_option}"';;\n"
   done
   # build prompt file
-  utils::echo "title=\"$(msg::say "${local_prompt_message}")\"" > "${prompt_path}"
-  utils::echo "prompt=\"$(msg::print "Pick an option : ")\"" >> "${prompt_path}"
-  utils::echo "options=("$prompt_options")" >> "${prompt_path}"
-  utils::echo "echo \$title" >> "${prompt_path}"
-  utils::echo "PS3=\$prompt" >> "${prompt_path}"
-  utils::echo "select opt in "'"${options[@]}"'" "Quit"; do " >> "${prompt_path}"
-  utils::echo "case "\$REPLY" in" >> "${prompt_path}"
-  utils::echo "$argCases" >> "${prompt_path}"
+  _echo "title=\"$(msg::say "${local_prompt_message}")\"" > "${prompt_path}"
+  _echo "prompt=\"$(msg::print "Pick an option : ")\"" >> "${prompt_path}"
+  _echo "options=("$prompt_options")" >> "${prompt_path}"
+  _echo "echo \$title" >> "${prompt_path}"
+  _echo "PS3=\$prompt" >> "${prompt_path}"
+  _echo "select opt in "'"${options[@]}"'" "Quit"; do " >> "${prompt_path}"
+  _echo "case "\$REPLY" in" >> "${prompt_path}"
+  _echo "$argCases" >> "${prompt_path}"
 
   if [[ "${is_required}" == true ]]; then
-    utils::echo "$((prompt_index+1))) echo "Goodbye!"; exit;;" >> "${prompt_path}"
+    _echo "$((prompt_index+1))) echo "Goodbye!"; exit;;" >> "${prompt_path}"
   elif [[ "${is_required}" == false ]]; then
-    utils::echo "$((prompt_index+1))) echo "No choice is also good."; ;;" >> "${prompt_path}"
+    _echo "$((prompt_index+1))) echo "No choice is also good."; ;;" >> "${prompt_path}"
   fi
   
-  utils::echo "*) echo "Invalid option. Try another one.";continue;;" >> "${prompt_path}"
-  utils::echo "esac" >> "${prompt_path}"
-  utils::echo "break" >> "${prompt_path}"
-  utils::echo "done" >> "${prompt_path}"
+  _echo "*) echo "Invalid option. Try another one.";continue;;" >> "${prompt_path}"
+  _echo "esac" >> "${prompt_path}"
+  _echo "break" >> "${prompt_path}"
+  _echo "done" >> "${prompt_path}"
 }
 
 #######################################
@@ -65,5 +65,5 @@ prompt::build(){
 prompt::call(){
   local path_suffix="${1-}"
   # source built file
-  utils::source ./src/temp/prompt_"${path_suffix}".sh
+  _source ./src/temp/prompt_"${path_suffix}".sh
 }

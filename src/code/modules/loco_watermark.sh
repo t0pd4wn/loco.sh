@@ -74,13 +74,13 @@ loco::instance_create(){
     fi
 
     # create the instance folder
-    utils::mkdir "${INSTANCE_PATH}"
+    _mkdir "${INSTANCE_PATH}"
 
     # create sub folders
-    utils::mkdir "${INSTANCE_PATH}/dotfiles-backup"
+    _mkdir "${INSTANCE_PATH}/dotfiles-backup"
 
     if [[ ${DETACHED} == false ]]; then
-      utils::mkdir "${INSTANCE_PATH}/dotfiles"
+      _mkdir "${INSTANCE_PATH}/dotfiles"
     fi
 
     # create yaml key in /home/$USER/.loco.yml
@@ -118,13 +118,13 @@ loco::watermark_action_install(){
     # switch to remove
     ACTION="remove"
     # keep a copy of current finish script
-    utils::cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
+    _cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
     # source the $ACTION.sh file
-    utils::source ./src/code/actions/"${ACTION}".sh
+    _source ./src/code/actions/"${ACTION}".sh
     # remove the newly created finish.sh
     utils::remove "./src/temp/finish.sh"
     # put the copy back
-    utils::cp "./src/temp/finish_temp.sh" "./src/temp/finish.sh"
+    _cp "./src/temp/finish_temp.sh" "./src/temp/finish.sh"
     # restore a copy of current messages
     MSG_ARRAY=("${recorded_messages[@]}")
     # switch back to installation and current profile
@@ -141,13 +141,13 @@ loco::watermark_action_install(){
     # # switch to remove
     # ACTION="remove"
     # # keep a copy of current finish script
-    # utils::cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
+    # _cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
     # # source the $ACTION.sh file
-    # utils::source ./src/code/actions/"${ACTION}".sh
+    # _source ./src/code/actions/"${ACTION}".sh
     # # remove the newly created finish.sh
     # utils::remove "./src/temp/finish.sh"
     # # put the copy back
-    # utils::cp "./src/temp/finish_temp.sh" "./src/temp/finish.sh"
+    # _cp "./src/temp/finish_temp.sh" "./src/temp/finish.sh"
     # # restore a copy of current messages
     # MSG_ARRAY=("${recorded_messages[@]}")
     # # switch back to installation and current profile
@@ -236,7 +236,7 @@ loco::watermark_action_update(){
     local previous_profile=$(yaml::get "${INSTANCE_YAML}" "${profile_selector}")
     utils::yq_change "${INSTANCE_YAML}" "${selector}" "${previous_profile} ${PROFILE}"
 
-    # utils::source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
+    # _source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
     # # keep sourced GLOBALs values
     # old_profile="${PROFILE-}"
     # old_user="${CURRENT_USER-}"
@@ -283,13 +283,13 @@ loco::watermark_unset(){
 #######################################
 loco::watermark_set(){
   if [[ "${WATERMARK}" == true ]]; then
-    utils::echo 'instance:' > "${INSTANCE_YAML}"
-    utils::echo '  CURRENT_USER: '${CURRENT_USER} >> "${INSTANCE_YAML}"
-    utils::echo '  PROFILE: '${PROFILE} >> "${INSTANCE_YAML}"
-    utils::echo '  INSTANCE_PATH: ' >> "${INSTANCE_YAML}"
-    utils::echo 'style:' >> "${INSTANCE_YAML}"
-    utils::echo 'packages:' >> "${INSTANCE_YAML}"
-    utils::echo 'dotfiles:' >> "${INSTANCE_YAML}"
+    _echo 'instance:' > "${INSTANCE_YAML}"
+    _echo '  CURRENT_USER: '${CURRENT_USER} >> "${INSTANCE_YAML}"
+    _echo '  PROFILE: '${PROFILE} >> "${INSTANCE_YAML}"
+    _echo '  INSTANCE_PATH: ' >> "${INSTANCE_YAML}"
+    _echo 'style:' >> "${INSTANCE_YAML}"
+    _echo 'packages:' >> "${INSTANCE_YAML}"
+    _echo 'dotfiles:' >> "${INSTANCE_YAML}"
 
     local home_path=/"${OS_PREFIX}"/"${CURRENT_USER}"
     # local home_files=$(ls -d ${home_path}.??*)
