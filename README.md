@@ -16,7 +16,7 @@
 
 ***Loco.sh*** comes with 6 example profiles :
 
-- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure and yaml file
+- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure and its yaml file
 - **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
 - **vim**: fully configured ```vim```
 - **zsh**: fully configured ```zsh``` with ```p10K```
@@ -63,7 +63,7 @@ cd ~/loco-dist
 ### Manually
 
 ```bash
-#clone repo
+#clone this repo
 git clone [repository]
 
 #navigate to repo
@@ -141,7 +141,8 @@ Using the ```cmd::record``` function allows to record commands that will be exec
 
 Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed.
 
-1. ```bash
+1. bash
+```bash
 #!bin/bash
 #-------------------------------------------------------------------------------
 # custom.sh | custom user scripts
@@ -173,7 +174,8 @@ remove_ubuntu_last(){
 }
 ```
 
-2. ```yaml
+2. yaml
+```yaml
 custom_functions:
   [action]_[entry/exit/last]:
   install_entry:
