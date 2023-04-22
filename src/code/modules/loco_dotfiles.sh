@@ -23,6 +23,7 @@ loco::dotfiles_manager(){
   local dotfiles_list
   local dotfiles_yaml
   local yaml_urls
+  local url_filename
 
   # prompt a dotfiles related y/n question
   msg::prompt "$1" "$2" "$3"
@@ -44,7 +45,14 @@ loco::dotfiles_manager(){
             # make an array from commands
             IFS=$'\n' read -r -d '' -a urls <<< "${yaml_urls}"
             for url in "${urls[@]}"; do
-              utils::get_url "${dotfiles_dir}" "${url}"
+              url_filename=$(utils::get_string_last "${url}" "/")
+              # if the url file already exist in /dotfiles/ do nothing
+              if [[ -f "${dotfiles_dir}/${url_filename}" ]]; then
+                msg::say "File" "${url_filename}" " already exists."
+              else
+                # file does not exist, get it
+                utils::get_url "${dotfiles_dir}" "${url}"
+              fi
             done
         fi
 

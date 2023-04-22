@@ -12,7 +12,7 @@
 - **security consultants**, to deal with a variety of identities and security access
 - **data scientists**, for setting up complex machine learning environments
 
-***Loco.sh*** is based on **profiles** made of a YAML file and/or a tree folder structure ; users can define everything in a single YAML and/or build their profiles with separate files in folders. Profiles can be installed, updated or removed. Multiple profiles can be installed at once, and new profiles can be installed over old ones.
+***Loco.sh*** is based on **profiles** made of a YAML file and/or a tree folder structure. Users can define everything in a single YAML and/or build their profiles with separate files in folders. Profiles can be installed, updated or removed. Multiple profiles can be installed at once, and new profiles can be installed over old ones.
 
 ***Loco.sh*** comes with 6 example profiles :
 
@@ -141,7 +141,7 @@ Using the ```cmd::record``` function allows to record commands that will be exec
 
 Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed.
 
-1. bash
+1. custom.sh : a script can be provided
 ```bash
 #!bin/bash
 #-------------------------------------------------------------------------------
@@ -174,13 +174,15 @@ remove_ubuntu_last(){
 }
 ```
 
-2. yaml
+2. profile.yaml : some yaml commands can be provided
 ```yaml
 custom_functions:
   [action]_[entry/exit/last]:
+    - # command goes here
   install_entry:
     - # command goes here
   [action]_[os_type]_[entry/exit/last]:
+    - # command goes here
   install_macos_exit:
     - # command goes here
   remove_ubuntu_last:
@@ -274,7 +276,7 @@ dotfiles:
       └── .[dotfile name] # a dotfile (optional)
 ```
 
-If more than one method is set the priority goes from 1. to 2. Be aware that dotfiles set through urls in the yaml file will overwrite existing files in the /dotfiles/ folder.
+If more than one method is set the sequence goes from 1. to 2, but already existing dotfiles in the ```[profile]/dotfiles/``` folder won't be downloaded from the yaml. This is meant to prevent yaml urls to overwrite locally modified dotfiles.
 
 ## Themes
 

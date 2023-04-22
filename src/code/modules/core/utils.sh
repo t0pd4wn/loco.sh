@@ -789,6 +789,23 @@ utils::get_url(){
 }
 
 #######################################
+# Get the last part of a string
+# Arguments:
+#   $1 # a string
+#   $2 # a delimeter
+#######################################
+utils::get_string_last(){
+  local string="${1-}"
+  local delimeter="${2-}"
+
+  if ! echo "${url}" | rev  | cut -d "${delimeter}" -f1 | rev; then
+    _error "Can not get ${string} last part"
+  fi
+}
+
+
+
+#######################################
 # Print an error message in STDERR
 #######################################
 _error() {
