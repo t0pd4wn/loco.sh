@@ -21,9 +21,10 @@ loco::package_action(){
   fi
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]] && [[ "${PACKAGE_MANAGER}" == "brew" ]]; then
-      cmd::run_as_user "eval "${PACKAGE_ACTION_CMD}""
+      cmd::run_as_user "cmd::execute "${PACKAGE_ACTION_CMD}""
   else
-    eval "${PACKAGE_ACTION_CMD}"
+    # eval "${PACKAGE_ACTION_CMD}"
+    cmd::execute "${PACKAGE_ACTION_CMD}"
   fi
 
   # clear global value

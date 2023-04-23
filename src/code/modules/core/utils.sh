@@ -284,7 +284,8 @@ utils::list(){
 utils::remove(){
   local path="${@-}"
   declare -a clean_path
-  clean_path=($(echo $path))
+  # this is meant to enable variables expansion in remove paths
+  clean_path=($(eval echo ${path[@]}))
 
   # try three different expansions 
   if ! rm -Rr "${clean_path[@]}"; then

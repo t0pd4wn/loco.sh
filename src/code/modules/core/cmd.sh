@@ -6,7 +6,7 @@
 #######################################
 # Register commands to finish.sh
 # Arguments:
-#   $1 // a command
+#   $1 # a command
 # Output:
 #   src/temp/finish.sh
 #######################################
@@ -27,7 +27,7 @@ cmd::record(){
 # GLOBALS:
 #   CURRENT_USER
 # Arguments:
-#   $1 // a command
+#   $1 # a command
 #######################################
 cmd::run_as_user(){
   local command="${@-}"
@@ -35,4 +35,20 @@ cmd::run_as_user(){
     msg::debug "Can not su ${command}"
     echo "Can not su ${command}" >&2
   fi
+}
+
+#######################################
+# Run a command
+# GLOBALS:
+#   CURRENT_USER
+# Arguments:
+#   $1 # a command
+#######################################
+cmd::execute(){
+  local command="${@-}"
+
+  # create an array on space delimeter
+  IFS=' ' read -r -a command_array <<< "${command}"
+  # expand command array to execute it
+  "${command_array[@]}"
 }

@@ -221,13 +221,10 @@ yaml::execute(){
   function_body=$(yaml::get "${path}" "${function}.[]")
 
   # make an array from commands
-  IFS=$'\n' read -r -d '' -a functions <<< "${function_body}"
+  IFS=$'\n' read -r -d '' -a commands <<< "${function_body}"
 
-  for function in "${functions[@]}"; do
-    # for each function create an array on space delimeter
-    IFS=' ' read -r -a command_arr <<< "${function}"
-    # expand function array to execute it
-    "${command_arr[@]}"
+  for command in "${commands[@]}"; do
+    cmd::execute "${command}"
   done
 }
 

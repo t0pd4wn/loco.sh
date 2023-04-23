@@ -37,8 +37,14 @@ custom_functions:
     - cmd::run_as_user vim +PluginInstall +qall
     - cmd::run_as_user git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.zsh-plugins/powerlevel10k
   remove_exit:
-    - utils::remove ~/.vim/bundle/*
-    - utils::remove ~/.zsh-plugins/powerlevel10k
+    - utils::remove /home/${CURRENT_USER}/.vim/bundle/anyfold
+    - utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline
+    - utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline-themes
+    - utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-line-no-indicator
+    - utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-minimap
+    - utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-monokai
+    - utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim
+    - utils::remove /home/${CURRENT_USER}/.zsh-plugins/powerlevel10k
   install_macos_exit:
     - cmd::record defaults write com.apple.dock static-only -bool TRUE; killall Dock
     - cmd::record defaults write NSGlobalDomain _HIHideMenuBar -bool TRUE; killall Finder

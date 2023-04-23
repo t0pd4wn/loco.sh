@@ -20,7 +20,13 @@ install_exit(){
 
 remove_exit(){
   # remove vim bundles
-  utils::remove "/"${OS_PREFIX}"/"${CURRENT_USER}"/.vim/bundle/*"
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/anyfold
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline-themes
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-line-no-indicator
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-minimap
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-monokai
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim
 
   # remove powerlevel10K
   utils::remove "/"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
