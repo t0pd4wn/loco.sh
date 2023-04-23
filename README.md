@@ -2,15 +2,15 @@
 
 ***Loco.sh*** is an Unix **lo**cal **co**nfiguration manager. It can install any package *(apt, ppas, brew, snap, pip...)*, manage dotfiles, terminal styles, fonts, backgrounds, overlays, and execute custom scripts.
 
-<img alt="Loco.sh Ubuntu demo" src="dist/loco_demo_0.7_Ubuntu.gif" width="1080">
-
 ***Loco.sh*** can be useful to:
 
-- **regular users**, who can easily define their desktop style
-- **developers**, for various environments and machines with the same look and feel
-- **system administrators**, to manage their users profiles in a single place
+- **regular users**, who can easily define their desktop style and essential packages
+- **developers**, to set the same look and feel over various environments and machines
+- **system administrators**, to manage all their users assets in a single place
 - **security consultants**, to deal with a variety of identities and security access
 - **data scientists**, for setting up complex machine learning environments
+
+<img alt="Loco.sh Ubuntu demo" src="dist/loco_demo_0.7_Ubuntu.gif" width="1080">
 
 ***Loco.sh*** is based on **profiles** made of a YAML file and/or a tree folder structure. Users can define everything in a single YAML and/or build their profiles with separate files in folders. Profiles can be installed, updated or removed. Multiple profiles can be installed at once, and new profiles can be installed over old ones.
 
@@ -35,18 +35,18 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, macOS)
 ```bash
-bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l));
+bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)); exit
 ```
 
 ##### Options
 You can pass options like this:
 ```bash
-bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options];
+bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options]; exit
 ```
 
-For example, you can launch an interactive session with a custom background like this:
+For example, you can launch an interactive session with multiple profiles installation like this :
 ```bash
-bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -B "[image url]";
+bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -p vim,zsh; exit
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on :
@@ -79,7 +79,7 @@ cd loco.sh
 
 ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of these *profiles*.
 
-*Profiles* are made of a YAML file, dotfiles, scripts and other assets. They are all optional and independant from each others.
+*Profiles* are made of a YAML file, dotfiles, scripts and other assets. They are all optional and independant from one to another.
 
 - folder structure: ```./profiles/``` 
 
@@ -277,6 +277,10 @@ dotfiles:
 ```
 
 If more than one method is set the sequence goes from 1. to 2, but already existing dotfiles in the ```[profile]/dotfiles/``` folder won't be downloaded from the yaml. This is meant to prevent yaml urls to overwrite locally modified dotfiles.
+
+### Dotfiles backups
+
+When installing profile dotfiles, loco will backup existing dotfiles into the ```/instance/[current instance]/dotfiles-backup``` folder. A list of installed and backuped dotfiles is available in ```~/.loco.yml```.
 
 ## Themes
 
