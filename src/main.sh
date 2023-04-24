@@ -23,6 +23,7 @@ _source ./src/code/modules/core/yaml.sh
 
 # source loco modules
 _source ./src/code/modules/loco_background.sh
+_source ./src/code/modules/loco_checks.sh
 _source ./src/code/modules/loco_custom_functions.sh 
 _source ./src/code/modules/loco_dotfiles.sh
 _source ./src/code/modules/loco_fonts.sh
@@ -33,7 +34,6 @@ _source ./src/code/modules/loco_packages.sh
 _source ./src/code/modules/loco_prompts.sh
 _source ./src/code/modules/loco_startup.sh
 _source ./src/code/modules/loco_terminal.sh 
-_source ./src/code/modules/loco_various.sh
 _source ./src/code/modules/loco_watermark.sh
 _source ./src/code/modules/loco_yaml.sh
 

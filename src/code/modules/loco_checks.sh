@@ -1,6 +1,6 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# various.sh | miscelaneous functions
+# loco_checks.sh | checking functions
 #-------------------------------------------------------------------------------
 
 #######################################
@@ -100,19 +100,6 @@ loco::mac_has_bash(){
 }
 
 #######################################
-# Set system clock (needed in  virtual hosts)
-# Globals:
-#   LOCO_OSTYPE
-#######################################
-loco::set_clock(){
-  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
-    if ! sudo hwclock --hctosys; then
-      _error "Unable to set clock"
-    fi
-  fi
-}
-
-#######################################
 # Check $OSTYPE and defines current OS
 # GLOBALS:
 #   LOCO_OSTYPE
@@ -144,9 +131,17 @@ loco::check_operating_system(){
     _exit "Operating System not supported."
   fi
   
-  echo "LOCO_OSTYPE=${LOCO_OSTYPE}" > "./src/temp/conf_OS_GLOBALS"
-  echo "SHORT_OS_VERSION=${SHORT_OS_VERSION}" >> "./src/temp/conf_OS_GLOBALS"
-  echo "OS_PREFIX=${OS_PREFIX}" >> "./src/temp/conf_OS_GLOBALS"
+  if [[ -d ./src/temp ]]; then
+    :
+  else
+    if ! mkdir "./src/temp"; then
+      echo "Can not create temp folder"
+    fi
+  fi
+
+  _echo "LOCO_OSTYPE=${LOCO_OSTYPE}" > "./src/temp/conf_OS_GLOBALS"
+  _echo "SHORT_OS_VERSION=${SHORT_OS_VERSION}" >> "./src/temp/conf_OS_GLOBALS"
+  _echo "OS_PREFIX=${OS_PREFIX}" >> "./src/temp/conf_OS_GLOBALS"
 }
 
 #######################################

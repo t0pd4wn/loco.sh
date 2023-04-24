@@ -4,14 +4,15 @@
 #-------------------------------------------------------------------------------
 LOCO_DEV="false"
 
-# source loco_various methods
-source ./src/code/modules/loco_various.sh
+# source needed modules
+source ./src/code/modules/core/base.sh
+source ./src/code/modules/loco_checks.sh
 
 # check operating system
 loco::check_operating_system
 
 # launch the main.sh script and the finish.sh one 
-# needed to execute main.sh as root, finish.sh as $USER and close terminal
+# needed to execute `main.sh` as root, and `finish.sh` as $USER, and then close terminal
 if [[ "${LOCO_DEV}" == "false" ]]; then
 	if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
 		/usr/local/bin/bash ./src/main.sh "${@-}" && ./src/temp/finish.sh && kill -9 $PPID 2&>/dev/null

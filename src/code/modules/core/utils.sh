@@ -184,6 +184,26 @@ utils::decode_URI(){
 }
 
 #######################################
+# Get a file from an URL into a folder.
+# Arguments:
+#   $1 # a folder path
+#   $2 # an url
+#######################################
+utils::get_url(){
+  local path="${1-}"
+  local url="${2-}"
+  local wget_options="-nc -q -P"
+  local curl_options="--create-dirs -C - -LOs --output-dir"
+  if eval 'command -v wget' > /dev/null 2>&1; then
+    msg::debug "wget is used"
+    cmd::run_as_user "wget ${wget_options} " "${path}" "'"${url}"'"
+  else
+    msg::debug "curl is used"
+    cmd::run_as_user "curl ${curl_options} " "${path}" "'"${url}"'"
+  fi
+}
+
+#######################################
 # Add a transparent image over another
 # Arguments:
 #   $1 # a normal image path
@@ -389,6 +409,15 @@ utils::replace_string_in_file(){
 }
 
 #######################################
+# Set system clock (needed in  virtual hosts)
+#######################################
+utils::set_clock(){
+  if ! sudo hwclock --hctosys; then
+    _error "Unable to set clock"
+  fi
+}
+
+#######################################
 # Print a timestamp.
 #######################################
 utils::timestamp(){
@@ -410,23 +439,3 @@ utils::timestamp(){
 #     _error "Unable to wget ${url}"
 #   fi
 # }
-
-#######################################
-# Get a file from an URL into a folder.
-# Arguments:
-#   $1 # a folder path
-#   $2 # an url
-#######################################
-utils::get_url(){
-  local path="${1-}"
-  local url="${2-}"
-  local wget_options="-nc -q -P"
-  local curl_options="--create-dirs -C - -LOs --output-dir"
-  if eval 'command -v wget' > /dev/null 2>&1; then
-    msg::debug "wget is used"
-    cmd::run_as_user "wget ${wget_options} " "${path}" "'"${url}"'"
-  else
-    msg::debug "curl is used"
-    cmd::run_as_user "curl ${curl_options} " "${path}" "'"${url}"'"
-  fi
-}

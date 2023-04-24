@@ -20,7 +20,9 @@ loco::startup(){
   utils::clean_temp
 
   # set system clock
-  loco::set_clock
+  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+    utils::set_clock
+  fi
 
   # print the warning message
   msg::warning
