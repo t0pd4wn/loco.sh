@@ -92,7 +92,7 @@ loco::mac_has_bash(){
     # if brew/bash is not installed
     else
       echo -e "🌵 Bash 4+ will be installed."
-      $(brew install bash)
+      /usr/local/bin/brew install bash
     fi
   else
     echo -e "🌵 Bash ${BASH_VERSINFO[0]} is installed."
