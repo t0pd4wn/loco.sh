@@ -44,7 +44,7 @@ loco::background_manager(){
       # clean file name from URI encoded characters
       img_basename=$(basename "${bg_url}")
 
-      # warning : below code is meant to support duckduckgo images
+      # note: below code is meant to support duckduckgo images
       # there are few problems related to URLs special characters decoding 
       # as duckduckgo proxies original URLs which can include sub-URLs
       # it is hard to get the correct path to install them dynamically
@@ -104,8 +104,7 @@ loco::background_manager(){
       msg::print "Backgrounds found in /src/assets/backgrounds/."
       # launch a prompt to select background
       loco::prompt_background
-      final_path=$( find "${ab_path}""/src/assets/backgrounds" -name "${BACKGROUND}.*" | tail -n 1)
-      
+      final_path=$(find "${ab_path}""/src/assets/backgrounds" -name "${BACKGROUND}.*" | tail -n 1)
     fi
 
   # if action is remove
@@ -116,7 +115,11 @@ loco::background_manager(){
       os_path=/usr/share/backgrounds/
       final_path="${os_path}""${os_default_bg}"
     elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-      os_default_bg="Monterey Graphic.heic"
+      if [[ "${SHORT_OS_VERSION}" -eq 13 ]]; then
+        os_default_bg="Ventura Graphic.heic"
+      else
+        os_default_bg="Monterey Graphic.heic"
+      fi
       os_path="/System/Library/Desktop Pictures/"
       final_path="${os_path}""${os_default_bg}"
     fi

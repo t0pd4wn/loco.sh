@@ -124,7 +124,7 @@ loco::check_operating_system(){
     # check if mac has bash 4+
     loco::mac_has_bash
     # get version information, then grep version line, cut full semver, cut main version "e.g 12"
-    SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f2 | cut -f1 -d'.')
+    SHORT_OS_VERSION=$(sw_vers | grep "ProductVersion:" | cut -f3 | cut -f1 -d'.')
   
   else 
     _error "Operating System not supported." 
