@@ -8,7 +8,7 @@
 #################
 install_ubuntu_exit(){
   # set ubuntu custom dock style
-  if [[ "${SHORT_OS_VERSION}" == "21" ]] || [[ "${SHORT_OS_VERSION}" == "22" ]]; then
+  if [[ "${SHORT_OS_VERSION}" == "21" ]] || [[ "${SHORT_OS_VERSION}" == "22" ]] || [[ "${SHORT_OS_VERSION}" == "23" ]]; then
     cmd::record "gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true"
     cmd::record "gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 5750"
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false"
@@ -22,7 +22,7 @@ install_ubuntu_exit(){
 
 remove_ubuntu_exit(){
   # set ubuntu default dock style
-  if [[ "${SHORT_OS_VERSION}" == "21" ]] || [[ "${SHORT_OS_VERSION}" == "22" ]]; then
+  if [[ "${SHORT_OS_VERSION}" == "21" ]] || [[ "${SHORT_OS_VERSION}" == "22" ]] || [[ "${SHORT_OS_VERSION}" == "23" ]]; then
     cmd::record "gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false"
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock extend-height true"
     cmd::record "gsettings set org.gnome.shell.extensions.dash-to-dock dock-position LEFT"
