@@ -3,121 +3,103 @@
 # .loco_startup | Effort to provide startup custom commands
 #-------------------------------------------------------------------------------
 
-# over ubuntu, below variables will become GLOBALS
-# over macosx, they will be classical instance variables
-set_system_ENV(){
-  # add some GLOBAL environment variables below
-  export LOCO_ENV=true
-  # this is specific to macosX to disable bash sessions
-  export SHELL_SESSION_HISTORY=0
-}
+# Below scripts provide functions to trigger commands, when terminal is open.
+# Previously, writing a persistent ENV variable was possible
+# Previously, writing a file in the system through .profile at startup was possible (as in POSIX compliance), which is limited in VMs
+# Nowadays, the inital check is made upon VPN connection
 
-# over ubuntu, below variables will be limited to current shell
-set_shell_ENV(){
-  # add some shell environment variables below
-  export LOCO_SHELL=true
-}
-
-# on ubuntu, this function will be called if .bashrc is sourced for the first time
-session_start(){
-  echo -e "Installed with loco.sh \U1f335. You can edit this text in ~/.loco_startup"
-  # add some session commands below (keyboard configurations, vpn...)
-}
-
-# on macOS, function will be called each time zsh is launched (?)
-session_start_macos(){
-  echo -e "Installed with loco.sh \U1f335 You can edit this text in ~/.loco_startup"
-  # add some startup commands below
-}
-
-# on ubuntu, this function will be called every time a shell is opened
-shell_start(){
-  # print a cactus if not first start
-  if [[ ! -f ~/.is_started ]]; then echo -e "\U1f335"; fi
-  set_shell_ENV
-  # add some shell commands below 
-}
-
-# on ubuntu, function will be called if .bashrc is sourced for the second time
-system_start(){
-  set_system_ENV
-  # create lock file
-  touch ~/.is_started
-}
+# To set this up properly
+# 1. in `is_started` change "VPN_identifier"
+# 2. in `wireguard_connect` change "VPN_domains"
+# 3. Enjoy !
 
 #######################################
-# Count number of times .bashrc is sourced
+# Called from .bashrc ; checks if VPN is connected
+# note : change "VPN_identifier" for your VPN identifier 
+# (something that distinguishes it in ```ip addr show```)
 #######################################
-shell_status(){
-  # if start flag is present
-  if [[ -f ~/.is_started ]]; then
-    # todo : check if true on macOS
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-      session_start_macos
-    else
-      session_start
-    fi
+is_started(){
+  local vpn_identifier="VPN_identifier"
+  local test=$(ip addr show | grep ${vpn_identifier})
+  if [[ -n ${test} ]] ; then
+    # started
     shell_start
-    # remove lock file
-    rm -fr .is_started
-  
-  # in all other cases
   else
+    # not started
+    session_start
     shell_start
   fi
 }
 
 #######################################
-# Set up a VPN connection
+# Called first time terminal is open
+# !if a VPN connection is set properly!
 #######################################
-vpnConnect(){
+session_start(){
+  echo -e "Installed with loco.sh \U1f335. You can edit this text in ~/.loco_startup"
+  # add some session commands below (keyboard configurations, mounts, vpn...)
+}
+
+#######################################
+# Called every time terminal is open
+#######################################
+shell_start(){
+  # print a cactus
+  echo -e "\U1f335";
+  # add some shell commands below
+}
+
+#######################################
+# Set up a vpn connection
+# note: change "VPN_domains" with your 
+# vpn domains for random connection
+#######################################
+vpn_connect(){
   # grep current status
-  local vpnStatus=$(vpn status | grep "Status: ") 
+  local vpnStatus=$(vpn status | grep "Status: ")
   declare -a optionsArray
-  optionsArray=(fr nl de)
+  optionsArray=(VPN_domains)
 
   # check status
-  if [[ "${vpnStatus}" == *"Connected"* ]]; then 
+  if [[ "${vpnStatus}" == *"Connected"* ]]; then
     # vpn is connected
     :
   else
     # connect to vpn
     # get a random domain
-    local connexionDomain=$(shuffleDomains "${optionsArray[@]}")
+    local connexionDomain=$(shuffle_domains "${optionsArray[@]}")
     vpn c "${connexionDomain}"
   fi
 }
 
 #######################################
 # Set up a wireguard connection
+# note: change "VPN_domains" with your 
+# wireguard domains for random connection
 #######################################
-wireguardConnect(){
+wireguard_connect(){
   # grep current status
   local wgStatus=$(wg)
   declare -a optionsArray
-  optionsArray=(fr1 fr2 fr3)
+  optionsArray=(VPN_domains)
 
   # check status
-  if [[ "${wgStatus}" == "" ]]; then 
+  if [[ "${wgStatus}" == "" ]]; then
     # connect to vpn
     # get a random domain
-    local connectionDomain=$(shuffleDomains "${optionsArray[@]}")
-    # wg-quick up ..
-  else
-    # wg is connected
-    :
+    local connectionDomain=$(shuffle_domains "${optionsArray[@]}")
+    wg-quick up ${connectionDomain}
   fi
 }
 
 #######################################
-# Return a VPN domain
+# Return a random VPN domain
 #######################################
-shuffleDomains(){
+shuffle_domains(){
   local -a opt_arr=("$@")
-  
   local optionsLength=$(echo ${#opt_arr[@]})
   local randomNum=$RANDOM
-  
+ 
   # provide a number between 1 and optionsLength
   local randomIndex=$(echo $((1 + ${randomNum} % ${optionsLength})))
 
