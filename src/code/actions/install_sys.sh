@@ -1,6 +1,6 @@
 #!bin/bash
 #-------------------------------------------------------------------------------
-# install.sh | classical install procedure
+# install_sys.sh | system install procedure
 #-------------------------------------------------------------------------------
 
 # prompt profiles, if none is set
@@ -12,12 +12,6 @@ loco::watermark_check
 
 # read and source "${PROFILE}" yaml file
 msg::say "Sourcing " "${PROFILE}" " YAML"
-
-# prompt themes, if none is set
-loco::prompt_theme
-
-# check for available backgrounds, prompt eventually
-loco::background_manager
 
 msg::say "Installing " "${PROFILE}" " profile"
 
@@ -38,14 +32,6 @@ loco::package_managers "generic"
 
 # link "${PROFILE}" .dotfiles to $USER
 loco::dotfiles_manager "Replace your dotfiles with " "${PROFILE}" " ones (y/n)?"
-
-# install fonts to system
-msg::say "Installing " "fonts"
-loco::fonts_manager
-
-# build terminal conf
-msg::say "Preparing " "terminal" " configuration"
-loco::term_conf_manager
 
 # install custom exit scripts
 msg::say "Running " "${LOCO_OSTYPE}" " exit scripts"

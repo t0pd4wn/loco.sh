@@ -207,9 +207,10 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 .
 └── src
 	└── actions # store actions scripts
-		├── install.sh # install packages and dotfiles, based on a profile
-		├── remove.sh  # remove packages and dotfiles, based on an installed instance
-		└── update.sh # update packages and dotfiles, based on a profile
+		├── install.sh # install packages, dotfiles, backgrounds and themes, based on a profile
+		├── install_sys.sh  # install packages and dotfiles, based on an installed instance
+    ├── remove.sh  # remove everything, based on an installed instance
+		└── update.sh # update everythin, based on a profile
 ```
 
 ### Add an action
@@ -326,7 +327,6 @@ style:
     └── assets #store specific files (optional)
       └── terminal.conf # terminal configuration (optional)
 ```
-
 
 ## Overlays
 
