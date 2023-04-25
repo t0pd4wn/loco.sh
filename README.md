@@ -208,8 +208,8 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 	└── actions # store actions scripts
 		├── install.sh # install packages, dotfiles, backgrounds and themes, based on a profile
 		├── install_sys.sh  # install packages and dotfiles, based on an installed instance
-    ├── remove.sh  # remove everything, based on an installed instance
-		└── update.sh # update everythin, based on a profile
+		├── remove.sh  # remove everything, based on an installed instance
+		└── update.sh # update everything, based on a profile
 ```
 
 ### Add an action
@@ -308,7 +308,7 @@ foreground-color='[color code]'
 palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]', '[color code 4]', '[color code 5]', '[color code 6]', '[color code 7]', '[color code 8]', '[color code 9]', '[color code 10]', '[color code 11]', '[color code 12]', '[color code 13]', '[color code 14]', '[color code 15]']
 ```
 
-*Themes* can be set through three methods :
+*Themes* can be set through four methods :
 
 1. ```-t``` option: the name of a theme present in ```/src/assets/themes``` can be provided to select a theme
 2. profile yaml : the name of a theme present in ```/src/assets/themes``` can be provided to select a theme
@@ -326,6 +326,7 @@ style:
     └── assets #store specific files (optional)
       └── terminal.conf # terminal configuration (optional)
 ```
+4. prompt: a prompt will be launched to choose a theme from the ones available in ```/src/assets/themes/```
 
 ## Overlays
 
