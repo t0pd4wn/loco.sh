@@ -9,14 +9,17 @@
 # Nowadays, the inital check is made upon VPN connection
 
 # To set this up properly
-# 1. in `is_started` change "VPN_identifier"
-# 2. in `wireguard_connect` change "VPN_domains"
+# 1. start your vpn connection
+# 2. launch `ip addr show` in terminal
+# 3. check for your vpn connection name (usually last in the list)
+# 4. in `is_started` change "VPN_identifier" for this name
+# 5. in `wireguard_connect` or `vpn_connect` change "VPN_domains"
 # 3. Enjoy !
 
 #######################################
 # Called from .bashrc ; checks if VPN is connected
 # note : change "VPN_identifier" for your VPN identifier 
-# (something that distinguishes it in ```ip addr show```)
+# (something that distinguishes it in `ip addr show`)
 #######################################
 is_started(){
   local vpn_identifier="VPN_identifier"
