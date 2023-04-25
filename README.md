@@ -14,17 +14,6 @@
 
 ***Loco.sh*** is based on **profiles** made of a YAML file and/or a tree folder structure. Users can define everything in a single YAML and/or build their profiles with separate files in folders. Profiles can be installed, updated or removed. Multiple profiles can be installed at once, and new profiles can be installed over old ones.
 
-***Loco.sh*** comes with 6 example profiles :
-
-- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure and its yaml file
-- **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
-- **vim**: fully configured ```vim```
-- **zsh**: fully configured ```zsh``` with ```p10K```
-- **style**: custom themed terminal and OS (dock, background)
-- **full-yaml**: same as **full** but yaml only
-<!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
-<!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
-
 **WARNING**: *use this script at your own risk as it will deal with your system configuration.*
 
 ## Installation
@@ -80,6 +69,16 @@ cd loco.sh
 ***Loco.sh*** is based on *profiles* that centralizes configurations for a specific user or user type, accross one or more operating systems, and *actions* which run workflows on top of these *profiles*.
 
 *Profiles* are made of a YAML file, dotfiles, scripts and other assets. They are all optional and independant from one to another.
+
+**Loco.sh** comes with 6 example profiles :
+- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure and its yaml file
+- **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
+- **vim**: fully configured ```vim```
+- **zsh**: fully configured ```zsh``` with ```p10K```
+- **style**: custom themed terminal and OS (dock, background)
+- **full-yaml**: same as **full** but yaml only
+<!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
+<!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
 - folder structure: ```./profiles/``` 
 
