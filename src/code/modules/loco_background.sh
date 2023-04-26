@@ -137,7 +137,6 @@ loco::background_manager(){
 
   # if there is a background file selected
   if [[ ! -z "${final_path-}" ]]; then
-
     # if the OVERLAY flag is set
     if [[ "${OVERLAY}" == true ]]; then
       loco::overlay_manager "${final_path}"
