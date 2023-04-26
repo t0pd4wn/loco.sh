@@ -34,6 +34,11 @@ install_ubuntu_custom_exit(){
     # insert commands below
 }
 
+install_ubuntu_custom_last(){
+    echo 'Custom Ubuntu install last'
+    # insert commands below
+}
+
 remove_ubuntu_custom_entry(){
     msg::record 'Custom Ubuntu remove entry'
     # insert commands below
@@ -42,4 +47,8 @@ remove_ubuntu_custom_entry(){
 remove_ubuntu_custom_exit(){
     msg::record 'Custom Ubuntu remove exit'
     # insert commands below
+}
+
+install_last(){
+    echo "Bye bye !"
 }

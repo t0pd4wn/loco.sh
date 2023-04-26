@@ -71,7 +71,7 @@ cd loco.sh
 *Profiles* are made of a YAML file, dotfiles, scripts and other assets. They are all optional and independant from one to another.
 
 **Loco.sh** comes with 6 example profiles :
-- **default**: is a default example, it does mostly nothing but installing ```tree``` to showcase the basics of a *profile* folder structure and its yaml file
+- **default**: is an empty example, showcasing custom functions
 - **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
 - **vim**: fully configured ```vim```
 - **zsh**: fully configured ```zsh``` with ```p10K```
@@ -134,7 +134,7 @@ custom_functions:
 
 - custom functions pattern: ```./profiles/[profile]/custom.sh``` 
 
-Custom functions allow users to define specific commands at various steps of the execution : *entry* which executes at the beginning of a loco **action**, *exit* at the end of the **action**, and *last* at the end of the script execution.
+Custom functions allow users to define specific commands at various steps of the execution : *entry* which executes at the beginning of a loco **action**, *exit* at the end of the **action**, and *last* after **loco** execution.
 
 Using the ```cmd::record``` function allows to record commands that will be executed after script execution (though ```/src/temp/finish.sh```). This may be useful to escape some shell or $USER related limitations.
 
@@ -184,11 +184,13 @@ custom_functions:
     - # command goes here
   install_macos_exit:
     - # command goes here
-  remove_ubuntu_last:
+  remove_ubuntu_entry:
     - # command goes here
 ```
 
 If more than one method is set both are used from 1 to 2.
+
+Note : there is currently a limitation for [last] which can't be implemented as a ```yaml``` function (probably due to variables expansion).
 
 ### Add a profile
 
@@ -468,12 +470,16 @@ As it is complicated to archive correctly ```git sub-modules``` in *profiles*, `
 When you install ```loco``` a watermark file ```~/.loco.yml``` is installed. It stores the original dotfiles backup path. Wen you try to remove a profile ```loco``` tries to find the watermark path to restore the original user dotfiles. If the path is broken, either correct ```~/.loco.yml``` with the correct path or put your dotftiles at the expected path.
 If for some reasons, you don't have access to these files, simply remove the ```~/.loco``` file. Previous installation will remain but you will be able to launch a new installation over it.
 
+### ```src/temp/finish.sh``` doesn't execute
+If your ```cmd::record``` commands are not executed, it is probably because the ```src/temp/finish.sh``` file is not properly sourced. Check your ```yaml``` file for a [last] custom function and remove it. [last] custom functions in ```yaml``` are not correctly interpreted and prevent ```finish.sh``` to be executed.
+
 ## Backlog
 - actions: add init, save
 - code: add an "img" module class ?
 - code: add BATS tests
 - code: add some CI to help with integration
 - code: custom functions could have dynamic steps
+- code: break loco_background.sh into more functions
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
 - options : ghost mode leaving no assets prior to action
