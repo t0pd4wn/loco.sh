@@ -14,7 +14,7 @@
 # 3. check for your vpn connection name (usually last in the list)
 # 4. in `is_started` change "VPN_identifier" for this name
 # 5. in `wireguard_connect` or `vpn_connect` change "VPN_domains"
-# 3. Enjoy !
+# 6. from now, the first time you open terminal will connect you to your VPN.
 
 #######################################
 # Called from .bashrc ; checks if VPN is connected
@@ -58,21 +58,12 @@ shell_start(){
 # vpn domains for random connection
 #######################################
 vpn_connect(){
-  # grep current status
-  local vpnStatus=$(vpn status | grep "Status: ")
   declare -a optionsArray
-  optionsArray=(VPN_domains)
+  optionsArray=("VPN_domains")
 
-  # check status
-  if [[ "${vpnStatus}" == *"Connected"* ]]; then
-    # vpn is connected
-    :
-  else
-    # connect to vpn
-    # get a random domain
-    local connexionDomain=$(shuffle_domains "${optionsArray[@]}")
-    vpn c "${connexionDomain}"
-  fi
+  # connect to a random domain
+  local connexionDomain=$(shuffle_domains "${optionsArray[@]}")
+  vpn c "${connexionDomain}"
 }
 
 #######################################
@@ -81,22 +72,16 @@ vpn_connect(){
 # wireguard domains for random connection
 #######################################
 wireguard_connect(){
-  # grep current status
-  local wgStatus=$(wg)
   declare -a optionsArray
-  optionsArray=(VPN_domains)
+  optionsArray=("VPN_domains")
 
-  # check status
-  if [[ "${wgStatus}" == "" ]]; then
-    # connect to vpn
-    # get a random domain
-    local connectionDomain=$(shuffle_domains "${optionsArray[@]}")
-    wg-quick up ${connectionDomain}
-  fi
+  # connect to a random domain
+  local connectionDomain=$(shuffle_domains "${optionsArray[@]}")
+  wg-quick up ${connectionDomain}
 }
 
 #######################################
-# Return a random VPN domain
+# Return a random array value
 #######################################
 shuffle_domains(){
   local -a opt_arr=("$@")
