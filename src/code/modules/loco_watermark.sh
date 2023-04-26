@@ -221,7 +221,7 @@ loco::watermark_action_update(){
 
   msg::print "${EMOJI_STOP} There is a " "${CURRENT_USER}" " watermark."
   
-  msg::prompt "Update the " "installed" " instance ?"
+  msg::prompt "Update the " "installed" " instance ? (y/n)"
   case ${USER_ANSWER:0:1} in
   y|Y )
     msg::print "${EMOJI_YES}" " Yes, update instance."
