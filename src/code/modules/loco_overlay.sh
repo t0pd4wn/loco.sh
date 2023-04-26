@@ -15,8 +15,6 @@
 #######################################
 loco::overlay_manager(){
   local bg_path="${1-}"
-
-  local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/assets/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
   local profile_ovl_path=$(find "${ab_path}"/"${assets_path}" -name 'overlay.png' 2>/dev/null)
@@ -45,7 +43,7 @@ loco::overlay_manager(){
       loco::prompt_overlay
       # 
       final_path="${OVERLAY_PATH}"
-      final_path=$( find "${ab_path}""/src/background-overlays" -name "${OVERLAY_PATH}.png" )
+      final_path=$( find "${ab_path}""/src/assets/background-overlays" -name "${OVERLAY_PATH}.png" )
     fi
   fi
 

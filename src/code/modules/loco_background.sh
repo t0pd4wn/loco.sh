@@ -25,6 +25,7 @@ loco::background_manager(){
   local yaml_bg_url=$(yaml::get "${PROFILE_YAML}" '.style.background')
   local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
   local local_bgs_path=./src/assets/backgrounds/
+  local previous_bg_url
   local img_basename
   local domain_name
   local uri_first_part
@@ -125,10 +126,18 @@ loco::background_manager(){
     fi
   fi
 
-  msg::debug "${final_path-}"
+  # in case $action is "update" and the old background is kept
+  # set $final_path to the previous background path
+  if [[ -z "${final_path-}" ]]; then
+    if [[ "${ACTION}" == "update" ]]; then
+      local previous_bg_url=$(yaml::get "${INSTANCE_YAML}" '.style.background')
+      final_path="${previous_bg_url}"
+    fi
+  fi
 
   # if there is a background file selected
   if [[ ! -z "${final_path-}" ]]; then
+
     # if the OVERLAY flag is set
     if [[ "${OVERLAY}" == true ]]; then
       loco::overlay_manager "${final_path}"
