@@ -234,7 +234,7 @@ loco::watermark_action_update(){
     # add curent profile to instance yaml
     local profile_selector=".instance.PROFILE"
     local previous_profile=$(yaml::get "${INSTANCE_YAML}" "${profile_selector}")
-    yaml::change "${INSTANCE_YAML}" "${selector}" "${previous_profile} ${PROFILE}"
+    yaml::change "${INSTANCE_YAML}" "${profile_selector}" "${previous_profile} ${PROFILE}"
 
     # _source /"${OS_PREFIX}"/"${CURRENT_USER}"/.loco
     # # keep sourced GLOBALs values
