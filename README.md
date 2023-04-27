@@ -330,6 +330,35 @@ style:
 ```
 4. prompt: a prompt will be launched to choose a theme from the ones available in ```/src/assets/themes/```
 
+## Fonts
+
+*Fonts* are users terminal fonts, installed system wide.
+
+### Add fonts
+
+*Fonts* can be selected through two methods :
+
+1. profile yaml: one or more urls can be provided to set one or more fonts. Note : only *fonts* with a [font name] declared in the *profile* ```yaml``` will be used for the terminal.
+
+```yaml
+  fonts:
+    name: [font name] # font system name
+    size: [font size] # desired terminal font size
+    urls:
+      - [font url] # an url to a font file
+```
+
+2. profile asset: files can be provided to install fonts on the system.
+
+```bash
+.
+└── profiles
+  └── [profile]
+    └── assets # store specific files (optional)
+      └── fonts # fonts folder (optional)
+        └── [font file] # font file (optional)
+```
+
 ## Overlays
 
 Transparent *overlays* can be added on top of users backgrounds.
@@ -480,12 +509,11 @@ If your ```cmd::record``` commands are not executed, it is probably because the 
 - code: add some CI to help with integration
 - code: custom functions could have dynamic steps
 - code: break loco_background.sh into more functions
+- code: better package managers abstraction
 - options : add a "none" option
 - options : detached in a remote /.dotfiles/ folder
 - options : ghost mode leaving no assets prior to action
 - options : add long options support
-- packagers: better package managers abstraction
-- packagers: remove eval (cmd::execute)
 - profiles: add devops, data-scientist...
 - UI: display prompts options as table rows
 
