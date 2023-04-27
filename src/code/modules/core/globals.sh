@@ -16,6 +16,7 @@ globals::set(){
   # used in messages
   declare -ga MSG_ARRAY
   MSG_INDEX=0
+  declare -g TERM_STORED_LENGTH
   # used in prompts
   declare -g USER_ANSWER
 }

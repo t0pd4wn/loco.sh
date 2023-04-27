@@ -60,16 +60,16 @@ msg::centered(){
   # this is meant to decode encoded characters
   local message=$(echo -e $message)
   local message_length=${#message}
+  local size_diff
 
   # add the option extra length
   if [[ -n "${option}" ]]; then
     message_length=$(( message_length + option ))
   fi
-  local cli_length=$(msg::get_length)
+  local cli_length="${TERM_STORED_LENGTH}"
   local extra_space=0
   local separator
   local separator_length=$(((cli_length + extra_space - message_length) / 2 ))
-  local total=$((separator_length*2 + message_length))
 
   for (( i = 0; i < ${separator_length}; i++ )); do
     separator+="."
@@ -84,6 +84,21 @@ msg::centered(){
   else
     msg::debug "Message length is odd."
     separatorB+="."
+  fi
+
+  # below is a fix meant to correct a bash behavior / bug,
+  # where cli width is not predictable.
+  # if there is a difference between cli width and total length
+  # reduce the width of separatorB
+  local sep_A_length=${#separator}
+  local sep_B_length=${#separatorB}
+  local total=$(( sep_A_length + sep_B_length + message_length ))
+  size_diff=$(( total - cli_length ))
+
+  if [[ "${size_diff}" -gt 0 ]]; then
+    for (( i = 0; i < "${size_diff}"; i++ )); do
+      separatorB-="."
+    done
   fi
 
   msg::print "${separator}" "${message}" "${separatorB}"
@@ -167,6 +182,7 @@ msg::license(){
 #   CURRENT_USER
 #######################################
 msg::start(){
+  msg::store_term_length
   msg::centered ""
   msg::centered ""
   msg::centered "Welcome to loco.sh ${EMOJI_LOGO} ${VERSION}" "1"
@@ -179,6 +195,7 @@ msg::start(){
 #   EMOJI_STOP
 #######################################
 msg::warning(){
+  msg::store_term_length
   msg::centered ""
   msg::centered ""
   msg::centered "${EMOJI_STOP} Modifying packages can break your system. ${EMOJI_STOP}" "2"
@@ -195,6 +212,7 @@ msg::warning(){
 #   VERSION
 #######################################
 msg::end(){
+  msg::store_term_length
   if [[ "${VERBOSE}" == false ]]; then
     clear
   fi
@@ -217,8 +235,18 @@ msg::end(){
 #######################################
 # Get cli length to adapt message length
 #######################################
-msg::get_length(){
+msg::get_term_length(){
   if ! echo -e "cols"|tput -S; then
     _error "Unable to get the terminal columns number."
   fi
+}
+
+#######################################
+# Get the length of a line 
+# and store it in a global
+# Global:
+#   # MESSAGE_LENGTH
+#######################################
+msg::store_term_length(){
+  TERM_STORED_LENGTH=$(msg::get_term_length)
 }
