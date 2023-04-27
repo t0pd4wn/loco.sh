@@ -10,11 +10,11 @@
 
 # To set this up properly
 # 1. start your vpn connection
-# 2. launch `ip addr show` in terminal
-# 3. check for your vpn connection name (usually last in the list)
+# 2. launch `ip addr show` in the terminal
+# 3. check for your vpn connection name (usually last in the list ("tun0" for OpenVPN)) 
 # 4. in `is_started` change "VPN_identifier" for this name
-# 5. in `wireguard_connect` or `vpn_connect` change "VPN_domains"
-# 6. from now, the first time you open terminal will connect you to your VPN.
+# 5. in `wireguard_connect` or `openvpn_connect` change "VPN_domains" for your VPN files prefixes
+# 6. from now, the first time you open the terminal, will connect you to your VPN.
 
 #######################################
 # Called from .bashrc ; checks if VPN is connected
@@ -61,9 +61,30 @@ vpn_connect(){
   declare -a optionsArray
   optionsArray=("VPN_domains")
 
-  # connect to a random domain
+  # get a random domain
   local connexionDomain=$(shuffle_domains "${optionsArray[@]}")
+
+  # connect to vpn
   vpn c "${connexionDomain}"
+}
+
+#######################################
+# Set up an OpenVPN connection
+# note: change "VPN_domains" with your 
+# vpn domains for random connection
+#######################################
+openvpn_connect(){
+  declare -a optionsArray
+  optionsArray=("VPN_domains")
+  local config_path="/etc/openvpn"
+
+  # get a random domain
+  local connexionDomain=$(shuffleDomains "${optionsArray[@]}")
+  local config_arg="--config ${config_path}/${connexionDomain}*"
+  local login_arg="--auth-user-pass ${config_path}/login.conf"
+
+  # connect to vpn
+  sudo openvpn ${config_arg} ${login_arg}
 }
 
 #######################################
@@ -75,13 +96,17 @@ wireguard_connect(){
   declare -a optionsArray
   optionsArray=("VPN_domains")
 
-  # connect to a random domain
+  # get a random domain
   local connectionDomain=$(shuffle_domains "${optionsArray[@]}")
-  wg-quick up ${connectionDomain}
+
+  # connect to vpn
+  wg-quick up "${connectionDomain}*"
 }
 
 #######################################
 # Return a random array value
+# Argument:
+#   $1 # an array of vpn prefixes
 #######################################
 shuffle_domains(){
   local -a opt_arr=("$@")
