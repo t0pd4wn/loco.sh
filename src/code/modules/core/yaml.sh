@@ -16,18 +16,18 @@ yaml::add(){
   local selector="${2-}" 
   local value="${3-}"
   local option="${4-"key"}"
-  local hasValue
+  local has_value
 
   if [[ "${option}" == "key" ]]; then
     local arg="${selector}"' = ["'"${value}"'"] + '"${selector}"
-    hasValue=$(yaml::contains "${yaml}" "${selector}" "${value}" )
+    has_value=$(yaml::contains "${yaml}" "${selector}" "${value}" )
   elif [[ "${option}" == "raw" ]]; then
     local arg="${selector}"' = "'"${value}"'" + '"${selector}"
-    # set hasvalue to false for raw content
-    hasValue=false
+    # set has_value to false for raw content
+    has_value=false
   fi
 
-  if [[ "${hasValue}" == false ]]; then
+  if [[ "${has_value}" == false ]]; then
     # tries to add value
     if ! cat "${yaml}" | yq "${arg}" > src/temp/yaml.local; then
       echo "Unable to yq add ${value} in ${selector} in yaml.local"
