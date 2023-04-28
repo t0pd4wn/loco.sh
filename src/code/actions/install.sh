@@ -51,9 +51,9 @@ loco::term_conf_manager
 msg::say "Running " "${LOCO_OSTYPE}" " exit scripts"
 loco::custom_exit
 
-# record a closing terminal command in loco_finish.sh
 # if no new fonts, exit normally
 if [[ "${IS_NEW_FONT-}" != "true" ]]; then
+	# record a closing terminal command in loco_finish.sh
 	cmd::record "exit 2&>/dev/null"
 else
 	return 0

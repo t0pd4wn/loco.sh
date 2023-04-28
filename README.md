@@ -214,6 +214,8 @@ Note: be careful about adding ```git submodules``` into your profiles as you may
 		└── update.sh # update everything, based on a profile
 ```
 
+Note : ```update.sh``` used with the ```-Y``` option will replace previously installed files.
+
 ### Add an action
 
 To create an action, simply duplicate one available in ```/src/code/actions/``` and start editing it as you please.

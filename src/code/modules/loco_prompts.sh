@@ -29,14 +29,14 @@ loco::prompt_background(){
   if [[ "${ACTION}" == "update" ]]; then
     local watermark_bkg=$(yaml::get "${INSTANCE_YAML}" '.style.background')
     if [[ "${watermark_bkg}" != "" ]]; then
-      msg::prompt "Do you want to keep your " "current background " "? (y/n) "
+      msg::prompt "Do you want to change your " "current background " "? (y/n) "
       case ${USER_ANSWER:0:1} in
       y|Y )
-        msg::print "${EMOJI_YES} Yes, I'll keep my " "current background"
-        return 0
+        msg::print "${EMOJI_NO} Yes, I'll change my " "current background"
       ;;
       * )
-        msg::print "${EMOJI_NO} No, I'll update my " "current background"
+        msg::print "${EMOJI_YES} No, I'll keep my " "current background"
+        return 0
       ;;
       esac
     fi
@@ -109,15 +109,15 @@ loco::prompt_theme(){
   if [[ "${ACTION}" == "update" ]]; then
     local watermark_style=$(yaml::get "${INSTANCE_YAML}" '.style.colors.theme')
     if [[ "${watermark_style}" != "" ]]; then
-      msg::prompt "Do you want to keep your current " "style " "? (y/n) "
+      msg::prompt "Do you want to change your current " "style " "? (y/n) "
       case ${USER_ANSWER:0:1} in
       y|Y )
-        msg::print "${EMOJI_YES} Yes, I'll keep my current " "style"
-        THEME="${watermark_style}"
-        return 0
+        msg::print "${EMOJI_NO} Yes, I'll change my current " "style"
       ;;
       * )
-        msg::print "${EMOJI_NO} No, I'll update my current " "style"
+        msg::print "${EMOJI_YES} No, I'll keep my current " "style"
+        THEME="${watermark_style}"
+        return 0
       ;;
       esac
     fi
