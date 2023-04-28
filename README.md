@@ -510,10 +510,11 @@ If your ```cmd::record``` commands are not executed, it is probably because the 
 - code: custom functions could have dynamic steps
 - code: break loco_background.sh into more functions
 - code: better package managers abstraction
-- options : add a "none" option
-- options : detached in a remote /.dotfiles/ folder
-- options : ghost mode leaving no assets prior to action
-- options : add long options support
+- code: add an import profile(s) support in yaml
+- options: add a "none" option
+- options: detached in a remote /.dotfiles/ folder
+- options: ghost mode leaving no assets prior to action
+- options: add long options support
 - profiles: add devops, data-scientist...
 - UI: display prompts options as table rows
 
