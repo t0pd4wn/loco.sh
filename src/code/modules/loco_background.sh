@@ -18,12 +18,7 @@ loco::background_manager(){
 
   msg::debug "background_manager"
 
-  local ab_path=$(pwd)
-  local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
   local custom_default_bg_url="https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/assets/backgrounds/christoph-von-gellhorn@unsplash.com.jpg"
-  local profile_bg_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
-  local yaml_bg_url=$(yaml::get "${PROFILE_YAML}" '.style.background')
-  local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
   local local_bgs_path=./src/assets/backgrounds/
   local previous_bg_url
   local img_basename
@@ -38,6 +33,11 @@ loco::background_manager(){
 
   # if action is install
   if [[ "${ACTION}" == "install" ]] ||[[ "${ACTION}" == "update" ]]; then
+    local ab_path=$(pwd)
+    local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
+    local profile_bg_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
+    local yaml_bg_url=$(yaml::get "${PROFILE_YAML}" '.style.background')
+    local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
     # if a background url option is set through -B or profile.yaml
     if [[ ! -z "${bg_url}" ]]; then
       msg::print "Background url option found."
