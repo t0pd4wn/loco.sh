@@ -66,7 +66,8 @@ msg::centered(){
   if [[ -n "${option}" ]]; then
     message_length=$(( message_length + option ))
   fi
-  local cli_length="${TERM_STORED_LENGTH}"
+  # assign a default value to $TERM_STORED_LENGTH
+  local cli_length="${TERM_STORED_LENGTH:=80}"
   local extra_space=0
   local separator
   local separator_length=$(((cli_length + extra_space - message_length) / 2 ))
