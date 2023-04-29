@@ -59,10 +59,10 @@ shell_start(){
 #######################################
 vpn_connect(){
   declare -a optionsArray
-  optionsArray=("VPN_domains")
+  options_array=("VPN_domains")
 
   # get a random domain
-  local connexion_domain=$(shuffle_domains "${optionsArray[@]}")
+  local connexion_domain=$(shuffle_domains "${options_array[@]}")
 
   # connect to vpn
   vpn c "${connexion_domain}"
@@ -75,16 +75,16 @@ vpn_connect(){
 #######################################
 openvpn_connect(){
   declare -a optionsArray
-  optionsArray=("VPN_domains")
+  options_array=("VPN_domains")
   local config_path="/etc/openvpn"
 
   # get a random domain
-  local connexion_domain=$(shuffle_domains "${optionsArray[@]}")
-  local config_arg="--config ${config_path}/${connexion_domain}*"
+  local connexion_domain=$(shuffle_domains "${options_array[@]}")
+  local config_arg="--config ${config_path}/${connexion_domain}"
   local login_arg="--auth-user-pass ${config_path}/login.conf"
 
   # connect to vpn
-  sudo openvpn ${config_arg} ${login_arg}
+  sudo openvpn ${config_arg}* ${login_arg}
 }
 
 #######################################
@@ -93,14 +93,13 @@ openvpn_connect(){
 # wireguard domains for random connection
 #######################################
 wireguard_connect(){
-  declare -a optionsArray
-  optionsArray=("VPN_domains")
+  declare -a options_array
+  options_array=("VPN_domains") 
 
   # get a random domain
-  local connection_domain=$(shuffle_domains "${optionsArray[@]}")
-
+  local connection_domain=$(shuffle_domains "${options_array[@]}")
   # connect to vpn
-  wg-quick up "${connection_domain}*"
+  wg-quick up "${connection_domain}"
 }
 
 #######################################
@@ -113,8 +112,8 @@ shuffle_domains(){
   local options_length=$(echo ${#opt_arr[@]})
   local random_num=$RANDOM
  
-  # provide a number between 1 and optionsLength
-  local random_index=$(echo $((1 + ${random_num} % ${options_length})))
+  # provide a number between 0 and options_length
+  local random_index=$(echo $((0 + ${random_num} % ${options_length})))
 
   # return the corresponding indexed array reference
   echo ${opt_arr[${random_index}]}
