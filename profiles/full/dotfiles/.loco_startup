@@ -13,7 +13,7 @@
 # 2. launch `ip addr show` in the terminal
 # 3. check for your vpn connection name (usually last in the list ("tun0" for OpenVPN)) 
 # 4. in `is_started` change "VPN_identifier" for this name
-# 5. in `wireguard_connect` or `openvpn_connect` change "VPN_domains" for your VPN files prefixes
+# 5. in `wireguard_connect` or `openvpn_connect` change "VPN_domains" for your VPN files prefixes (e.g. jp, uk...)
 # 6. from now, the first time you open the terminal, will connect you to your VPN.
 
 #######################################
