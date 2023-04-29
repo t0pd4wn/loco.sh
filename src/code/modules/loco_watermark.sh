@@ -15,7 +15,7 @@
 #   EMOJI_NO
 #   OS_PREFIX
 #######################################
-loco::watermark_check(){        
+loco::watermark_check(){
   # keep a copy of current GLOBALs values
   local current_profile="${PROFILE-}"
   local current_user="${CURRENT_USER-}"
