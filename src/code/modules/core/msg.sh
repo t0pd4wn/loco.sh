@@ -87,7 +87,7 @@ msg::centered(){
     separatorB+="."
   fi
 
-  # below is a fix meant to correct a bash behavior / bug,
+  # below is a fix meant to correct a bash inconsistant behavior,
   # where cli width is not predictable.
   # if there is a difference between cli width and total length
   # reduce the width of separatorB
