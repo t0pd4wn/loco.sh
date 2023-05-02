@@ -506,13 +506,12 @@ If your ```cmd::record``` commands are not executed, it is probably because the 
 
 ## Backlog
 - actions: add init, save
-- code: add an "img" module class ?
-- code: add BATS tests
-- code: add some CI to help with integration
+- code: add an img::class module ?
+- code: add tests and CI to help with integration
 - code: custom functions could have dynamic steps
 - code: break loco_background.sh into more functions
 - code: better package managers abstraction
-- code: add an import profile(s) support in yaml
+- code: add an import profile(s) support in profile yaml
 - options: add a "none" option
 - options: detached in a remote /.dotfiles/ folder
 - options: ghost mode leaving no assets prior to action

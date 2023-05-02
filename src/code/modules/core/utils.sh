@@ -83,6 +83,25 @@ utils::dump_bash_function(){
 }
 
 #######################################
+# Dump a bash function
+# Arguments:
+#   $1 # a function name"
+#   $2 # /path/to/a/script.sh
+#######################################
+utils::find_filename(){
+  local name="${1-}"
+  local path="${2-}"
+
+  source "${path}"
+
+  if [[ $(type -t "${name}") == function ]]; then
+    if ! type "${name}" | sed '1,3d;$d'; then
+      _error "Unable to dump ${name} from ${path}"
+    fi
+  fi
+}
+
+#######################################
 # Get the function names in bash script
 # Arguments:
 #   $1 # /path/to/a/file
@@ -93,42 +112,6 @@ utils::list_bash_functions(){
 
   if ! grep -E  "${grep_arg}" "${file}" | cut -d"(" -f 1; then
     _error "Unable to get functions names from ${file}"
-  fi
-}
-
-#######################################
-# Cut a string
-# Arguments:
-#   $1 # a string ex: "Hello/world"
-#   $2 # delimeter ex: "/"
-#   $3 # part to be retrieved ex: "1"
-#######################################
-utils::string_cut(){
-  local string="${1-}"
-  local delimeter="${2-}"
-  local part="${3-}"
-  local command="echo "${string}" | cut -d "${delimeter}" -f "${part}""
-
-  if ! cmd::run_as_user ${command}; then
-    _error "Unable to cut ${string}"
-  fi
-}
-
-#######################################
-# Cut a string (reverse)
-# Arguments:
-#   $1 # a string ex: "Hello/world"
-#   $2 # delimeter ex: "/"
-#   $3 # part to be retrieved ex: "3"
-#######################################
-utils::string_cut_rev(){
-  local string="${1-}"
-  local delimeter="${2-}"
-  local part="${3-}"
-  local command="echo "${string}" | rev | cut -d "${delimeter}" -f "${part}" | rev"
-
-  if ! cmd::run_as_user ${command}; then
-    _error "Unable to reverse cut ${string}"
   fi
 }
 
@@ -200,6 +183,19 @@ utils::get_url(){
   else
     msg::debug "curl is used"
     cmd::run_as_user "curl ${curl_options} " "${path}" "'"${url}"'"
+  fi
+}
+
+#######################################
+# Return domain from an url
+# Arguments:
+#   $1 # an url
+#######################################
+utils::get_url_domain(){
+  local url="${1-}"
+
+  if ! _echo "${url}" | awk -F/ '{print $3}'; then
+    _error "Unable to retrieve domain from ${url}"
   fi
 }
 
@@ -388,6 +384,42 @@ utils::replace_block_in_file(){
 
   if ! perl -i -p0e "${search_and_replace}" "${file_path}"; then
     _error "Unable to replace text in "${file_path}""
+  fi
+}
+
+#######################################
+# Cut a string
+# Arguments:
+#   $1 # a string ex: "Hello/world"
+#   $2 # delimeter ex: "/"
+#   $3 # part to be retrieved ex: "1"
+#######################################
+utils::string_cut(){
+  local string="${1-}"
+  local delimeter="${2-}"
+  local part="${3-}"
+  local command="echo "${string}" | cut -d "${delimeter}" -f "${part}""
+
+  if ! cmd::run_as_user ${command}; then
+    _error "Unable to cut ${string}"
+  fi
+}
+
+#######################################
+# Cut a string (reverse)
+# Arguments:
+#   $1 # a string ex: "Hello/world"
+#   $2 # delimeter ex: "/"
+#   $3 # part to be retrieved ex: "3"
+#######################################
+utils::string_cut_rev(){
+  local string="${1-}"
+  local delimeter="${2-}"
+  local part="${3-}"
+  local command="echo "${string}" | rev | cut -d "${delimeter}" -f "${part}" | rev"
+
+  if ! cmd::run_as_user ${command}; then
+    _error "Unable to reverse cut ${string}"
   fi
 }
 

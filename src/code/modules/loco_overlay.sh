@@ -56,7 +56,7 @@ loco::overlay_manager(){
   # if not
   else
     # send only the background to conf file
-    loco::set_background "${bg_path}"
+    loco::register_background "${bg_path}"
   fi
 }
 
@@ -87,6 +87,6 @@ loco::apply_overlay(){
   # apply overlay to background
   utils::image_overlay "${bg_path}" "${ovl_path}" "${output_path}"
 
-  # copy new background path to config file
-  loco::set_background "${output_path}"
+  # send new background path to config file
+  loco::register_background "${output_path}"
 }
