@@ -74,31 +74,18 @@ loco::set_background(){
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
   local profile_bg_path=$(find "${ab_path}"/"${assets_path}" -name 'background.*' 2>/dev/null)
   local yaml_bg_url=$(yaml::get "${PROFILE_YAML}" '.style.background')
-  local bg_url="${BACKGROUND_URL:-"${yaml_bg_url}"}"
-  local img_basename
-  local domain_name
+  local bg_option="${BACKGROUND_URL:-"${yaml_bg_url}"}"
   declare -n img_path="${1-}"
 
-  # if a background url option is set through -B or profile.yaml
-  if [[ -n "${bg_url}" ]]; then
-    msg::print "Background url option found."
-    # clean file name from URI encoded characters
-    img_basename=$(basename "${bg_url}")
-    # domain_name=$(_echo "${bg_url}" | awk -F/ '{print $3}')
-    domain_name=$(utils::get_url_domain "${bg_url}")
-
-    # if the image comes from duckduckgo images
-    if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
-      msg::print "Duckduckgo images can be unstable."
-      img_path=$(loco::get_duckduckgo_image "${bg_url}")
-
-    # else if the image comes from an other domain
+  # if a background option is set through -B or profile.yaml
+  if [[ -n "${bg_option}" ]]; then
+    if [[ "${bg_option}" == "http"* ]]; then
+      msg::print "Background option url found."
+      img_path=$(loco::get_background_url "${bg_option}" "${ab_path}") 
     else
-      # download image
-      utils::get_url "./src/assets/backgrounds" "${bg_url}"
-      img_basename=$(utils::decode_URI "${img_basename}")
-      img_path="${ab_path}"/src/assets/backgrounds/"${img_basename}"
-    fi
+      msg::print "Background option path found."
+      img_path=$(loco::get_background_path "${bg_option}" "${ab_path}")
+  fi
 
   # or, if a background file is present in /assets/
   elif [[ -f "${profile_bg_path}" ]]; then
@@ -177,6 +164,60 @@ loco::register_background(){
     msg::debug "${osascript_opts}"
     cmd::record "osascript -e "${osascript_opts}""
   fi
+}
+
+#######################################
+# Find a local background and save it
+# Arguments:
+#   $1 # a background path
+#   $2 # absolute path
+#######################################
+loco::get_background_path(){
+  local bg_path="${1-}"
+  local ab_path="${2-}"
+  local img_basename
+  local img_path
+
+  # copy option background in src/assets/backgrounds/
+  _cp "${bg_path}" "src/assets/backgrounds/"
+
+  # get filename from path
+  img_basename=$(utils::string_cut_rev "${bg_path}" "/" "1")
+  img_path="${ab_path}/src/assets/backgrounds/${img_basename}"
+
+  _echo "${img_path}"
+}
+
+#######################################
+# Download a background and save it
+# Arguments:
+#   $1 # a background url
+#   $2 # absolute path
+#######################################
+loco::get_background_url(){
+  local bg_url="${1-}"
+  local ab_path="${2-}"
+  local domain_name
+  local img_basename
+  local img_path
+
+  # clean file name from URI encoded characters
+  img_basename=$(basename "${bg_url}")
+  # domain_name=$(_echo "${bg_url}" | awk -F/ '{print $3}')
+  domain_name=$(utils::get_url_domain "${bg_url}")
+  # if the image comes from duckduckgo images
+  if [[ "${domain_name}" == *"duckduckgo.com" ]]; then
+    msg::print "Duckduckgo images can be unstable."
+    img_path=$(loco::get_duckduckgo_image "${bg_url}")
+  # else if the image comes from an other domain
+  else
+    # download image
+    utils::get_url "./src/assets/backgrounds" "${bg_url}"
+    img_basename=$(utils::decode_URI "${img_basename}")
+    img_path="${ab_path}/src/assets/backgrounds/${img_basename}"
+  fi
+
+  _echo "${img_path}"
 }
 
 #######################################

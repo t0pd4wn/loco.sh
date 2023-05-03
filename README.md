@@ -422,7 +422,7 @@ If more than one method is set the priority goes from 1. to 4.
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | ACTION | a | Define the loco action | string | install, remove | - |
 | BACKGROUND | b | Define the user background (from /src/assets/backgrounds) | string | filenames fom available /src/assets/backgrounds/ | - |
-| BACKGROUND_URL | B | Define the user background (from an url) | string | any .jpg or .png image url | - |
+| BACKGROUND_URL | B | Define the user background (from an url or path) | string | any .jpg or .png image url or path | - |
 | CONFIG_PATH | c | Define a path to the configuration file |  string | [user defined] | "./src/loco.conf" |
 | PROFILES_DIR | d | Define a path for profiles directories | string |  [user defined] | "profiles" |
 | DETACHED | D | Define if dotfiles are symbolically linked from repo or from  | boolean | true/false | false |
