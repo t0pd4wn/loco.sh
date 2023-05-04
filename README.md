@@ -140,7 +140,7 @@ Using the ```cmd::record``` function allows to record commands that will be exec
 
 Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed.
 
-1. custom.sh : a script can be provided
+1. custom.sh: a script can be provided
 ```bash
 #!bin/bash
 #-------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ remove_ubuntu_last(){
 }
 ```
 
-2. profile.yaml : some yaml commands can be provided
+2. profile.yaml: some yaml commands can be provided
 ```yaml
 custom_functions:
   [action]_[entry/exit/last]:
@@ -188,7 +188,7 @@ custom_functions:
     - # command goes here
 ```
 
-If more than one method is set both are used from 1 to 2.
+If more than one method is set both are used from 1. to 2.
 
 Note : there is currently a limitation for [last] which can't be implemented as a ```yaml``` function (probably due to variables expansion).
 
@@ -280,7 +280,7 @@ dotfiles:
       └── .[dotfile name] # a dotfile (optional)
 ```
 
-If more than one method is set the sequence goes from 1. to 2, but already existing dotfiles in the ```[profile]/dotfiles/``` folder won't be downloaded from the yaml. This is meant to prevent yaml urls to overwrite locally modified dotfiles.
+If more than one method is set the sequence goes from 1. to 2., but already existing dotfiles in the ```[profile]/dotfiles/``` folder won't be downloaded from the yaml. This is meant to prevent yaml urls to overwrite locally modified dotfiles.
 
 ### Dotfiles backups
 
@@ -312,16 +312,16 @@ foreground-color='[color code]'
 palette=['[color code 0]', '[color code 1]', '[color code 2]', '[color code 3]', '[color code 4]', '[color code 5]', '[color code 6]', '[color code 7]', '[color code 8]', '[color code 9]', '[color code 10]', '[color code 11]', '[color code 12]', '[color code 13]', '[color code 14]', '[color code 15]']
 ```
 
-*Themes* can be set through four methods :
+*Themes* can be set through four methods:
 
 1. ```-t``` option: the name of a theme present in ```/src/assets/themes``` can be provided to select a theme
-2. profile yaml : the name of a theme present in ```/src/assets/themes``` can be provided to select a theme
+2. profile yaml: the name of a theme present in ```/src/assets/themes``` can be provided to select a theme
 
 ```yaml
 style:
   theme: [theme name]
 ```
-3. profile asset : a file can be provided to set terminal configuration (not the theme only)
+3. profile asset: a file can be provided to set terminal configuration (not the theme only)
 
 ```bash
 .
@@ -487,7 +487,7 @@ Using curl:
 bash <(curl --header "PRIVATE-TOKEN: [secret key]" -JLO "https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name]")
 ```
 
-Using either (untested) :
+Using either (untested):
 ```bash
 bash <(echo '[secret key]' 'https://[git server]/api/v4/projects/[project ID]/repository/files/src%2Futils%2Finstall/raw?ref=[branch name]'|(read l o; wget --content-disposition --header="PRIVATE-TOKEN: $l -qO- $o 2>/dev/null || curl --header "PRIVATE-TOKEN: $l" -JLO $o));
 ```
