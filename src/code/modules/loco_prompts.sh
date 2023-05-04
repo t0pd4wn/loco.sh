@@ -18,14 +18,17 @@ loco::prompt_action(){
 #######################################
 # Call the backgrounds prompt
 # Globals:
-#   style_background
+#   ACTION
 #   BACKGROUND
+#   INSTANCE_YAML
+#   PROFILE_YAML
+#   USER_ANSWER
 #######################################
 loco::prompt_background(){
   local profile_bkg
   profile_bkg=$(yaml::get "${PROFILE_YAML}" '.style.background')
 
-  # if action "update", check for existing background
+  # if action "update", check for new profile background
   if [[ "${ACTION}" == "update" ]]; then
     local watermark_bkg=$(yaml::get "${INSTANCE_YAML}" '.style.background')
     if [[ "${watermark_bkg}" != "" ]]; then
@@ -96,9 +99,14 @@ loco::prompt_profile(){
 # Globals:
 #   OS_PREFIX
 #   CURRENT_USER
+#   INSTANCE_YAML
+#   PROFILE_YAML
 #   THEME
 #######################################
 loco::prompt_theme(){
+  local profile_style=$(yaml::get "${PROFILE_YAML}" '.style.colors.theme')
+  local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
+
   # if macos, exit
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
     msg::print "Themes are not supported over macOS"
@@ -108,27 +116,30 @@ loco::prompt_theme(){
   # if action "update", check for existing style
   if [[ "${ACTION}" == "update" ]]; then
     local watermark_style=$(yaml::get "${INSTANCE_YAML}" '.style.colors.theme')
-    if [[ "${watermark_style}" != "" ]]; then
-      msg::prompt "Do you want to change your current " "style " "? (y/n) "
-      case ${USER_ANSWER:0:1} in
-      y|Y )
-        msg::print "${EMOJI_NO} Yes, I'll change my current " "style"
-      ;;
-      * )
-        msg::print "${EMOJI_YES} No, I'll keep my current " "style"
+
+    # if a theme is already set
+    if [[ -n "${watermark_style}" ]]; then
+      # if there is a theme in the profile
+      if [[ -n "${profile_style}" ]] || [[ -f "${local_theme}" ]]; then
+        msg::prompt "Do you want to change your current " "style " "? (y/n) "
+        case ${USER_ANSWER:0:1} in
+        y|Y )
+          msg::print "${EMOJI_NO} Yes, I'll change my current " "style"
+        ;;
+        * )
+          msg::print "${EMOJI_YES} No, I'll keep my current " "style"
+          THEME="${watermark_style}"
+          return 0
+        ;;
+        esac
+      # if there is no new theme
+      else
+        msg::print "No theme present in " "${PROFILE}" " profile"
         THEME="${watermark_style}"
         return 0
-      ;;
-      esac
+      fi
     fi
   fi
-
-  # check for profile style
-  local profile_style
-  profile_style=$(yaml::get_child_values '.style.colors.theme')
-
-  # check for profile terminal file
-  local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf
 
   # if no theme is set, launch a prompt
   if [ -z "${profile_style:-"${THEME}"}" ] &&  [ ! -f "${local_theme}" ] ; then
