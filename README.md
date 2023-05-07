@@ -27,6 +27,8 @@ To install and execute ```loco```:
 bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)); exit
 ```
 
+note : you can change the bit.ly redirection link to the [loco install file link](src/code/utils/install) for additional privacy.
+
 ##### Options
 You can pass options like this:
 ```bash
