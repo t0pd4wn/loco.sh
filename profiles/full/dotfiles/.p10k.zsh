@@ -138,10 +138,10 @@
   typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 
   # Connect left prompt lines with these symbols. You'll probably want to use the same color
-typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND=240
-typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX='%0F╭─'
-typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX='%0F├─'
-typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%0F╰─'
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND=240
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX='%0F╭─'
+  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX='%0F├─'
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%0F╰─'
   # Connect right prompt lines with these symbols.
   typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX=
   typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX=
@@ -157,7 +157,7 @@ typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX='%0F╰─'
   if [[ $POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_CHAR != ' ' ]]; then
     # The color of the filler. You'll probably want to match the color of POWERLEVEL9K_MULTILINE
     # ornaments defined above.
-typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND=240
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND=240
     # Start filler from the edge of the screen if there are no left segments on the first line.
     typeset -g POWERLEVEL9K_EMPTY_LINE_LEFT_PROMPT_FIRST_SEGMENT_END_SYMBOL='%{%}'
     # End filler on the edge of the screen if there are no right segments on the first line.
@@ -165,12 +165,12 @@ typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_FOREGROUND=240
   fi
 
   # Default background color.
-typeset -g POWERLEVEL9K_BACKGROUND=236
+  typeset -g POWERLEVEL9K_BACKGROUND=236
 
   # Separator between same-color segments on the left.
-typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='%244F\u2502'
+  typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='%244F\u2502'
   # Separator between same-color segments on the right.
-typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='%244Fu2502'
+  typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='%244Fu2502'
   # Separator between different-color segments on the left.
   typeset -g POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR=''
   # Separator between different-color segments on the right.
@@ -188,7 +188,7 @@ typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='%244Fu2502'
 
   #################################[ os_icon: os identifier ]##################################
   # OS identifier color.
-typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=7
+  typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=7
   # Custom icon.
   # typeset -g POWERLEVEL9K_OS_ICON_CONTENT_EXPANSION='⭐'
 
@@ -196,9 +196,9 @@ typeset -g POWERLEVEL9K_OS_ICON_FOREGROUND=7
   # Transparent background.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_BACKGROUND=
   # Green prompt symbol if the last command succeeded.
-typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=2
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=2
   # Red prompt symbol if the last command failed.
-typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=1
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=1
   # Default prompt symbol.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIINS_CONTENT_EXPANSION='❯'
   # Prompt symbol in command vi mode.
@@ -217,7 +217,7 @@ typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=1
 
   ##################################[ dir: current directory ]##################################
   # Default current directory color.
-typeset -g POWERLEVEL9K_DIR_FOREGROUND=7
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND=7
   # If directory is too long, shorten some of its segments to the shortest possible unique
   # prefix. The shortened directory can be tab-completed to the original.
   typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique
@@ -227,7 +227,7 @@ typeset -g POWERLEVEL9K_DIR_FOREGROUND=7
   typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=103
   # Color of the anchor directory segments. Anchor segments are never shortened. The first
   # segment is always an anchor.
-POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=7
+  POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=7
   # Display anchor directory segments in bold.
   typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
   # Don't shorten directories that contain any of these files. They are anchors.
@@ -342,7 +342,7 @@ POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=7
   #
   # If a styling parameter isn't explicitly defined for some class, it falls back to the classless
   # parameter. For example, if POWERLEVEL9K_DIR_WORK_NOT_WRITABLE_FOREGROUND is not set, it falls
-typeset -g POWERLEVEL9K_DIR_FOREGROUND=7
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND=7
   #
   # typeset -g POWERLEVEL9K_DIR_CLASSES=()
 
@@ -377,21 +377,19 @@ typeset -g POWERLEVEL9K_DIR_FOREGROUND=7
 
     if (( $1 )); then
       # Styling for up-to-date Git status.
-local       meta='%036F'  # grey foreground
-local      clean='%003F'  # yellow foreground
-local   modified='%202F'  # orange foreground
-local  untracked='%004F'  # blue foreground
-local conflicted='%001F'  # red foreground
-    else
+      local       meta='%036F'  # grey foreground
+      local      clean='%003F'  # yellow foreground
+      local   modified='%202F'  # orange foreground
+      local  untracked='%004F'  # blue foreground
+      local conflicted='%001F'  # red foreground
+          else
       # Styling for incomplete and stale Git status.
-local       meta='%244F'  # grey stale foreground
-local      clean='%244F'  # grey stale foreground
-local   modified='%244F'  # grey stale foreground
-local  untracked='%244F'  # grey stale foreground
-local conflicted='%244F'  # grey stale foreground
+      local       meta='%244F'  # grey stale foreground
+      local      clean='%244F'  # grey stale foreground
+      local   modified='%244F'  # grey stale foreground
+      local  untracked='%244F'  # grey stale foreground
+      local conflicted='%244F'  # grey stale foreground
     fi
-
-
     local res
 
     if [[ -n $VCS_STATUS_LOCAL_BRANCH ]]; then
@@ -1658,7 +1656,7 @@ typeset -g POWERLEVEL9K_BACKGROUND=236
   typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
   # Hot reload allows you to change POWERLEVEL9K options after Powerlevel10k has been initialized.
-typeset -g POWERLEVEL9K_BACKGROUND=236
+  typeset -g POWERLEVEL9K_BACKGROUND=236
   # can slow down prompt by 1-2 milliseconds, so it's better to keep it turned off unless you
   # really need it.
   typeset -g POWERLEVEL9K_DISABLE_HOT_RELOAD=true
