@@ -16,6 +16,9 @@ install_exit(){
   # install powerlevel10K
   # utils::remove "/home/${CURRENT_USER}/.zsh-plugins/powerlevel10k"
   cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
+  
+  # set vpn icon for p10k.zsh
+  cmd::run_as_user "sed -i '/# vpn_ip/c\vpn_ip' ~/.p10k.zsh"
 }
 
 remove_exit(){
@@ -26,7 +29,9 @@ remove_exit(){
   utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-line-no-indicator
   utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-minimap
   utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-monokai
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim  
+  # unset vpn icon for p10k.zsh
+  cmd::run_as_user "sed -i '/vpn_ip/c\# vpn_ip' ~/.p10k.zsh"
 
   # remove powerlevel10K
   utils::remove "/"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"

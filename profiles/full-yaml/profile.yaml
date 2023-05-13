@@ -36,6 +36,7 @@ custom_functions:
     - cmd::run_as_user git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     - cmd::run_as_user vim +PluginInstall +qall
     - cmd::run_as_user git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.zsh-plugins/powerlevel10k
+    - cmd::run_as_user sed -i '/# vpn_ip/c\vpn_ip' ~/.p10k.zsh
   remove_exit:
     - utils::remove /home/${CURRENT_USER}/.vim/bundle/anyfold
     - utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline

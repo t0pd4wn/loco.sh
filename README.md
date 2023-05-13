@@ -74,11 +74,12 @@ cd loco.sh
 
 **Loco.sh** comes with 6 example profiles :
 - **default**: is an empty example, showcasing custom functions
-- **full**: all *profiles* made into one, with ```vim```, ```zsh```  and ```p10K```
+- **full**: all *profiles* made into one, with ```vim```, ```zsh```, ```p10K``` and ```vpn```
+- **full-yaml**: same as **full** but yaml only
+- **start-vpn**: packages and script to execute vpn at startup
+- **style**: custom themed terminal and OS (dock, background)
 - **vim**: fully configured ```vim```
 - **zsh**: fully configured ```zsh``` with ```p10K```
-- **style**: custom themed terminal and OS (dock, background)
-- **full-yaml**: same as **full** but yaml only
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
 <!-- - **loco-webdev**: a more complete and opiniated example, comes with extra packages ; supports Ubuntu and partially MacOSx -->
 
