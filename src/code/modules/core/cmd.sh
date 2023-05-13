@@ -31,6 +31,7 @@ cmd::record(){
 #######################################
 cmd::run_as_user(){
   local command="${@-}"
+
   if ! su "${CURRENT_USER}" -c "${command}"; then
     msg::debug "Can not su ${command}"
     echo "Can not su ${command}" >&2

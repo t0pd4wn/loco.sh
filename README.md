@@ -14,7 +14,7 @@
 
 ***Loco.sh*** is based on **profiles** made of a YAML file and/or a tree folder structure. Users can define everything in a single YAML and/or build their profiles with separate files in folders. Profiles can be installed, updated or removed. Multiple profiles can be installed at once, and new profiles can be installed over old ones.
 
-**WARNING**: *use this script at your own risk as it will deal with your system configuration.*
+**WARNING**: *use this library at your own risk as it will deal with your system configuration.*
 
 ## Installation
 
@@ -138,7 +138,9 @@ custom_functions:
 
 Custom functions allow users to define specific commands at various steps of the execution : *entry* which executes at the beginning of a loco **action**, *exit* at the end of the **action**, and *last* after **loco** execution.
 
-Using the ```cmd::record``` function allows to record commands that will be executed after script execution (though ```/src/temp/finish.sh```). This may be useful to escape some shell or $USER related limitations.
+As these functions are executed as ```root```; two additional functions are made available. These may be useful to escape some shell or ```$USER``` related limitations.
+Using the ```cmd::run_as_user [command]``` function allows to execute a command as the initial ```$USER```.
+Using the ```cmd::record [command]``` function allows to record commands that will be executed after script execution (though ```/src/temp/finish.sh```).
 
 Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed.
 
@@ -193,7 +195,7 @@ custom_functions:
 If more than one method is set both are used from 1. to 2.
 
 Note 1.: there is currently a limitation for [last] which can't be implemented as a ```yaml``` function (probably due to variables expansion).
-Note 2.: these functions are executed as ```root```; the ```cmd::run_as_user [command]``` function allows executing a custom command as the initial ```$USER```.
+Note 2.: ```cmd::run_as_user [command]``` and ```cmd::record [command]``` are not fully generic. In some cases, ```[command]``` argument quotes escaping will provoke some unexpected behaviors. Try to remove quotes in these cases, for example: ```cmd::run_as_user echo var >> file```.
 
 ### Add a profile
 
@@ -343,7 +345,7 @@ style:
 
 *Fonts* can be selected through two methods :
 
-1. profile yaml: one or more urls can be provided to set one or more fonts. Note : only *fonts* with a [font name] declared in the *profile* ```yaml``` will be used for the terminal.
+1. profile yaml: one or more urls can be provided to set one or more fonts. Note: only *fonts* with a [font name] declared in the *profile* ```yaml``` will be used for the terminal.
 
 ```yaml
   fonts:
@@ -353,7 +355,7 @@ style:
       - [font url] # an url to a font file
 ```
 
-2. profile asset: files can be provided to install fonts on the system.
+2. profile assets: files can be provided to install fonts on the system.
 
 ```bash
 .
@@ -512,8 +514,7 @@ If your ```cmd::record``` commands are not executed, it is probably because the 
 - code: add an img::class module ?
 - code: add tests and CI to help with integration
 - code: custom functions could have dynamic steps
-- code: break loco_background.sh into more functions
-- code: better package managers abstraction
+- code: remove globals when possible
 - code: add an import profile(s) support in profile yaml
 - options: add a "none" option
 - options: detached in a remote /.dotfiles/ folder

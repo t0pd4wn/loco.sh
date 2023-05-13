@@ -83,7 +83,7 @@ utils::dump_bash_function(){
 }
 
 #######################################
-# Dump a bash function
+# Dump a bash function name
 # Arguments:
 #   $1 # a function name"
 #   $2 # /path/to/a/script.sh

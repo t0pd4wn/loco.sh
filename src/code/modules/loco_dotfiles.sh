@@ -34,7 +34,6 @@ loco::dotfiles_manager(){
       loco::instance_create
     fi
 
-    # $ACTION == "install || update"
     if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" ==  "update" ]]; then
         dotfiles_dir="./"${PROFILES_DIR}"/"${PROFILE}"/dotfiles"
         dotfiles_yaml="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
@@ -59,9 +58,13 @@ loco::dotfiles_manager(){
         # check if there are dotfiles in $PROFILE
         if [[ -d "${dotfiles_dir}" ]]; then
         utils::list dotfiles "${dotfiles_dir}"
-        loco::dotfiles_action_install "${dotfiles[@]}"
+          if [[ "${ACTION}" == "install" ]]; then
+            loco::dotfiles_action_install "${dotfiles[@]}"
+          elif [[ "${ACTION}" == "update" ]]; then
+            loco::dotfiles_action_update "${dotfiles[@]}"
+          fi
         fi
-      # empty the normative list (array ?)
+      # empty the normative array
       # meant for multi actions (?)
       dotfiles=()
     fi
@@ -123,6 +126,60 @@ loco::dotfiles_action_install(){
 }
 
 #######################################
+# Dotfiles update procedure
+# GLOBALS:
+#   CURRENT_USER
+#   EMOJI_YES
+#   INSTANCE_PATH
+#   OS_PREFIX
+#   PROFILE_PATH
+#   PROFILE
+#   PROFILES_DIR
+# Arguments:
+#   $@ # an array of dotfiles
+#######################################
+loco::dotfiles_action_update(){
+  declare -a dotfiles
+  dotfiles=("$@")
+  local current_path=$(pwd)
+  local is_legacy
+  local file_from
+  local file_to
+
+  msg::print "${EMOJI_YES} Yes, update with " "${PROFILE}" " dotfiles"
+  msg::print "Preparing your dotfiles backup"
+
+  # create the PROFILE_PATH depending on cli option
+  if [[ ${PROFILES_DIR} == "profiles" ]]; then
+    # if PROFILES_DIR is the default value
+    PROFILE_PATH="${current_path}"/"${PROFILES_DIR}"/"${PROFILE}"
+  else
+    # if PROFILES_DIR is a custom value
+    PROFILE_PATH="${PROFILES_DIR}"/"${PROFILE}"
+  fi
+
+  # backup $CURRENT_USER dotfiles and install $PROFILE ones
+  for dotfile in "${dotfiles[@]}"; do
+    # is existing dotfile an installed one ?
+    is_legacy=$(yaml::contains "${INSTANCE_YAML}" ".dotfiles.installed" "${dotfile}")
+
+    if [[ "${is_legacy}" == true ]]; then
+      # if dotfile is one installed by loco, merge it
+      file_from="${PROFILES_DIR}/${PROFILE}/dotfiles/${dotfile}"
+      file_to="/${OS_PREFIX}/${CURRENT_USER}/${dotfile}"
+      loco::single_dotfile_merge "${file_from}" "${file_to}"
+    elif [[ "${is_legacy}" == false ]]; then
+      # if "${dotfile}" already exists, merge it
+      loco::dotfiles_backup "${dotfile}"
+      # copy & link "${dotfile}"
+      loco::dotfiles_set "${dotfile}"
+    fi
+  done
+  msg::say "${CURRENT_USER}" " dotfiles were backup'd here :"
+  msg::say "${INSTANCE_PATH}/dotfiles-backup"
+}
+
+#######################################
 # Dotfiles remove procedure
 # GLOBALS:
 #   CURRENT_USER
@@ -167,6 +224,34 @@ loco::dotfiles_backup(){
     # add entry to instance yaml
     yaml::add "${INSTANCE_YAML}" ".dotfiles.backup" "${dotfile}"
     msg::debug "${dotfile}" " is backup'd"
+  fi
+}
+
+#######################################
+# Merge two dotfiles folders together
+# Arguments:
+#   $1 # a dotfiles path to be merged from (A)
+#   $2 # a dotfiles path to be merged with (B)
+#######################################
+loco::single_dotfile_merge(){
+  local dotfile_from="${1-}"
+  local dotfile_to="${2-}"
+  local prev
+  local new
+  local is_same
+
+  prev="${dotfile_to}"
+  new="${dotfile_from}"
+
+  if [[ -f "${prev}" ]]; then
+    # compare files sizes and content
+    is_same=$(utils::compare "${prev}" "${new}")
+    if [[ "${is_same}" == false ]]; then
+      # files sizes are different
+      # copy $new file content in $prev file
+      _echo "\n\n### from ${new}" >> "${prev}"
+      _cat "${new}" >> "${prev}"
+    fi
   fi
 }
 
@@ -236,12 +321,9 @@ loco::dotfiles_set(){
       _error "Can not cp "${profile_file}" in "${instance_path}""
     fi
 
+    # todo : _link ??
     # create a symlink between the instance file and the home folder
     ln -sfn "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
-    # todo : _link ??
-    # ln -n "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
-    # _link "${instance_path}""${dotfile}" /"${OS_PREFIX}"/"${CURRENT_USER}"/
-
   else
     msg::debug "Detached"
     # if detached copy directly the file to home folder
