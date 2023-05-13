@@ -6,39 +6,10 @@
 #################
 # all OS
 #################
-install_exit(){}
-
-remove_exit(){}
-
-#################
-# macOS related
-#################
-install_macos_exit(){}
-
-update_macos_exit(){}
-
-remove_macos_exit(){}
-
-#################
-# ubuntu related
-#################
-install_ubuntu_exit(){}
-
-update_ubuntu_exit(){}
-
-remove_ubuntu_exit(){}
-
-#################
-# Custom functions
-#################
-set_ubuntu_style(){
+install_exit(){
+  cmd::run_as_user "sed -i '/# vpn_ip/c\vpn_ip' ~/.p10k.zsh"
 }
 
-unset_ubuntu_style(){
-}
-
-set_macos_style(){
-}
-
-unset_macos_style(){
+remove_exit(){
+  cmd::run_as_user "sed -i '/vpn_ip/c\# vpn_ip' ~/.p10k.zsh"
 }
