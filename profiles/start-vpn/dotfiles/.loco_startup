@@ -3,11 +3,6 @@
 # .loco_startup | Effort to provide startup custom commands
 #-------------------------------------------------------------------------------
 
-# Below scripts provide functions to trigger commands, when terminal is open.
-# Previously, writing a persistent ENV variable was possible
-# Previously, writing a file in the system through .profile at startup was possible (as in POSIX compliance), which is limited in VMs
-# Nowadays, the inital check is made upon VPN connection
-
 # To set this up properly
 # 1. start your vpn connection
 # 2. launch `ip addr show` in the terminal
@@ -18,7 +13,7 @@
 # From now on, accessing your system will open the terminal and connect you to your VPN.
 
 #######################################
-# Called from .bashrc ; checks if VPN is connected
+# Called from .bashrc; check if VPN is connected
 # note : change "VPN_identifier" for your VPN identifier 
 # (something that distinguishes it in `ip addr show`)
 #######################################
@@ -36,20 +31,16 @@ is_started(){
 }
 
 #######################################
-# Called first time terminal is opened
+# Called first time terminal is open
 # !if a VPN connection is set properly!
 #######################################
 session_start(){
   echo -e "Installed with loco.sh \U1f335. You can edit this text in ~/.loco_startup"
-  # uncomment below lines depending on your vpn solution
-  # openvpn_connect
-  # wireguard_connect
-
-  # add some session commands below (keyboard configurations, mounts...)
+  # add some session commands below (keyboard configurations, mounts, vpn...)
 }
 
 #######################################
-# Called every time terminal is opened
+# Called every time terminal is open
 #######################################
 shell_start(){
   # print a cactus
