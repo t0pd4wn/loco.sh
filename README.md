@@ -192,7 +192,8 @@ custom_functions:
 
 If more than one method is set both are used from 1. to 2.
 
-Note : there is currently a limitation for [last] which can't be implemented as a ```yaml``` function (probably due to variables expansion).
+Note 1.: there is currently a limitation for [last] which can't be implemented as a ```yaml``` function (probably due to variables expansion).
+Note 2.: these functions are executed as ```root```; the ```cmd::run_as_user [command]``` function allows executing a custom command as the initial ```$USER```.
 
 ### Add a profile
 
