@@ -15,15 +15,16 @@ All notable changes to ```loco.sh``` will be documented in this file.
 
 - ```update``` and ```remove``` actions behaviors; ```update``` will now merge profiles, including dotfiles, into existing one(s), and ```remove``` will play every profiles exit functions
 
+
 ## [0.8] - 2023-04-23
 
 Improved modularity and yaml based description.
 
 ### Added
 
-- full yaml support for profiles; profiles can be described through a single yaml file
-- instance watermark yaml now holds all ```loco.sh``` information
 - multiple profiles installation support
+- full yaml support for profiles; profiles can be described through a single yaml file
+- instance watermark yaml now holds all ```loco.sh``` instance information
 
 ### Changed
 
@@ -46,6 +47,7 @@ The first bugless version for ubuntu and macos.
 
 - errors while installing .vimrc
 
+
 ## [0.6] - 2022-06-03
 
 Update action and background behaviors.
@@ -63,6 +65,7 @@ Update action and background behaviors.
 ### Changed
 
 - license to GPL-V3
+
 
 ## [0.5] - 2022-06-03
 
@@ -92,6 +95,7 @@ Introducing remote installation means.
 - styles related bugs
 - installation behavior
 
+
 ## [0.2] - 2022-04-18
 
 The initial commited version.
@@ -101,5 +105,14 @@ The initial commited version.
 - main ```loco.sh``` principles
 - ```install``` and ```remove``` actions
 - macos and ubuntu support
+
+
+[unreleased]: https://github.com/t0pd4wn/loco.sh/compare/v0.8...HEAD
+[0.8]: https://github.com/t0pd4wn/loco.sh/compare/v0.8...v0.7
+[0.7]: https://github.com/t0pd4wn/loco.sh/compare/v0.7...v0.6
+[0.6]: https://github.com/t0pd4wn/loco.sh/compare/v0.6...v0.5
+[0.5]: https://github.com/t0pd4wn/loco.sh/compare/v0.5...v0.3
+[0.3]: https://github.com/t0pd4wn/loco.sh/compare/v0.3...v0.2
+[0.2]: https://github.com/t0pd4wn/loco.sh/tree/v0.2
 
 This changelog is inspired by the [keep a changelog](https://github.com/olivierlacan/keep-a-changelog/) project.

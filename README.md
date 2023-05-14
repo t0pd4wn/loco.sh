@@ -35,12 +35,12 @@ You can pass options like this:
 bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options]; exit
 ```
 
-For example, you can launch an interactive session with multiple profiles installation like this :
+For example, you can launch an interactive session with multiple profiles installation like this:
 ```bash
 bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -p vim,zsh; exit
 ```
 
-Or go ***loco*** and install directly a profile with the ```-Y``` flag on :
+Or go ***loco*** and install directly a profile with the ```-Y``` flag on:
 ```bash
 bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
 ```
