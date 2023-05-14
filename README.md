@@ -24,7 +24,7 @@ To install and execute ```loco```:
 
 #### All systems (Ubuntu, macOS)
 ```bash
-bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)); exit
+bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)); exit
 ```
 
 note : you can change the bit.ly redirection link to the [loco install file link](src/code/utils/install) for additional privacy.
@@ -32,17 +32,17 @@ note : you can change the bit.ly redirection link to the [loco install file link
 ##### Options
 You can pass options like this:
 ```bash
-bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options]; exit
+bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) [options]; exit
 ```
 
 For example, you can launch an interactive session with multiple profiles installation like this:
 ```bash
-bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -p vim,zsh; exit
+bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -a install -p vim,zsh; exit
 ```
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on:
 ```bash
-bash <(echo https://bit.ly/l0c0-sh|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
+bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
 ```
 
 Once installed, you can simply interact with ```loco``` like this: 
