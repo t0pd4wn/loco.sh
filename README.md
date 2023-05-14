@@ -510,20 +510,6 @@ If for some reasons, you don't have access to these files, simply remove the ```
 ### My background doesn't change ? ```src/temp/finish.sh``` doesn't execute.
 If your ```cmd::record``` commands are not executed, it is probably because the ```src/temp/finish.sh``` file is not properly sourced. Check your ```yaml``` profile file for a [last] custom function and remove it. [last] custom functions in profile ```yaml``` are not correctly interpreted and prevent ```finish.sh``` to be executed.
 
-## Backlog
-- actions: add init, save
-- code: add an img::class module ?
-- code: add tests and CI to help with integration
-- code: custom functions could have dynamic steps
-- code: remove globals when possible
-- code: add an import profile(s) support in profile yaml
-- options: add a "none" option
-- options: detached in a remote /.dotfiles/ folder
-- options: ghost mode leaving no assets prior to action
-- options: add long options support
-- profiles: add devops, data-scientist...
-- UI: display prompts options as table rows
-
 ## Thanks
 
 All of you, ***Eses*** !
