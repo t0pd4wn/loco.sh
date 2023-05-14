@@ -10,8 +10,10 @@ function dev_build(){
 	source ./src/code/utils/clean_profiles
 	git rm ./dist/loco-dist.zip
 	source ./src/code/utils/build_release
-	# git add .
 	git add ./dist/loco-dist.zip
+	git add ./dist/i
+
+	cp ./src/code/utils/install ./dist/i
 	git commit -m "${commit_message}"
 	git push
 }

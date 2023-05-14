@@ -115,4 +115,6 @@ The initial commited version.
 [0.3]: https://github.com/t0pd4wn/loco.sh/compare/v0.3...v0.2
 [0.2]: https://github.com/t0pd4wn/loco.sh/tree/v0.2
 
+---
+
 This changelog is inspired by the [keep a changelog](https://github.com/olivierlacan/keep-a-changelog/) project.
