@@ -70,8 +70,8 @@ openvpn_connect(){
 
   # get a random domain
   local connexion_domain=$(shuffle_domains "${options_array[@]}")
-  local config_arg="--config ${options_path}/${connexion_domain}"
-  local login_arg="--auth-user-pass ${config_path}/login.conf"
+  local config_arg="--config ${config_path}/${connexion_domain}"
+  local login_arg="--auth-user-pass ${openvpn_path}/login.conf"
 
   # connect to vpn
   sudo openvpn ${config_arg} ${login_arg}
