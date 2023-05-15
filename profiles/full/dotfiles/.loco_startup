@@ -90,7 +90,7 @@ wireguard_connect(){
   local connection_domain=$(shuffle_domains "${options_array[@]}")
   
   # connect to vpn
-  wg-quick up "${options_path}/${connection_domain}"
+  wg-quick up "${config_path}/${connection_domain}"
 }
 
 #######################################
