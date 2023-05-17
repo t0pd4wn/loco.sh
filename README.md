@@ -27,7 +27,7 @@ To install and execute ```loco```:
 bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)); exit
 ```
 
-note : you can change the bit.ly redirection link to the [loco install file link](src/code/utils/install) for additional privacy.
+note : you can change the locosh.dev redirection link to the [loco install file link](https://raw.githubusercontent.com/t0pd4wn/loco.sh/gh-main/src/code/utils/install) for additional privacy.
 
 ##### Options
 You can pass options like this:
