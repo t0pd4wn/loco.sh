@@ -7,3 +7,11 @@ custom_functions:
     - echo "You are using Ubuntu.";
   install_exit: 
     - echo "About to depart...";
+  remove_entry: 
+    - echo "Hello, you want to remove me ?";
+  remove_macos_entry:
+    - echo "You are using Macosx.";
+  remove_ubuntu_entry:
+    - echo "You are using Ubuntu.";
+  remove_exit: 
+    - echo "About to depart for good...";
