@@ -3,7 +3,7 @@
 # loco_dotfiles.sh | loco.sh dotfiles functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Manage dotfiles installation or removal
 # GLOBALS:
 #   ACTION
@@ -17,7 +17,7 @@
 #   PROFILE
 # Arguments:
 #   $1, 2, 3 # "This" "is a" "message"
-#######################################
+########################################
 loco::dotfiles_manager(){
   local dotfiles_dir
   local dotfiles_list
@@ -82,7 +82,7 @@ loco::dotfiles_manager(){
   esac
 }
 
-#######################################
+########################################
 # Dotfiles install procedure
 # GLOBALS:
 #   CURRENT_USER
@@ -92,7 +92,7 @@ loco::dotfiles_manager(){
 #   PROFILE
 # Arguments:
 #   $@ # an array of dotfiles
-#######################################
+########################################
 loco::dotfiles_action_install(){
   declare -a dotfiles
   dotfiles=("$@")
@@ -125,7 +125,7 @@ loco::dotfiles_action_install(){
   msg::say "${INSTANCE_PATH}/dotfiles-backup"
 }
 
-#######################################
+########################################
 # Dotfiles update procedure
 # GLOBALS:
 #   CURRENT_USER
@@ -137,7 +137,7 @@ loco::dotfiles_action_install(){
 #   PROFILES_DIR
 # Arguments:
 #   $@ # an array of dotfiles
-#######################################
+########################################
 loco::dotfiles_action_update(){
   declare -a dotfiles
   dotfiles=("$@")
@@ -179,14 +179,14 @@ loco::dotfiles_action_update(){
   msg::say "${INSTANCE_PATH}/dotfiles-backup"
 }
 
-#######################################
+########################################
 # Dotfiles remove procedure
 # GLOBALS:
 #   CURRENT_USER
 #   INSTANCE_PATH
 # Arguments:
 #   $@ # an array of dotfiles names
-#######################################
+########################################
 loco::dotfiles_action_remove(){
   declare -a dotfiles
   dotfiles=(${@})
@@ -200,7 +200,7 @@ loco::dotfiles_action_remove(){
   done
 }
 
-#######################################
+########################################
 # Backup dotfiles to $INSTANCE_PATH
 # GLOBALS:
 #   CURRENT_USER
@@ -208,7 +208,7 @@ loco::dotfiles_action_remove(){
 #   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
-#######################################
+########################################
 loco::dotfiles_backup(){
   local dotfile="${1-}"
   local profile_file="${INSTANCE_PATH}"/dotfiles-backup/"${dotfile}"
@@ -227,12 +227,12 @@ loco::dotfiles_backup(){
   fi
 }
 
-#######################################
+########################################
 # Merge two dotfiles folders together
 # Arguments:
 #   $1 # a dotfiles path to be merged from (A)
 #   $2 # a dotfiles path to be merged with (B)
-#######################################
+########################################
 loco::single_dotfile_merge(){
   local dotfile_from="${1-}"
   local dotfile_to="${2-}"
@@ -249,18 +249,21 @@ loco::single_dotfile_merge(){
     if [[ "${is_same}" == false ]]; then
       # files sizes are different
       # copy $new file content in $prev file
-      _echo "\n\n### from ${new}" >> "${prev}"
+      _echo "\n\n########################################" >> "${prev}"
+      _echo "## Imported from :" >> "${prev}"
+      _echo "## ${new}" >> "${prev}"
+      _echo "########################################" >> "${prev}"
       _cat "${new}" >> "${prev}"
     fi
   fi
 }
 
-#######################################
+########################################
 # Merge two dotfiles folders together
 # Arguments:
 #   $1 # a dotfiles path to be merged from (A)
 #   $2 # a dotfiles path to be merged with (B)
-#######################################
+########################################
 loco::dotfiles_merge(){
   local dotfiles_from="${1-}"
   local dotfiles_to="${2-}"
@@ -276,26 +279,18 @@ loco::dotfiles_merge(){
       prev="${dotfiles_to}/${dotfile}"
       new="${dotfiles_from}/${dotfile}"
 
-    if [[ -f "${dotfiles_to}/${dotfile}" ]]; then
-      # filenames are similar
-      # compare files sizes and content
-      is_same=$(utils::compare "${prev}" "${new}")
-
-      if [[ "${is_same}" == false ]]; then
-        # files sizes are different
-        # copy $new file content in $prev file
-        _echo "\n\n### from ${new}" >> "${prev}"
-        _cat "${new}" >> "${prev}"
-      fi
+    if [[ -f "${prev}" ]]; then
+      # previous dotfile exists, merge it
+      loco::single_dotfile_merge "${new}" "${prev}"
     else
-      # file doesn't exist
+      # dotfile doesn't exist
       # copy file in destination
       _cp "${new}" "${dotfiles_to}"
     fi
   done
 }
 
-#######################################
+########################################
 # Set dotfiles to /"${OS_PREFIX}"/"${CURRENT_USER}"
 # GLOBALS:
 #   CURRENT_USER
@@ -305,7 +300,7 @@ loco::dotfiles_merge(){
 #   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
-#######################################
+########################################
 loco::dotfiles_set(){
   local dotfile="${1-}"
 
@@ -333,7 +328,7 @@ loco::dotfiles_set(){
   yaml::add "${INSTANCE_YAML}" ".dotfiles.installed" "${dotfile}"
 }
 
-#######################################
+########################################
 # Restore dotfiles to /"${OS_PREFIX}"/"${CURRENT_USER}"
 # GLOBALS:
 #   CURRENT_USER
@@ -341,7 +336,7 @@ loco::dotfiles_set(){
 #   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
-#######################################
+########################################
 loco::dotfile_restore(){
   local dotfile="${1-}"
   local sub_path="dotfiles-backup"
@@ -356,14 +351,14 @@ loco::dotfile_restore(){
   fi
 }
 
-#######################################
+########################################
 # Unset dotfiles from /"${OS_PREFIX}"/"${CURRENT_USER}"
 # GLOBALS:
 #   CURRENT_USER
 #   OS_PREFIX
 # Arguments:
 #   $1 # a dotfile name
-#######################################
+########################################
 loco::dotfiles_unset(){
   local dotfile="${1-}"
   local yaml="${INSTANCE_YAML}"
