@@ -3,7 +3,7 @@
 # loco_watermark.sh | loco.sh watermark functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Check for watermark presence
 # GLOBALS:
 #   CURRENT_USER
@@ -14,7 +14,7 @@
 #   EMOJI_YES
 #   EMOJI_NO
 #   OS_PREFIX
-#######################################
+########################################
 loco::watermark_check(){
   # keep a copy of current GLOBALs values
   local current_profile="${PROFILE-}"
@@ -52,7 +52,7 @@ loco::watermark_check(){
   fi
 }
 
-#######################################
+########################################
 # Instance folders creation
 # GLOBALS:
 #   CURRENT_USER
@@ -61,7 +61,7 @@ loco::watermark_check(){
 #   INSTANCE_PATH
 #   INSTANCE_YAML
 #   PROFILE
-#######################################
+########################################
 loco::instance_create(){
     local current_path=$(pwd)
 
@@ -87,7 +87,7 @@ loco::instance_create(){
     yaml::change "${INSTANCE_YAML}" ".instance.INSTANCE_PATH" "${INSTANCE_PATH}"
 }
 
-#######################################
+########################################
 # Watermark install procedure
 # GLOBALS:
 #   ACTION
@@ -96,7 +96,7 @@ loco::instance_create(){
 #   CURRENT_USER
 #   PROFILE
 #   USER_ANSWER
-#######################################
+########################################
 loco::watermark_action_install(){
   # keep a copy of current GLOBALs values
   local current_profile="${PROFILE-}"
@@ -164,7 +164,7 @@ loco::watermark_action_install(){
   esac
 }
 
-#######################################
+########################################
 # Watermark remove procedure
 # GLOBALS:
 #   CURRENT_USER
@@ -172,7 +172,7 @@ loco::watermark_action_install(){
 #   PROFILE
 # Arguments:
 #   $1 # a yaml path "/yaml/path"
-#######################################
+########################################
 loco::watermark_action_remove(){
   local profile_array
   local profile_prefix
@@ -197,7 +197,7 @@ loco::watermark_action_remove(){
   loco::yaml_init
 }
 
-#######################################
+########################################
 # Watermark update procedure
 # GLOBALS:
 #   ACTION
@@ -207,7 +207,7 @@ loco::watermark_action_remove(){
 #   CURRENT_USER
 #   PROFILE
 #   USER_ANSWER
-#######################################
+########################################
 loco::watermark_action_update(){
   # keep a copy of current GLOBALs values
   local current_profile="${PROFILE-}"
@@ -257,7 +257,7 @@ loco::watermark_action_update(){
   esac
 }
 
-#######################################
+########################################
 # Unset a post script watermark.
 # GLOBALS:
 #   ACTION
@@ -265,13 +265,13 @@ loco::watermark_action_update(){
 #   OS_PREFIX
 # Output:
 #   Remove .loco file from /"${OS_PREFIX}"/"${CURRENT_USER}"
-#######################################
+########################################
 loco::watermark_unset(){
   msg::say "Removing " "watermark"
   utils::remove "${INSTANCE_YAML}"
 }
 
-#######################################
+########################################
 # Init the .yml watermark.
 # GLOBALS:
 #   CURRENT_USER
@@ -280,7 +280,7 @@ loco::watermark_unset(){
 #   INSTANCE_YAML
 # Output:
 #   Writes .loco.yml file to /"${OS_PREFIX}"/"${CURRENT_USER}"/
-#######################################
+########################################
 loco::watermark_set(){
   if [[ "${WATERMARK}" == true ]]; then
     _echo 'instance:' > "${INSTANCE_YAML}"

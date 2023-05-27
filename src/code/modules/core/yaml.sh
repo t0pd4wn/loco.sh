@@ -3,14 +3,14 @@
 # yaml.sh | yaml function file
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Add a yaml value
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
 #   $3 # a yaml value
 #   $4 # addition type "key|raw"
-#######################################
+########################################
 yaml::add(){
   local yaml="${1-}"
   local selector="${2-}" 
@@ -47,14 +47,14 @@ yaml::add(){
   fi
 }
 
-#######################################
+########################################
 # Add a yaml nested key
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".parent.path"
 #   $3 # a yaml value ".childpath"
 #   $4 # addition type "key|raw"
-#######################################
+########################################
 yaml::add_key(){
   local yaml="${1-}"
   local selector="${2-}"
@@ -87,13 +87,13 @@ yaml::add_key(){
   fi
 }
 
-#######################################
+########################################
 # Change a yaml value
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
 #   $3 # a yaml value
-#######################################
+########################################
 yaml::change(){
   local yaml="${1-}"
   local selector="${2-}" 
@@ -121,13 +121,13 @@ yaml::change(){
   fi
 }
 
-#######################################
+########################################
 # Return a boolean if value is found
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
 #   $3 # a yaml value
-#######################################
+########################################
 yaml::contains(){
   local yaml="${1-}"
   local selector="${2-}" 
@@ -142,13 +142,13 @@ yaml::contains(){
   fi
 }
 
-#######################################
+########################################
 # Delete a yaml value
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
 #   $3 # a yaml value
-#######################################
+########################################
 yaml::delete(){
   local yaml="${1-}"
   local selector="${2-}" 
@@ -173,13 +173,13 @@ yaml::delete(){
   fi
 }
 
-#######################################
+########################################
 # Delete a yaml nested key
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".parent.path"
 #   $3 # a yaml value ".childpath"
-#######################################
+########################################
 yaml::delete_key(){
   local yaml="${1-}"
   local selector="${2-}"
@@ -206,12 +206,12 @@ yaml::delete_key(){
   fi
 }
 
-#######################################
+########################################
 # Execute commands from a yaml array
 # Arguments:
 #   $1 # a yaml file
 #   $2 # a yaml selector
-#######################################
+########################################
 yaml::execute(){
   local path="${1-}"
   local function="${2-}"
@@ -228,12 +228,12 @@ yaml::execute(){
   done
 }
 
-#######################################
+########################################
 # Return yaml values
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
-#######################################
+########################################
 yaml::get(){
   # local options="${1-}"
   local yaml="${1-}"
@@ -249,7 +249,7 @@ yaml::get(){
   fi
 }
 
-#######################################
+########################################
 # Return yaml keys (deprecated?)
 # Globals:
 #   PROFILE
@@ -257,7 +257,7 @@ yaml::get(){
 # Arguments:
 #   $1 # a yaml variable ".variable.path"
 #   $2 # an optional yaml file path
-#######################################
+########################################
 yaml::get_keys(){
   local var="${1-}"
   local path="${2:-"${PROFILE_YAML}"}"
@@ -271,7 +271,7 @@ yaml::get_keys(){
   fi
 }
 
-#######################################
+########################################
 # Return yaml child values
 # Globals:
 #   PROFILE
@@ -279,7 +279,7 @@ yaml::get_keys(){
 # Arguments:
 #   $1 # a yaml variable ".variable.path"
 #   $2 # a yaml file path
-#######################################
+########################################
 yaml::get_child_values(){
   local var="${1-}" 
   local path="${2:-"${PROFILE_YAML}"}"
@@ -298,7 +298,7 @@ yaml::get_child_values(){
   _echo "${value}"
 }
 
-#######################################
+########################################
 # Check if a child selector is present in yaml
 # Globals:
 #   PROFILE
@@ -306,7 +306,7 @@ yaml::get_child_values(){
 # Arguments:
 #   $1 # a yaml selector ".variable.path"
 #   $2 # a yaml file path
-#######################################
+########################################
 yaml::has_child_selector(){ 
   local selector="${1-}" 
   local yaml="${2-}"
@@ -333,14 +333,14 @@ yaml::has_child_selector(){
   fi
 }
 
-#######################################
+########################################
 # Merge two yaml selectors
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.pathA"
 #   $3 # a yaml selector ".variable.pathB"
 #   $4 # merge type "classic|array"
-#######################################
+########################################
 yaml::merge(){
   local yaml="${1-}"
   local selecA="${2-}" 
@@ -361,12 +361,12 @@ yaml::merge(){
   fi
 }
 
-#######################################
+########################################
 # Return yaml values, no child selector check
 # Arguments:
 #   $1 # a yaml file path
 #   $2 # a yaml selector ".variable.path"
-#######################################
+########################################
 yaml::yq(){
   # local options="${1-}"
   local yaml="${1-}"
@@ -380,14 +380,14 @@ yaml::yq(){
   fi
 }
 
-#######################################
+########################################
 # Return yaml values
 # todo : precise implementation in regards to
 # utils::yq_light so child selector check is more transparent
 # Arguments:
 #   $1 # a yaml selector ".variable.path"
 #   $2 # a yaml file path
-#######################################
+########################################
 yaml::yq_child(){
   # local options="${1-}"
   local selector="${1-}" 

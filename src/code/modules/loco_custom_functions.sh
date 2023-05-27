@@ -3,7 +3,7 @@
 # loco_custom_functions.sh | loco.sh custom functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Prepare custom functions execution
 # GLOBALS:
 #   ACTION
@@ -12,7 +12,7 @@
 #   PROFILES_DIR
 # Arguments:
 #   $1 # "entry" or "exit"
-#######################################
+########################################
 loco::custom_action(){
   local step="${1-}"
   local custom_function_path="./"${PROFILES_DIR}"/"${PROFILE}"/custom.sh"
@@ -34,11 +34,11 @@ loco::custom_action(){
   fi
 }
 
-#######################################
+########################################
 # Execute custom functions
 # Arguments:
 #   $1 # a function name
-#######################################
+########################################
 loco::custom_function(){
   local custom_function=${1-}
 
@@ -61,11 +61,11 @@ loco::custom_function(){
   fi
 }
 
-#######################################
+########################################
 # Execute custom entry functions
 # GLOBALS:
 #   PROFILE
-#######################################
+########################################
 loco::custom_entry(){
   local profile_backup="${PROFILE}"
   local profile_array=(${PROFILE})
@@ -84,11 +84,11 @@ loco::custom_entry(){
   PROFILE="${profile_backup}"
 }
 
-#######################################
+########################################
 # Execute custom exit functions
 # GLOBALS:
 #   PROFILE
-#######################################
+########################################
 loco::custom_exit(){
   local profile_backup="${PROFILE}"
   local profile_array=(${PROFILE})
@@ -107,11 +107,11 @@ loco::custom_exit(){
   PROFILE="${profile_backup}"
 }
 
-#######################################
+########################################
 # Execute custom last functions
 # GLOBALS:
 #   PROFILE
-#######################################
+########################################
 loco::custom_last(){
   local profile_backup="${PROFILE}"
   local profile_array=(${PROFILE})
@@ -130,12 +130,12 @@ loco::custom_last(){
   PROFILE="${profile_backup}"
 }
 
-#######################################
+########################################
 # Source the custom functions file
 # GLOBALS:
 #   PROFILE
 #   PROFILES_DIR
-#######################################
+########################################
 loco::custom_source(){
   local path="./${PROFILES_DIR}/${PROFILE}/custom.sh"
   
@@ -147,13 +147,13 @@ loco::custom_source(){
   fi
 }
 
-#######################################
+########################################
 # Merge custom functions
 # Arguments:
 #   $1 # a custom file to be merged from (A)
 #   $2 # a custom file to be merged with (B)
 #   $3 # a custom file to keep the result
-#######################################
+########################################
 loco::custom_merge(){
   local custom_from="${1-}"
   local custom_to="${2-}"

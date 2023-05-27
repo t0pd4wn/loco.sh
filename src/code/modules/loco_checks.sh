@@ -3,11 +3,11 @@
 # loco_checks.sh | checking functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Check if the current user is root
 # Output:
 #   ./src/temp/conf_is_start
-#######################################
+########################################
 loco::check_if_start(){
   # check if first start (stores $USER without sudo)
   if [ -f "./src/temp/conf_is_start" ]; then
@@ -20,7 +20,7 @@ loco::check_if_start(){
   fi
 }
 
-#######################################
+########################################
 # Check if the current user is root and source CURRENT_USER
 # Arguments:
 #   IS_ROOT
@@ -28,7 +28,7 @@ loco::check_if_start(){
 # Output:
 #   ./src/temp/conf_is_start
 #   ./src/temp/conf_CURRENT_USER
-#######################################
+########################################
 loco::check_if_root(){
   if [[ "${ROOT_YES}" == false ]]; then
     if [[ "${IS_ROOT}" -ne 0 ]]; then
@@ -50,14 +50,14 @@ loco::check_if_root(){
   fi
 }
 
-#######################################
+########################################
 # For macOS check if brew is installed or install it
 # GLOBALS:
 #   PACKAGE_ACTION_CMD
 #   PACKAGE_MANAGER
 #   PACKAGE_ACTION
 #   PACKAGE
-#######################################
+########################################
 loco::mac_has_brew(){
   # if on macOS
   if [[ "${LOCO_OSTYPE}" == "macos" ]];  then
@@ -72,13 +72,13 @@ loco::mac_has_brew(){
   fi
 }
 
-#######################################
+########################################
 # for macOS check if bash 4.* is installed or install it
 # GLOBALS:
 #   ACTION
 #   PACKAGE
 #   PACKAGE_MANAGER
-#######################################
+########################################
 loco::mac_has_bash(){
   # if bash version is equal to 3.x
   if [[ ${BASH_VERSINFO[0]} -eq 3 ]];  then
@@ -99,7 +99,7 @@ loco::mac_has_bash(){
   fi
 }
 
-#######################################
+########################################
 # Check $OSTYPE and defines current OS
 # GLOBALS:
 #   LOCO_OSTYPE
@@ -108,7 +108,7 @@ loco::mac_has_bash(){
 # Output:
 #   ./src/temp/globals.conf
 # Note : only methods from this file should be called.
-#######################################
+########################################
 loco::check_operating_system(){
   # if a linux platform
   if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -144,11 +144,11 @@ loco::check_operating_system(){
   _echo "OS_PREFIX=${OS_PREFIX}" >> "./src/temp/conf_OS_GLOBALS"
 }
 
-#######################################
+########################################
 # Check if dependencies are met
 # GLOBALS:
 #   LOCO_OS_VERSION
-#######################################
+########################################
 loco::check_dependencies(){
   if [[ $(command -v yq) ]]; then
     msg::say "yq is installed."

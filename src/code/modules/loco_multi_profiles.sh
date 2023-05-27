@@ -3,13 +3,13 @@
 # loco_merge_profiles.sh | loco.sh merge profiles functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Prepare .Multi folder for receiving other profiles
 # GLOBALS:
 #   PROFILES_DIR
 # Arguments:
 #   $1 # an array of profiles
-#######################################
+########################################
 loco::multi_prepare(){
   declare -a profiles
   profiles=("${@}")
@@ -29,12 +29,12 @@ loco::multi_prepare(){
   done
 }
 
-#######################################
+########################################
 # Copy profiles assets
 # GLOBALS:
 # Arguments:
 #   $1 # a profile name
-#######################################
+########################################
 loco::multi_assets(){
   local profile_arg="${1-}"
   local from="./${PROFILES_DIR}/${profile_arg}/assets"
@@ -46,12 +46,12 @@ loco::multi_assets(){
   fi
 }
 
-#######################################
+########################################
 # Merge profiles dotfiles
 # GLOBALS:
 # Arguments:
 #   $1 # "entry" or "exit"
-#######################################
+########################################
  loco::multi_dotfiles(){
   local profile_arg="${1-}"
   local from_path=./${PROFILES_DIR}/"${profile_arg}"/dotfiles
@@ -66,12 +66,12 @@ loco::multi_assets(){
   fi
  }
 
-#######################################
+########################################
 # Merge profiles yaml
 # GLOBALS:
 # Arguments:
 #   $1 # from profile
-#######################################
+########################################
  loco::multi_yaml(){
   local profile_arg="${1-}"
   local from_yaml=./${PROFILES_DIR}/"${profile_arg}"/profile.yaml
@@ -86,12 +86,12 @@ loco::multi_assets(){
   fi
  }
 
- #######################################
+ ########################################
 # Merge profiles custom functions files
 # GLOBALS:
 # Arguments:
 #   $1 # from profile
-#######################################
+########################################
 loco::multi_custom_functions(){
   local profile_arg="${1-}"
   local from_custom=./${PROFILES_DIR}/"${profile_arg}"/custom.sh

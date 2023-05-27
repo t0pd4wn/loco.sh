@@ -3,7 +3,7 @@
 # cli.sh | cli.sh functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Build cli file
 # note: echo is preferred to _echo here,
 # because it doesn't require su rights
@@ -13,7 +13,7 @@
 #   HELP_TEXT
 # Output:
 #   ./src/temp/cli.sh
-#######################################
+########################################
 cli::build(){
   local cli_file=./src/temp/cli.sh
   local joined_parameters
@@ -31,18 +31,18 @@ cli::build(){
   _echo "done" >> "${cli_file}"
 }
 
-#######################################
+########################################
 # Call the cli
 # Arguments:
 #   $@ // cli options
-#######################################
+########################################
 cli::call(){
   local cli_path=./src/temp/cli.sh
   local cli_args="${@-}"
   _source "${cli_path}" "${cli_args}"
 }
 
-#######################################
+########################################
 # Set cli options and GLOBALS
 # GLOBALS:
 #   CLI_OPT_PARAMETERS
@@ -50,7 +50,7 @@ cli::call(){
 #   HELP_TEXT
 # Arguments:
 #   $1 # the option associative array 
-#######################################
+########################################
 cli::define_option(){
   local -n opt_arr="$1"
   local opt_desc
@@ -75,11 +75,11 @@ cli::define_option(){
   HELP_TEXT+=("${hlp_txt}")
 }
 
-#######################################
+########################################
 # Print the help text.
 # GLOBALS:
 #   HELP_TEXT
-#######################################
+########################################
 cli::print_help(){
   local joined_help_text
   joined_help_text=$(IFS=; echo "${HELP_TEXT[*]}");
@@ -87,17 +87,17 @@ cli::print_help(){
   _echo "loco.sh ${EMOJI_LOGO}"
 }
 
-#######################################
+########################################
 # Print the version number.
 # Globals:
 #   EMOJI_LOGO
 #   VERSION
-#######################################
+########################################
 cli::print_version(){
   _echo "loco.sh ${EMOJI_LOGO} version ${VERSION}"
 }
 
-#######################################
+########################################
 # Register cli options
 # GLOBALS:
 #   ACTION
@@ -117,7 +117,7 @@ cli::print_version(){
 #   LOCO_YES
 #   ROOT_YES
 #   LOCO_DIST
-#######################################
+########################################
 cli::set_options(){
   declare -A action_opt_array
   action_opt_array=(

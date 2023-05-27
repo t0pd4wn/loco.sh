@@ -5,11 +5,11 @@
 
 set -eu
 
-#######################################
+########################################
 # Build a zip file from folder root
 # Output:
 #   dist/loco-dist.zip
-#######################################
+########################################
 build_release(){
 	if ! sudo rm -fr ./src/temp/*; then
 		echo "Can not remove temp files" >&2

@@ -3,19 +3,19 @@
 # utils.sh | utils functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Removes temp files.
-#######################################
+########################################
 utils::clean_temp(){
   utils::remove './src/temp/*'
 }
 
-#######################################
+########################################
 # Display a countdown
 # Arguments:
 #   $1 # message to be displayed
 #   $2 # countdown duration
-#######################################
+########################################
 utils::countdown(){
   local message="${1-}"
   local duration="${2-}"
@@ -30,14 +30,14 @@ utils::countdown(){
   done
 }
 
-#######################################
+########################################
 # Compare two files
 # Arguments:
 #   $1 # /path/to/a/file
 #   $2 # /path/to/a/second/file
 # Output:
 #    a boolean
-#######################################
+########################################
 utils::compare(){
   local file_A="${1-}"
   local file_B="${2-}"
@@ -63,12 +63,12 @@ utils::compare(){
   fi
 }
 
-#######################################
+########################################
 # Dump a bash function
 # Arguments:
 #   $1 # a function name"
 #   $2 # /path/to/a/script.sh
-#######################################
+########################################
 utils::dump_bash_function(){
   local name="${1-}"
   local path="${2-}"
@@ -82,12 +82,12 @@ utils::dump_bash_function(){
   fi
 }
 
-#######################################
+########################################
 # Dump a bash function name
 # Arguments:
 #   $1 # a function name"
 #   $2 # /path/to/a/script.sh
-#######################################
+########################################
 utils::find_filename(){
   local name="${1-}"
   local path="${2-}"
@@ -101,11 +101,11 @@ utils::find_filename(){
   fi
 }
 
-#######################################
+########################################
 # Get the function names in bash script
 # Arguments:
 #   $1 # /path/to/a/file
-#######################################
+########################################
 utils::list_bash_functions(){
   local file="${1-}"
   local grep_arg='^[[:space:]]*([[:alnum:]_]+[[:space:]]*\(\)+)'
@@ -115,12 +115,12 @@ utils::list_bash_functions(){
   fi
 }
 
-#######################################
+########################################
 # Get the last part of a string
 # Arguments:
 #   $1 # a string
 #   $2 # a delimeter
-#######################################
+########################################
 utils::get_string_last(){
   local string="${1-}"
   local delimeter="${2-}"
@@ -130,11 +130,11 @@ utils::get_string_last(){
   fi
 }
 
-#######################################
+########################################
 # Escape special characters in a path
 # Arguments:
 #   $1 # a path with special characters
-#######################################
+########################################
 utils::escape_string(){
   local string="${@-}"
   if ! printf %q "${string}"; then
@@ -142,11 +142,11 @@ utils::escape_string(){
   fi
 }
 
-#######################################
+########################################
 # Encode a path to URI
 # Arguments:
 #   $1 # a path
-#######################################
+########################################
 utils::encode_URI(){
   local string="${@-}"
   if ! echo "${string}"| perl -MURI::file -e 'print URI::file->new(<STDIN>)'; then
@@ -154,11 +154,11 @@ utils::encode_URI(){
   fi
 }
 
-#######################################
+########################################
 # Decode an URI to a path
 # Arguments:
 #   $1 # an URI
-#######################################
+########################################
 utils::decode_URI(){
   local string="${@-}"
   if ! echo ''"${string}"'' | perl -pe 's/\%(\w\w)/chr hex $1/ge'; then
@@ -166,12 +166,12 @@ utils::decode_URI(){
   fi
 }
 
-#######################################
+########################################
 # Get a file from an URL into a folder.
 # Arguments:
 #   $1 # a folder path
 #   $2 # an url
-#######################################
+########################################
 utils::get_url(){
   local path="${1-}"
   local url="${2-}"
@@ -186,11 +186,11 @@ utils::get_url(){
   fi
 }
 
-#######################################
+########################################
 # Return domain from an url
 # Arguments:
 #   $1 # an url
-#######################################
+########################################
 utils::get_url_domain(){
   local url="${1-}"
 
@@ -199,13 +199,13 @@ utils::get_url_domain(){
   fi
 }
 
-#######################################
+########################################
 # Add a transparent image over another
 # Arguments:
 #   $1 # a normal image path
 #   $2 # a transparent png path
 #   $3 # is an optional output pathname
-#######################################
+########################################
 utils::image_overlay(){
   local img_path="${1-}"
   local ovl_path="${2-}"
@@ -251,14 +251,14 @@ utils::image_overlay(){
   fi
 }
 
-#######################################
+########################################
 # List files and folders within an array
 # Arguments:
 #   $1 # a normative array name
 #   $2 # a path
 #   $3 # an option [clear, hidden, all (default)]
 # 
-#######################################
+########################################
 utils::list(){
   local -n list_name="${1-}"
   local list_path="${2-}"
@@ -292,11 +292,11 @@ utils::list(){
   shopt -u nullglob
 }
 
-#######################################
+########################################
 # Remove a path
 # Arguments:
 #   $1 # a path
-#######################################
+########################################
 utils::remove(){
   local path="${@-}"
   declare -a clean_path
@@ -320,11 +320,11 @@ utils::remove(){
   fi
 }
 
-#######################################
+########################################
 # Remove a file
 # Arguments:
 #   $1 # a file path
-#######################################
+########################################
 utils::remove_file(){
   local path="${@-}"
 
@@ -345,12 +345,12 @@ utils::remove_file(){
   fi
 }
 
-#######################################
+########################################
 # Remove a string from a file
 # Arguments:
 #   $1 # a string
 #   $2 # a file path
-#######################################
+########################################
 utils::remove_string_in_file(){
   local string="${1-}"
   local file="${2-}"
@@ -360,7 +360,7 @@ utils::remove_string_in_file(){
   fi
 }
 
-#######################################
+########################################
 # Replace a text block within a file
 # Notes :
 #   as the text block is a regex pattern within perl
@@ -372,7 +372,7 @@ utils::remove_string_in_file(){
 #   $2 # template last part (end of searched string)
 #   $3 # template content
 #   $4 # file to be modified path 
-#######################################
+########################################
 utils::replace_block_in_file(){
   local template_first_part="${1-}"
   local template_last_part="${2-}"
@@ -387,13 +387,13 @@ utils::replace_block_in_file(){
   fi
 }
 
-#######################################
+########################################
 # Cut a string
 # Arguments:
 #   $1 # a string ex: "Hello/world"
 #   $2 # delimeter ex: "/"
 #   $3 # part to be retrieved ex: "1"
-#######################################
+########################################
 utils::string_cut(){
   local string="${1-}"
   local delimeter="${2-}"
@@ -405,13 +405,13 @@ utils::string_cut(){
   fi
 }
 
-#######################################
+########################################
 # Cut a string (reverse)
 # Arguments:
 #   $1 # a string ex: "Hello/world"
 #   $2 # delimeter ex: "/"
 #   $3 # part to be retrieved ex: "3"
-#######################################
+########################################
 utils::string_cut_rev(){
   local string="${1-}"
   local delimeter="${2-}"
@@ -423,13 +423,13 @@ utils::string_cut_rev(){
   fi
 }
 
-#######################################
+########################################
 # Replace a string within a file
 # Arguments:
 #   $1 # searched string
 #   $2 # replace string
 #   $4 # file to be modified path 
-#######################################
+########################################
 utils::replace_string_in_file(){
   local search="${1-}"
   local replace="${2-}"
@@ -440,18 +440,18 @@ utils::replace_string_in_file(){
   fi
 }
 
-#######################################
+########################################
 # Set system clock (needed in  virtual hosts)
-#######################################
+########################################
 utils::set_clock(){
   if ! sudo hwclock --hctosys; then
     _error "Unable to set clock"
   fi
 }
 
-#######################################
+########################################
 # Print a timestamp.
-#######################################
+########################################
 utils::timestamp(){
   # print current time
   date +"%Y-%m-%d_%H-%M-%S"
@@ -462,7 +462,7 @@ utils::timestamp(){
 # Arguments:
 #   $1 # a path
 #   $2 # an url
-#######################################
+########################################
 # utils::wget(){
 #   local path="${1-}"
 #   local url="${2-}"

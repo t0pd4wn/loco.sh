@@ -3,7 +3,7 @@
 # loco_terminal.sh | loco.sh terminal functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Manage terminal style actions.
 # note : Setting dconf for a specific user thorugh terminal,
 # can only be achieved with root rights (su, not sudo).
@@ -12,7 +12,7 @@
 #   PROFILES_DIR
 #   ACTION
 #   LOCO_DIST
-#######################################
+########################################
 loco::term_conf_manager(){
   local gnome_path="/org/gnome/terminal/legacy/profiles:/"
 
@@ -28,7 +28,7 @@ loco::term_conf_manager(){
   fi
 }
 
-#######################################
+########################################
 # Print the dconf configuration command in finish.sh
 # note : scheme to dump profile
 # dconf list /org/gnome/terminal/legacy/profiles:/
@@ -36,7 +36,7 @@ loco::term_conf_manager(){
 #   $1 // dconf gnome path
 #   $2 // dconf gnome UUID
 #   $3 // terminal.conf file
-#######################################
+########################################
 loco::term_conf_record_command(){
   local gnome_path="${1-}"
   local gnome_UUID="${2-}"
@@ -49,7 +49,7 @@ loco::term_conf_record_command(){
   fi
 }
 
-#######################################
+########################################
 # Build terminal style file.
 # note : Setting dconf for a specific user thorugh terminal,
 # can only be achieved with root rights (su, not sudo).
@@ -59,7 +59,7 @@ loco::term_conf_record_command(){
 #   PROFILES_DIR
 #   LOCO_DIST
 #   THEME
-#######################################
+########################################
 loco::term_conf_set(){
   # check if current loco is a remote installation
   if [[ "${LOCO_DIST}" == true ]]; then local dist_path=loco-dist/; fi

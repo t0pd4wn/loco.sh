@@ -37,14 +37,14 @@ _source ./src/code/modules/loco_terminal.sh
 _source ./src/code/modules/loco_watermark.sh
 _source ./src/code/modules/loco_yaml.sh
 
-#######################################
+########################################
 # main
 # GLOBALS:
 #   ACTION
 #   CONFIG_PATH
 # Arguments:
 #   $@ # script options
-#######################################
+########################################
 main(){
   # source the globals from loco::check_os
   _source "./src/temp/conf_OS_GLOBALS"

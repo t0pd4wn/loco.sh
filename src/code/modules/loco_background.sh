@@ -3,12 +3,12 @@
 # loco_background.sh | loco.sh background functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Prepare background installation
 # GLOBALS:
 #   ACTION
 #   INSTANCE_YAML
-#######################################
+########################################
 loco::background_manager(){
   local local_bgs_path=./src/assets/backgrounds/
   local previous_bg_url
@@ -59,7 +59,7 @@ loco::background_manager(){
   fi
 }
 
-#######################################
+########################################
 # Set the selected loco background
 # GLOBALS:
 #   BACKGROUND_URL
@@ -68,7 +68,7 @@ loco::background_manager(){
 #   PROFILES_YAML
 # Arguments:
 #   $1 # a normative array name
-#######################################
+########################################
 loco::set_background(){
   local ab_path=$(pwd)
   local assets_path="${PROFILES_DIR}"/"${PROFILE}"/assets/
@@ -100,13 +100,13 @@ loco::set_background(){
   fi
 }
 
-#######################################
+########################################
 # Unset the loco background and set a default or legacy one
 # GLOBALS:
 #   LOCO_OSTYPE
 #   INSTANCE_YAML
 #   SHORT_OS_VERSION
-#######################################
+########################################
 loco::unset_background(){
   local os_default_bg
   local os_path
@@ -137,14 +137,14 @@ loco::unset_background(){
   _echo "${img_path}" 
 }
 
-#######################################
+########################################
 # Call the themes prompt
 # GLOBALS:
 #   LOCO_OSTYPE
 #   SHORT_OS_VERSION
 # Arguments:
 #   $1 # a background path
-#######################################
+########################################
 loco::register_background(){
   local background_path="${@-}"
   # ubuntu related
@@ -166,12 +166,12 @@ loco::register_background(){
   fi
 }
 
-#######################################
+########################################
 # Find a local background and save it
 # Arguments:
 #   $1 # a background path
 #   $2 # absolute path
-#######################################
+########################################
 loco::get_background_path(){
   local bg_path="${1-}"
   local ab_path="${2-}"
@@ -188,12 +188,12 @@ loco::get_background_path(){
   _echo "${img_path}"
 }
 
-#######################################
+########################################
 # Download a background and save it
 # Arguments:
 #   $1 # a background url
 #   $2 # absolute path
-#######################################
+########################################
 loco::get_background_url(){
   local bg_url="${1-}"
   local ab_path="${2-}"
@@ -220,12 +220,12 @@ loco::get_background_url(){
   _echo "${img_path}"
 }
 
-#######################################
+########################################
 # Find the current background and save it
 # GLOBALS:
 #   LOCO_OSTYPE
 #   INSTANCE_YAML
-#######################################
+########################################
 loco::get_current_background(){
   local legacy_bg=$(yaml::get "${INSTANCE_YAML}" ".style.legacy_background")
   local loco_backgrounds_path="src/assets/backgrounds/"
@@ -258,14 +258,14 @@ loco::get_current_background(){
   fi
 }
 
-#######################################
+########################################
 # Download a duckduckgo image
 # note : very unstable due to duckduckgo path rewrite
 # GLOBALS:
 #   LOCO_OSTYPE
 # Arguments:
 #   $1 # a duckduckgo image url 
-#######################################
+########################################
 loco::get_duckduckgo_image(){
   local bg_url="${1-}"
   local img_basename=$(basename "${bg_url}")

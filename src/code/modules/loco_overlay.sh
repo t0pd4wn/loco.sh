@@ -3,7 +3,7 @@
 # loco_background.sh | loco.sh background functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Prepare custom functions execution
 # GLOBALS:
 #   ACTION
@@ -12,7 +12,7 @@
 #   PROFILES_DIR
 # Arguments:
 #   $1 # the background path
-#######################################
+########################################
 loco::overlay_manager(){
   local bg_path="${1-}"
   local ab_path=$(pwd)
@@ -60,12 +60,12 @@ loco::overlay_manager(){
   fi
 }
 
-#######################################
+########################################
 # Apply an overlay to an image
 # Arguments:
 #   $1 // a trnasparent overlay path
 #   $1 // a background path
-#######################################
+########################################
 loco::apply_overlay(){
   local ovl_path="${1-}"
   local bg_path="${2-}"

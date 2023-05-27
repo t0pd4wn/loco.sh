@@ -3,13 +3,13 @@
 # cmd.sh | cmd.sh functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Register commands to finish.sh
 # Arguments:
 #   $1 # a command
 # Output:
 #   src/temp/finish.sh
-#######################################
+########################################
 cmd::record(){
   local command="${@-}"
   local script_path="./src/temp/finish.sh"
@@ -22,13 +22,13 @@ cmd::record(){
   fi
 }
 
-#######################################
+########################################
 # Run a command as current user
 # GLOBALS:
 #   CURRENT_USER
 # Arguments:
 #   $1 # a command
-#######################################
+########################################
 cmd::run_as_user(){
   local command="${@-}"
 
@@ -38,13 +38,13 @@ cmd::run_as_user(){
   fi
 }
 
-#######################################
+########################################
 # Run a command
 # GLOBALS:
 #   CURRENT_USER
 # Arguments:
 #   $1 # a command
-#######################################
+########################################
 cmd::execute(){
   local command="${@-}"
 

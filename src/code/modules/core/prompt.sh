@@ -3,7 +3,7 @@
 # pompt.sh | prompt.sh functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Build a prompt shell file
 # Arguments:
 #   $1 # $ACTION (for readability)
@@ -11,7 +11,7 @@
 #   $3 # prompt message
 # Output:
 #   ./src/prompts/prompt_$1.sh
-#######################################
+########################################
 prompt::build(){
   local local_GLOBAL="${1-}"
   local local_dir="${2-}"
@@ -57,11 +57,11 @@ prompt::build(){
   _echo "done" >> "${prompt_path}"
 }
 
-#######################################
+########################################
 # Call a prompt file
 # Arguments:
 #   $1 # path_suffix
-#######################################
+########################################
 prompt::call(){
   local path_suffix="${1-}"
   # source built file

@@ -3,7 +3,7 @@
 # loco_startup.sh | loco.sh startup functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Call the startup functions.
 # Globals:
 #   CONFIG_PATH
@@ -11,7 +11,7 @@
 #   ACTION
 # Arguments:
 #   $@ just in case
-#######################################
+########################################
 loco::startup(){
   # check dependencies (yaml)
   loco::check_dependencies

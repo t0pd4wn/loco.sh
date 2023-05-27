@@ -3,11 +3,11 @@
 # loco_prompts.sh | loco.sh prompts calls
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Call the actions prompt
 # Globals:
 #   ACTION
-#######################################
+########################################
 loco::prompt_action(){
   if [ -z "${ACTION}" ]; then
     prompt::build "ACTION" "./src/code/actions" "Choose an action :" true
@@ -15,7 +15,7 @@ loco::prompt_action(){
   fi
 }
 
-#######################################
+########################################
 # Call the backgrounds prompt
 # Globals:
 #   ACTION
@@ -23,7 +23,7 @@ loco::prompt_action(){
 #   INSTANCE_YAML
 #   PROFILE_YAML
 #   USER_ANSWER
-#######################################
+########################################
 loco::prompt_background(){
   local profile_bkg
   profile_bkg=$(yaml::get "${PROFILE_YAML}" '.style.background')
@@ -53,12 +53,12 @@ loco::prompt_background(){
   fi
 }
 
-#######################################
+########################################
 # Call the overlays prompt
 # Globals:
 #   style_overlay
 #   OVERLAY
-#######################################
+########################################
 loco::prompt_overlay(){
   local style_overlay
   style_overlay=$(yaml::get_child_values '.style.overlay')
@@ -69,11 +69,11 @@ loco::prompt_overlay(){
   fi
 }
 
-#######################################
+########################################
 # Call the profiles prompt
 # Globals:
 #   PROFILE
-#######################################
+########################################
 loco::prompt_profile(){
   # if no $PROFILE option is set
   if [ -z "${PROFILE}" ]; then
@@ -94,7 +94,7 @@ loco::prompt_profile(){
   fi
 }
 
-#######################################
+########################################
 # Call the themes prompt
 # Globals:
 #   OS_PREFIX
@@ -102,7 +102,7 @@ loco::prompt_profile(){
 #   INSTANCE_YAML
 #   PROFILE_YAML
 #   THEME
-#######################################
+########################################
 loco::prompt_theme(){
   local profile_style=$(yaml::get "${PROFILE_YAML}" '.style.colors.theme')
   local local_theme=./"${PROFILES_DIR}"/"${PROFILE}"/assets/terminal.conf

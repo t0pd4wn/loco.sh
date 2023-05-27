@@ -3,7 +3,7 @@
 # loco_meta.sh | loco.sh meta functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # apply the defined cmd over the package
 # GLOBALS:
 #   LOCO_OSTYPE
@@ -11,7 +11,7 @@
 #   PACKAGE_MANAGER
 #   PACKAGE_ACTION
 #   PACKAGE
-#######################################
+########################################
 loco::package_action(){
 
   # if there isn't a specific command, build one
@@ -31,7 +31,7 @@ loco::package_action(){
   PACKAGE_ACTION_CMD=""
 }
 
-#######################################
+########################################
 # meta package: prepare package
 # GLOBALS:
 #   PACKAGE_MANAGER
@@ -40,7 +40,7 @@ loco::package_action(){
 #   PACKAGE_ACTION_CMD
 #   PACKAGE
 #   ACTION
-#######################################
+########################################
 loco::package_prepare(){
   msg::debug "Package ..."
   msg::debug ${PACKAGE_MANAGER-}
@@ -108,7 +108,7 @@ loco::package_prepare(){
   PACKAGE_MANAGER_TEST_CMD=""
 }
 
-#######################################
+########################################
 # meta package manager: prepare package manager
 # GLOBALS:
 #   PROFILE
@@ -117,7 +117,7 @@ loco::package_prepare(){
 #   $1 # defines the packages type (OS specific or not)
 # Output:
 #   Writes the bash variables file from yaml 
-#######################################
+########################################
 loco::package_managers(){
   msg::debug "package_manager ..."
   # assign the $1 package managers

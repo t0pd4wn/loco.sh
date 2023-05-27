@@ -3,7 +3,7 @@
 # loco_yaml.sh | loco.sh yaml functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Assign yaml paths to globals.
 # Globals:
 #   PROFILE
@@ -12,18 +12,18 @@
 #   PROFILES_DIR
 #   PROFILE_YAML
 #   INSTANCE_YAML
-#######################################
+########################################
 loco::yaml_init(){
   PROFILE_YAML="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
   INSTANCE_YAML=/"${OS_PREFIX}"/"${CURRENT_USER}"/.loco.yml
 }
 
-#######################################
+########################################
 # Merge two yaml files together
 # Arguments:
 #   $1 # a yaml to be merged from (A)
 #   $2 # a yaml to be merged with (B)
-#######################################
+########################################
 loco::yaml_merge(){
   local yaml_from="${1-}"
   local yaml_to="${2-}"

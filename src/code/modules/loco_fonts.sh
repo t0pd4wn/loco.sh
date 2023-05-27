@@ -3,7 +3,7 @@
 # loco_fonts.sh | loco.sh fonts functions
 #-------------------------------------------------------------------------------
 
-#######################################
+########################################
 # Manages fonts installation and removal
 # GLOBALS:
 #   IS_NEW_FONT
@@ -14,7 +14,7 @@
 #   CURRENT_USER
 # Output:
 #   /"${OS_PREFIX}"/"${CURRENT_USER}"/.fonts/[fonts]
-#######################################
+########################################
 loco::fonts_manager(){
   local font
   local fonts_path
@@ -64,14 +64,14 @@ loco::fonts_manager(){
   fi
 }
 
-#######################################
+########################################
 # Fonts install yaml procedure
 # Arguments:
 #   $1 # fonts destination path
 #   $2 # a font url
 # Output :
 #   Download font in $1
-#######################################
+########################################
 loco::fonts_action_install_yaml(){
   local fonts_path="${1-}"
   local font="${2-}"
@@ -84,14 +84,14 @@ loco::fonts_action_install_yaml(){
   yaml::add "${INSTANCE_YAML}" ".style.fonts.urls" "${font}"
 }
 
-#######################################
+########################################
 # Fonts remove yaml procedure
 # Arguments:
 #   $1 # fonts destination path
 #   $2 # a font url
 # Output:
 #   Remove font from $1
-#######################################
+########################################
 loco::fonts_action_remove_yaml(){
   local fonts_path="${1-}"
   local font="${2-}"
@@ -116,7 +116,7 @@ loco::fonts_action_remove_yaml(){
   loco::fonts_cache_refresh "${fonts_path}"
 }
 
-#######################################
+########################################
 # Fonts install local assets procedure
 # GLOBALS:
 #   PROFILE
@@ -125,7 +125,7 @@ loco::fonts_action_remove_yaml(){
 #   $1 # fonts destination path
 # Output:
 #   Copy fonts in $1
-#######################################
+########################################
 loco::fonts_action_install_local(){
   local fonts_path="${1-}"
   local from_path=./"${PROFILES_DIR}"/"${PROFILE}"/assets/fonts/*
@@ -133,7 +133,7 @@ loco::fonts_action_install_local(){
   _cp "${from_path}" "${fonts_path}"
 }
 
-#######################################
+########################################
 # Fonts remove local assets procedure
 # GLOBALS:
 #   PROFILE
@@ -142,7 +142,7 @@ loco::fonts_action_install_local(){
 #   $1 # fonts destination path
 # Output:
 #   Remove fonts in $1
-#######################################
+########################################
 loco::fonts_action_remove_local(){
   local fonts_path="${1-}"
   local font_name
@@ -160,13 +160,13 @@ loco::fonts_action_remove_local(){
   done
 }
 
-#######################################
+########################################
 # Font removal
 # Arguments:
 #   $1 # a font destination path
 # Output:
 #   Remove $1
-#######################################
+########################################
 loco::font_unset(){
   local font_path="${1-}"
   if [[ ! -f "${font_path}" ]]; then
@@ -176,11 +176,11 @@ loco::font_unset(){
   fi
 }
 
-#######################################
+########################################
 # Refresh fonts cache
 # Arguments:
 #   $1 # fonts destination path
-#######################################
+########################################
 loco::fonts_cache_refresh(){
   local fonts_path="${1-}"
   # if on macos return 0 as this is not supported
