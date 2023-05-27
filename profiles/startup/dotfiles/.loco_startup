@@ -1,0 +1,61 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# .loco_startup | Provide terminal startup steps (first, everytime)
+#-------------------------------------------------------------------------------
+
+# Below scripts provide functions to trigger commands, when terminal is open.
+# The inital check is made upon VPN connection status. 
+
+# To set this up properly
+# 1. start your vpn connection.
+# 2. launch `ip addr show` in the terminal.
+# 3. check for your vpn connection name (usually last in the list ("tun0" for OpenVPN)).
+# 4. in the `is_started` function below change "VPN_identifier" for this name.
+# 5. optional : if you are using the "vpn(startup)" loco.sh profile, 
+# in `wireguard_connect` or `openvpn_connect` change your vpn configurations paths.
+# 6. last, you need to set your terminal as a startup application.
+# For Ubuntu users : 
+# - open the 'Startup applications preferences' from the applications.
+# For MacOS users : 
+# - open then Apple menu, then 'System Settings', then 'General' then 'Login Items'.
+# From now on, accessing your system will open the terminal and connect you to your VPN.
+
+########################################
+# Called from .bashrc ; checks if VPN is connected
+# note : change "VPN_identifier" for your VPN identifier 
+# (something that distinguishes it in `ip addr show`)
+########################################
+is_started(){
+  local vpn_identifier="VPN_identifier"
+  local test=$(ip addr show | grep ${vpn_identifier})
+  if [[ -n ${test} ]] ; then
+    # started
+    shell_start
+  else
+    # not started
+    session_start
+    shell_start
+  fi
+}
+
+########################################
+# Called first time terminal is opened
+# !if a VPN identifier is set properly in `is_started`!
+########################################
+session_start(){
+  echo -e "Installed with loco.sh \U1f335. You can edit this text in ~/.loco_startup"
+  # below file contains loco.sh startup commands (from other profiles)
+  source .loco_start_cmd
+  # add some additional session commands below (keyboard configurations, mounts...)
+}
+
+########################################
+# Called every time terminal is opened
+########################################
+shell_start(){
+  # print a cactus
+  echo -e "\U1f335";
+  # below file contains loco.sh shell commands (from other profiles)
+  source .loco_shell_cmd
+  # add some shell commands below
+}

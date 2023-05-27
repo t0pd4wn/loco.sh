@@ -1,0 +1,52 @@
+########################################
+# Set up a random OpenVPN connection
+########################################
+openvpn_connect(){
+  # put your openvpn login file in the path below
+  local openvpn_path="/etc/openvpn"
+  # put your openvpn configurations in the path below
+  local config_path="${openvpn_path}/confs"
+  declare -a options_array
+  options_array=($(sudo ls "${config_path}")) 
+
+  # get a random domain
+  local connexion_domain=$(shuffle_domains "${options_array[@]}")
+  local config_arg="--config ${config_path}/${connexion_domain}"
+  local login_arg="--auth-user-pass ${openvpn_path}/login.conf"
+
+  # connect to vpn
+  sudo openvpn ${config_arg} ${login_arg}
+}
+
+########################################
+# Set up a random wireguard connection
+########################################
+wireguard_connect(){
+  # put your wireguard configurations in the path below
+  local config_path="/etc/wireguard/confs"
+  declare -a options_array
+  options_array=($(sudo ls "${config_path}")) 
+
+  # get a random domain
+  local connection_domain=$(shuffle_domains "${options_array[@]}")
+  
+  # connect to vpn
+  wg-quick up "${config_path}/${connection_domain}"
+}
+
+########################################
+# Return a random array value
+# Argument:
+#   $1 # an array of vpn files
+########################################
+shuffle_domains(){
+  local -a opt_arr=("$@")
+  local options_length=$(echo ${#opt_arr[@]})
+  local random_num=$RANDOM
+ 
+  # provide a number between 0 and options_length
+  local random_index=$(echo $((0 + ${random_num} % ${options_length})))
+
+  # return the corresponding indexed array reference
+  echo ${opt_arr[${random_index}]}
+}

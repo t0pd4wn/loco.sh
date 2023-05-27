@@ -1,0 +1,9 @@
+packages:
+  macos:
+    brew:
+      - openvpn
+      - wireguard
+  ubuntu:
+    apt:
+      - openvpn
+      - wireguard
