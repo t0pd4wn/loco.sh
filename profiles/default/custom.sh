@@ -1,6 +1,6 @@
 #!bin/bash
 #-------------------------------------------------------------------------------
-# custom.sh | custom user functions
+# custom.sh | profile custom functions (execute as root)
 #-------------------------------------------------------------------------------
 
 # macOS related
