@@ -72,7 +72,7 @@ loco::custom_entry(){
   local profile_array_length="${#profile_array[@]}"
 
   # source custom.sh
-  msg::print "Sourcing " "${PROFILE}" " entry custom functions."
+  msg::say "Sourcing " "${PROFILE}" " entry custom functions."
 
   # reverse the array sequence so to execute commands recursively
   for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
@@ -95,7 +95,7 @@ loco::custom_exit(){
   local profile_array_length="${#profile_array[@]}"
 
   # source custom.sh
-  msg::print "Sourcing " "${PROFILE}" " exit custom functions."
+  msg::saay "Sourcing " "${PROFILE}" " exit custom functions."
 
   # reverse the array sequence so to execute commands recursively
   for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
@@ -118,7 +118,7 @@ loco::custom_last(){
   local profile_array_length="${#profile_array[@]}"
 
   # source custom.sh
-  msg::print "Sourcing " "${PROFILE}" " last custom functions."
+  msg::say "Sourcing " "${PROFILE}" " last custom functions."
 
   # reverse the array sequence so to execute commands recursively
   for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
@@ -157,6 +157,7 @@ loco::custom_source(){
 loco::custom_merge(){
   local custom_from="${1-}"
   local custom_to="${2-}"
+  local custom_file="./src/temp/custom.tmp"
   local prev
   local new
   local is_same
@@ -167,6 +168,11 @@ loco::custom_merge(){
   new_functions=($(utils::list_bash_functions "${custom_from}"))
   prev_functions=($(utils::list_bash_functions "${custom_to}"))
 
+  # remove temp file before text manipulations
+  if [[ -f "${custom_file}" ]]; then
+    utils::remove "${custom_file}"
+  fi
+
   for function in "${new_functions[@]}"; do
     if [[ "${prev_functions[*]}" =~ "${function}" ]]; then
       # function exists in file
@@ -175,16 +181,24 @@ loco::custom_merge(){
 
       if [[ "${new}" == "${prev}" ]]; then
         # functions are identical
-        _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+        _echo $"${function}(){" >> "${custom_file}"
+        # regular echo, because custom functions may hold escaped characters
+        echo "${new}" >> "${custom_file}"
+        _echo "}" >> "${custom_file}"
       else
-        # functions are different
-        prev="${prev}\n${new}"
-        _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+        _echo $"${function}(){" >> "${custom_file}"
+        # regular echo, because custom functions may hold escaped characters
+        echo "${prev}" >> "${custom_file}"
+        echo "${new}" >> "${custom_file}"
+        _echo "}" >> "${custom_file}"
       fi
     else
       # function doesn't exist
       new=$(utils::dump_bash_function "${function}" "${custom_from}")
-      _echo "${function}(){\n${new}\n}\n" >> ./src/temp/custom.tmp
+      _echo $"${function}(){" >> "${custom_file}"
+      # regular echo, because custom functions may hold escaped characters
+      echo "${new}" >> "${custom_file}"
+      _echo "}" >> "${custom_file}"
     fi
   done
 
@@ -196,13 +210,47 @@ loco::custom_merge(){
     else
       # if not, copy the function
       prev=$(utils::dump_bash_function "${function}" "${custom_to}")
-      _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+      # utils::remove_textblock_in_file "./src/temp/custom.tmp" "${function}(){" "}"
+      # _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+      _echo $"${function}(){" >> ./src/temp/custom.tmp
+      # regular echo, because custom functions may hold escaped characters
+      echo "${prev}" >> ./src/temp/custom.tmp
+      _echo "}" >> ./src/temp/custom.tmp
     fi
   done
 
-  # replace dest file with cleaned temp one
+  # replace destination file with cleaned temporary one
   utils::remove "${custom_to}"
   utils::replace_string_in_file '";' '"' ./src/temp/custom.tmp
   utils::replace_string_in_file 'fi;' 'fi' ./src/temp/custom.tmp
   _cp ./src/temp/custom.tmp "${custom_to}"
+}
+
+
+#######################################
+# Add instructions to ""
+# Arguments:
+#   $1 # a custom file to be merged from (A)
+#   $2 # a custom file to be merged with (B)
+#   $3 # a custom file to keep the result
+########################################
+loco::custom_add_to_start(){
+  local instruction="${@-}"
+  local file_path="/home/"${CURRENT_USER}"/.loco_startup"
+  local start_function="session_start"
+  local start_function_body
+
+  declare -a start_functions
+  declare -a prev_functions
+
+  # list functions from both files
+  start_functions=($(utils::list_bash_functions "${custom_from}"))
+
+  for function in "${start_functions[@]}"; do
+    echo $function
+  done
+
+  start_function_body=$(utils::dump_bash_function "${start_function}" "${file_path}") 
+
+  echo ${start_function_body}
 }
