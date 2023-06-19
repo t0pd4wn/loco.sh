@@ -95,7 +95,7 @@ loco::custom_exit(){
   local profile_array_length="${#profile_array[@]}"
 
   # source custom.sh
-  msg::saay "Sourcing " "${PROFILE}" " exit custom functions."
+  msg::say "Sourcing " "${PROFILE}" " exit custom functions."
 
   # reverse the array sequence so to execute commands recursively
   for (( i = "${profile_array_length}"-1; i >= 0; i-- )); do
@@ -181,11 +181,14 @@ loco::custom_merge(){
 
       if [[ "${new}" == "${prev}" ]]; then
         # functions are identical
+        # dump to temp file
         _echo $"${function}(){" >> "${custom_file}"
         # regular echo, because custom functions may hold escaped characters
         echo "${new}" >> "${custom_file}"
         _echo "}" >> "${custom_file}"
       else
+
+        # dump to temp file
         _echo $"${function}(){" >> "${custom_file}"
         # regular echo, because custom functions may hold escaped characters
         echo "${prev}" >> "${custom_file}"
@@ -195,6 +198,8 @@ loco::custom_merge(){
     else
       # function doesn't exist
       new=$(utils::dump_bash_function "${function}" "${custom_from}")
+
+      # dump to temp file
       _echo $"${function}(){" >> "${custom_file}"
       # regular echo, because custom functions may hold escaped characters
       echo "${new}" >> "${custom_file}"
@@ -210,8 +215,8 @@ loco::custom_merge(){
     else
       # if not, copy the function
       prev=$(utils::dump_bash_function "${function}" "${custom_to}")
-      # utils::remove_textblock_in_file "./src/temp/custom.tmp" "${function}(){" "}"
-      # _echo "${function}(){\n${prev}\n}\n" >> ./src/temp/custom.tmp
+
+      # dump to temp file
       _echo $"${function}(){" >> ./src/temp/custom.tmp
       # regular echo, because custom functions may hold escaped characters
       echo "${prev}" >> ./src/temp/custom.tmp
@@ -226,31 +231,91 @@ loco::custom_merge(){
   _cp ./src/temp/custom.tmp "${custom_to}"
 }
 
-
 #######################################
-# Add instructions to ""
+# Add instructions to "/.loco_startup" "session_start"
 # Arguments:
-#   $1 # a custom file to be merged from (A)
-#   $2 # a custom file to be merged with (B)
-#   $3 # a custom file to keep the result
+#   $1 # a command to be written
 ########################################
 loco::custom_add_to_start(){
   local instruction="${@-}"
-  local file_path="/home/"${CURRENT_USER}"/.loco_startup"
+  local file_path="${INSTANCE_PATH}/dotfiles/.loco_startup"
   local start_function="session_start"
   local start_function_body
 
-  declare -a start_functions
-  declare -a prev_functions
+  start_function_body=$(utils::dump_bash_function "${start_function}" "${file_path}")
 
-  # list functions from both files
-  start_functions=($(utils::list_bash_functions "${custom_from}"))
+  # remove previous function block
+  utils::remove_textblock_in_file "${file_path}" "#session_start##########################" "}" 
 
-  for function in "${start_functions[@]}"; do
-    echo $function
-  done
+  # write the function anew
+  _echo "\n#session_start##########################" >> "${file_path}"
+  _echo "# Called first time terminal is opened" >> "${file_path}"
+  _echo "# !if a VPN identifier is set properly in 'is_started'!" >> "${file_path}"
+  _echo "# note: this function can be manipulated by loco.sh" >> "${file_path}"
+  _echo "########################################" >> "${file_path}"
+  _echo $"session_start(){" >> "${file_path}"
+  # regular echo as this block can contain escaped characters
+  echo "${start_function_body}" >> "${file_path}"
+  echo "    ${instruction}" >> "${file_path}"
+  _echo $"}" >> "${file_path}"
+}
 
-  start_function_body=$(utils::dump_bash_function "${start_function}" "${file_path}") 
+#######################################
+# Add instructions to "/.loco_startup" "session_start"
+# Arguments:
+#   $1 # a command to be written
+########################################
+loco::custom_add_to_shell(){
+  local instruction="${@-}"
+  local file_path="${INSTANCE_PATH}/dotfiles/.loco_startup"
+  local function="shell_start"
+  local function_body
 
-  echo ${start_function_body}
+  function_body=$(utils::dump_bash_function "${function}" "${file_path}")
+
+  # remove previous function block
+  utils::remove_textblock_in_file "${file_path}" "#session_start##########################" "}" 
+
+  # write the function anew
+  _echo "\n#session_start##########################" >> "${file_path}"
+  _echo "# Called first time terminal is opened" >> "${file_path}"
+  _echo "# !if a VPN identifier is set properly in 'is_started'!" >> "${file_path}"
+  _echo "# note: this function can be manipulated by loco.sh" >> "${file_path}"
+  _echo "########################################" >> "${file_path}"
+  _echo $"shell_start(){" >> "${file_path}"
+  # regular echo as this block can contain escaped characters
+  echo "${function_body}" >> "${file_path}"
+  echo "    ${instruction}" >> "${file_path}"
+  _echo $"}" >> "${file_path}"
+}
+
+#######################################
+# Add instruction to a function in a file
+# Arguments:
+#   $1 # a/file/path
+#   $2 # a function name in the file
+#   $1 # a command to be written
+########################################
+loco::custom_add_to(){
+  local file_path="${1-}"
+  local function="${2-}"
+  local instruction="${3-}"
+  local function_body
+
+  function_body=$(utils::dump_bash_function "${function}" "${file_path}")
+
+  # remove previous function block
+  utils::remove_textblock_in_file "${file_path}" "###${function}###" "}" 
+
+  # write the function anew
+  _echo "\n###${function}###" >> "${file_path}"
+  _echo "# Called when ${function}" >> "${file_path}"
+  _echo "# note: this function can be manipulated by loco.sh" >> "${file_path}"
+  _echo "# see original dotfiles for comments" >> "${file_path}"
+  _echo "########################################" >> "${file_path}"
+  _echo $"${function}(){" >> "${file_path}"
+  # regular echo as this block can contain escaped characters
+  echo "${function_body}" >> "${file_path}"
+  echo "    ${instruction}" >> "${file_path}"
+  _echo $"}" >> "${file_path}"
 }

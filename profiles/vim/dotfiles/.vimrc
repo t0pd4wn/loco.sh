@@ -48,11 +48,6 @@ Plugin 'VundleVim/Vundle.vim'
 		"Room viewer
 		"Plugin 'junegunn/goyo.vim'
 		":GoYo
-		
-		"minimap
-		Plugin 'severin-lemaignan/vim-minimap'
-		let g:minimap_highlight='Visual'
-		au BufEnter * :Minimap
 
 		"highlight search results
 		set hlsearch
@@ -86,12 +81,6 @@ Plugin 'VundleVim/Vundle.vim'
 
 
 "code specific
-	"autocomplete
-	" Plugin 'ycm-core/YouCompleteMe'
-	
-	"html5 / javascript
-	" Plugin 'othree/html5.vim'
-	" Plugin 'othree/yajs.vim'
 
 "colorschemes
 	Plugin 'sickill/vim-monokai'

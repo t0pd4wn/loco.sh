@@ -1,3 +1,6 @@
+profiles:
+  import:
+    - start
 packages:
   macos:
     brew:

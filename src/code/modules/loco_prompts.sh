@@ -75,23 +75,13 @@ loco::prompt_overlay(){
 #   PROFILE
 ########################################
 loco::prompt_profile(){
-  # if no $PROFILE option is set
+  # if no $PROFILE option is set, launch prompt
   if [ -z "${PROFILE}" ]; then
     prompt::build "PROFILE" "./"${PROFILES_DIR}"" "Choose a profile :" true
     prompt::call "PROFILE"
-  else
-    # if a $PROFILE option is set
-    # split the option on the "," character 
-    declare -a profile_option
-    profile_option=($(echo "${PROFILE}" | tr "," " "))
-
-    local profile_length=${#profile_option[@]}
-
-    # if there is more than one profile, merge profiles
-    if [[ "${profile_length}" -gt 1 ]]; then
-      loco::multi_prepare "${profile_option[@]}"
-    fi
   fi
+
+  loco::profile_prepare "${PROFILE}"
 }
 
 ########################################

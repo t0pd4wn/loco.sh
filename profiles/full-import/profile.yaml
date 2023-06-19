@@ -1,0 +1,7 @@
+profiles:
+  import:
+    - start
+    - style
+    - vim
+    - vpn
+    - zsh

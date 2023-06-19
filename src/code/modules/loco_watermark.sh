@@ -137,24 +137,6 @@ loco::watermark_action_install(){
   # update the installed instance
   u|U )
      msg::print "${EMOJI_YES}" " Yes, update instance."
-
-    # # switch to remove
-    # ACTION="remove"
-    # # keep a copy of current finish script
-    # _cp "./src/temp/finish.sh" "./src/temp/finish_temp.sh"
-    # # source the $ACTION.sh file
-    # _source ./src/code/actions/"${ACTION}".sh
-    # # remove the newly created finish.sh
-    # utils::remove "./src/temp/finish.sh"
-    # # put the copy back
-    # _cp "./src/temp/finish_temp.sh" "./src/temp/finish.sh"
-    # # restore a copy of current messages
-    # MSG_ARRAY=("${recorded_messages[@]}")
-    # # switch back to installation and current profile
-    # ACTION="install"
-    # PROFILE="${current_profile}"
-    # # reset the yaml .profile path
-    # loco::yaml_profile
   ;;
 
   * )
@@ -290,9 +272,22 @@ loco::watermark_set(){
     _echo 'style:' >> "${INSTANCE_YAML}"
     _echo 'packages:' >> "${INSTANCE_YAML}"
     _echo 'dotfiles:' >> "${INSTANCE_YAML}"
+    _echo 'profiles:' >> "${INSTANCE_YAML}"
 
+    # populate ".dotfiles.legacy" with existing dotfiles
     local home_path=/"${OS_PREFIX}"/"${CURRENT_USER}"
-    # local home_files=$(ls -d ${home_path}.??*)
+
+    utils::list "home_dotfiles" "${home_path}" "hidden"
+
+    for file in "${home_dotfiles[@]}"; do
+      local filename=$(utils::string_cut_rev "${file}" "/" "1")
+      # add filename to ".dotfiles.legacy"
+      yaml::add "${INSTANCE_YAML}" ".dotfiles.legacy" "${filename}"
+    done
+
+    for import in "${LOCO_IMPORT_PROFILES[@]}"; do
+      yaml::add "${INSTANCE_YAML}" ".profiles.import" "${import}"
+    done
 
     utils::list "home_dotfiles" "${home_path}" "hidden"
 

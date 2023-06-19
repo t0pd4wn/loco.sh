@@ -8,8 +8,16 @@
 ########################################
 loco::GLOBALS_set(){
   # used in profile management
+  declare -g PROFILE_YAML
+  declare -g INSTANCE_YAML
+  declare -ga LOCO_IMPORT_PROFILES
   PROFILE_YAML=""
+  INSTANCE_YAML=""
+  LOCO_IMPORT_PROFILES=""
   # used in package management
+  declare -g PACKAGE_MANAGER_TEST_CMD
+  declare -g PACKAGE_TEST_CMD
+  declare -g PACKAGE_ACTION_CMD  
   PACKAGE_MANAGER_TEST_CMD=""
   PACKAGE_TEST_CMD=""
   PACKAGE_ACTION_CMD=""
@@ -31,6 +39,7 @@ loco::GLOBALS_lock(){
   # readonly CURRENT_USER
   # readonly PROFILE_YAML
   # readonly INSTANCE_YAML
+  # readonly LOCO_IMPORT_PROFILES
   # readonly PROFILE_PATH
   # readonly INSTANCE_PATH
   # readonly SHORT_OS_VERSION

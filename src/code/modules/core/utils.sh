@@ -360,6 +360,24 @@ utils::remove_string_in_file(){
   fi
 }
 
+
+########################################
+# Remove a text block from a file
+# Arguments:
+#   $1 # a file path
+#   $2 # a text block beginning
+#   $2 # a text block ending
+########################################
+utils::remove_textblock_in_file(){
+  local file="${1-}"
+  local string_begin="${2-}"
+  local string_end="${3-}"
+
+  if ! sed -i '/^'"${string_begin}"'$/,/^'"${string_end}"'$/d' "${file}" ; then
+    _error "Unable to remove textblock from ${file}"
+  fi
+}
+
 ########################################
 # Replace a text block within a file
 # Notes :

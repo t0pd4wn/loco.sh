@@ -797,7 +797,7 @@ typeset -g POWERLEVEL9K_BACKGROUND=236
   # Custom icon.
   # typeset -g POWERLEVEL9K_RANGER_VISUAL_IDENTIFIER_EXPANSION='⭐'
 
-  ######################################[ ram: free RAM ]#######################################
+  ######################################[ ram: free RAM ]########################################
   # RAM color.
   typeset -g POWERLEVEL9K_RAM_FOREGROUND=66
   # Custom icon.

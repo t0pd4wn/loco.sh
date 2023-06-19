@@ -16,6 +16,7 @@
 loco::yaml_init(){
   PROFILE_YAML="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
   INSTANCE_YAML=/"${OS_PREFIX}"/"${CURRENT_USER}"/.loco.yml
+  TEMP_YAML="src/temp/yaml.local"
 }
 
 ########################################

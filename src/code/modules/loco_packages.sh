@@ -134,7 +134,7 @@ loco::package_managers(){
   elif [[ "${ACTION}" == "remove" ]]; then
     local current_yaml="${INSTANCE_YAML}"
   fi
-    packagers=$(yaml::get_keys ".packages.${pkg_type}" "${current_yaml}")
+    packagers=$(yaml::get_keys "${current_yaml}" ".packages.${pkg_type}")
 
   # check if packagers are declared
   if [[ -z "${packagers}" ]]; then

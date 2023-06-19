@@ -4,5 +4,11 @@
 # source loco startup scripts file
 . ~/.loco_startup
 
-# check start status
-is_started
+# check if in an interactive session
+if [[ -n "$PS1" ]]; then
+	# check start status
+	is_started
+fi
+
+# set zsh as default shell
+zsh

@@ -20,7 +20,7 @@ yaml::add(){
 
   if [[ "${option}" == "key" ]]; then
     local arg="${selector}"' = ["'"${value}"'"] + '"${selector}"
-    has_value=$(yaml::contains "${yaml}" "${selector}" "${value}" )
+    has_value=$(yaml::contains_better "${yaml}" "${selector}" "${value}" )
   elif [[ "${option}" == "raw" ]]; then
     local arg="${selector}"' = "'"${value}"'" + '"${selector}"
     # set has_value to false for raw content
@@ -45,6 +45,74 @@ yaml::add(){
       fi
     fi
   fi
+}
+
+########################################
+# Return a boolean if value is found
+# Arguments:
+#   $1 # a yaml file path
+#   $2 # a yaml selector ".variable.path"
+#   $3 # a yaml value
+########################################
+yaml::contains_better(){
+  local yaml="${1-}"
+  local selector="${2-}" 
+  local value="${3-}"
+  local has_value
+  declare -a yaml_value
+
+  yaml_value=($(yaml::get "${yaml}" "${selector}[]"))
+
+  for existing_value in "${yaml_value[@]}"; do
+    if [[ "${existing_value}" == "${value}" ]]; then
+      has_value=true
+    fi
+  done
+
+  if [[ "${has_value-}" == true ]]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+########################################
+# Add a yaml value after a specific list value 
+# Arguments:
+#   $1 # a yaml file path
+#   $2 # a yaml selector ".variable.path"
+#   $3 # a specific yaml value
+#   $4 # yaml value to be added
+########################################
+yaml::add_after(){
+  local yaml="${1-}"
+  local selector="${2-}"
+  local target="${3-}"
+  local addition="${4-}"
+  declare -a yaml_list
+  declare -a new_list
+
+  yaml_list=($(yaml::get "${yaml}" "${selector}[]" "${target}" "${addition}"))
+
+  for element in "${yaml_list[@]}"; do
+    # add the previous list element to the new list
+    new_list+=("${element}")
+    # if the element is the targeted one, add the new value after it
+    if [[ "mg" == "mgc" ]]; then
+      echo "mg is equal to mgc"
+    fi
+
+
+    if [[ "${element}" == "${target}" ]]; then
+      new_list+=("${addition}")
+    fi
+    # remove the element from the orginal yaml list
+    yaml::delete  "${yaml}" "${selector}" "${target}"
+  done
+
+  for new_element in "${new_list[@]}"; do
+    yaml::add "${yaml}" "${selector}" "${new_element}"
+  done
 }
 
 ########################################
@@ -250,7 +318,7 @@ yaml::get(){
 }
 
 ########################################
-# Return yaml keys (deprecated?)
+# Return yaml keys (deprecated? same behavior as yaml_get)
 # Globals:
 #   PROFILE
 #   PROFILES_DIR
@@ -259,8 +327,8 @@ yaml::get(){
 #   $2 # an optional yaml file path
 ########################################
 yaml::get_keys(){
-  local var="${1-}"
-  local path="${2:-"${PROFILE_YAML}"}"
+  local path="${1:-"${PROFILE_YAML}"}"
+  local var="${2-}"
 
   if [[ ! -f "${path}" ]]; then
     msg::debug "${EMOJI_STOP} No " "YAML file" " found"

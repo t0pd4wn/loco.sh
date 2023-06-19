@@ -1,4 +1,7 @@
-styles:  
+profiles:
+  import:
+    - start
+  styles:  
   fonts:
     name: MesloLGS NF
     size: 11
