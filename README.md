@@ -42,7 +42,7 @@ bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl 
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on:
 ```bash
-bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full; exit
+bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full-import; exit
 ```
 
 Once installed, you can simply interact with ```loco``` like this: 
@@ -74,10 +74,12 @@ cd loco.sh
 
 **Loco.sh** comes with 6 example profiles :
 - **default**: is an empty example, showcasing custom functions
-- **full**: all *profiles* made into one, with ```vim```, ```zsh```, ```p10K``` and ```vpn```
+- **full-classic**: all *profiles* made into one, with ```start```, ```syle```, ```vim```, ```zsh```, and ```vpn```
+- **full-import**: same as **full** but import only
 - **full-yaml**: same as **full** but yaml only
-- **start-vpn**: packages and script to execute vpn at startup
+- **start**: set of scripts used to control terminal startup
 - **style**: custom themed terminal and OS (dock, background)
+- **vpn**: packages and script to execute vpn at startup
 - **vim**: fully configured ```vim```
 - **zsh**: fully configured ```zsh``` with ```p10K```
 <!-- - **loco-nvim**: same as *loco-shell* with nvim ; supports MacOSx and Ubuntu -->
