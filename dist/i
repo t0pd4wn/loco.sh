@@ -5,13 +5,13 @@
 
 set -eu
 
-#######################################
+########################################
 # Retrieve loco archive from Github
 # Arguments:
 #   ./loco "$@" ones
 # Output:
 #   ~/loco-dist
-#######################################
+########################################
 retrieve_public_archive(){
   local branch_name="gh-main"
   local release_url="https://github.com/t0pd4wn/loco.sh/raw/"${branch_name}"/dist/loco-dist.zip"
@@ -22,13 +22,13 @@ retrieve_public_archive(){
   loco::extract_and_run "$@"
 }
 
-#######################################
+########################################
 # Retrieve loco archive from a private server
 # Arguments:
 #   ./loco "$@" ones
 # Output:
 #   ~/loco-dist
-#######################################
+########################################
 retrieve_private_archive(){
   # modify below with your infos #
   local branch_name="gh-main"
@@ -47,11 +47,11 @@ retrieve_private_archive(){
   loco::extract_and_run "$@"
 }
 
-#######################################
+########################################
 # Extract loco archive and run main script
 # Arguments:
 #   ./loco "$@" ones
-#######################################
+########################################
 loco::extract_and_run(){
   # unzip archive
   unzip -oqq ~/loco-dist.zip -d ~/loco-dist
