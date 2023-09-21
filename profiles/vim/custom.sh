@@ -13,3 +13,14 @@ install_exit(){
   # install vundle plugins
   cmd::run_as_user "vim +PluginInstall +qall"
 }
+
+remove_exit(){
+  # remove vim bundles
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/anyfold
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline-themes
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-line-no-indicator
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-minimap
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-monokai
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim  
+}

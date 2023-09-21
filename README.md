@@ -42,7 +42,7 @@ bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl 
 
 Or go ***loco*** and install directly a profile with the ```-Y``` flag on:
 ```bash
-bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full-import; exit
+bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)) -Ya install -p full-classic; exit
 ```
 
 Once installed, you can simply interact with ```loco``` like this: 
