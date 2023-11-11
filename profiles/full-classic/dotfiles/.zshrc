@@ -15,3 +15,4 @@ source ~/.zsh-plugins/powerlevel10k/powerlevel10k.zsh-theme
 HISTSIZE=77777
 HISTFILESIZE=777777
 SAVEHIST=$HISTSIZE
+HISTFILE=~/.zsh_history
