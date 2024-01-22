@@ -48,6 +48,14 @@ loco::yaml_merge(){
   to_style_list=$(yaml::get "${yaml_to}" ".style")
   from_packages_list=$(yaml::get "${yaml_from}" ".packages")
   to_packages_list=$(yaml::get "${yaml_to}" ".packages")
+
+  # msg::debug "${from_packages_list}"
+
+
+  echo "CALLED"
+  # echo "${to_packages_list}"
+
+
   from_dotfiles_list=$(yaml::get "${yaml_from}" ".dotfiles")
   to_dotfiles_list=$(yaml::get "${yaml_to}" ".dotfiles")  
   from_functions_list=$(yaml::get "${yaml_from}" ".custom_functions")
@@ -63,6 +71,9 @@ loco::yaml_merge(){
   yaml::add "${yaml_to}" ".funsA" "${from_functions_list}" "raw"
   yaml::add "${yaml_to}" ".funsB" "${to_functions_list}" "raw"
 
+  echo "CAT" ?
+  cat "${yaml_to}"
+
   # merge values together and keep them in variables
   # check if one or the other value is empty
   if [[ -z "${from_style_list}" || -z "${to_style_list}" ]]; then
@@ -77,6 +88,7 @@ loco::yaml_merge(){
   if [[ -z "${from_packages_list}" || -z "${to_packages_list}" ]]; then
     packages_part="${from_packages_list:-$to_packages_list}"
   else
+  echo "here"
     packages_part=$(yaml::merge "${yaml_to}" ".packagesA" ".packagesB" "array-merge")
   fi
 
@@ -108,12 +120,18 @@ loco::yaml_merge(){
 
   # write merged values in new destination file
   # create selectors
+
+echo "HERE"
+
   _echo "style:" > ${yaml_to}
   _echo "packages:" >> ${yaml_to}
   _echo "dotfiles:" >> ${yaml_to}  
   _echo "custom_functions:" >> ${yaml_to}
   
-  # write yaml values to selectorsq 
+
+echo "THERE"
+
+  # write yaml values to selectors
   yaml::add "${yaml_to}" ".style" "${style_part}" "raw"
   yaml::add "${yaml_to}" ".packages" "${packages_part}" "raw"
   yaml::add "${yaml_to}" ".dotfiles" "${dotfiles_part}" "raw"  

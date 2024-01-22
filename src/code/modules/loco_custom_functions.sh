@@ -42,7 +42,7 @@ loco::custom_action(){
 loco::custom_function(){
   local custom_function=${1-}
 
-  if [[ $(type -t "${custom_function}") == function ]]; then
+  if [[ $(type "${custom_function}") == *"function"* ]]; then
     "${custom_function}"
   else
     msg::debug "No "${custom_function}" function found in custom.sh."
@@ -182,28 +182,28 @@ loco::custom_merge(){
       if [[ "${new}" == "${prev}" ]]; then
         # functions are identical
         # dump to temp file
-        _echo $"${function}(){" >> "${custom_file}"
+        echo $"${function}(){" >> "${custom_file}"
         # regular echo, because custom functions may hold escaped characters
         echo "${new}" >> "${custom_file}"
-        _echo "}" >> "${custom_file}"
+        echo "}" >> "${custom_file}"
       else
 
         # dump to temp file
-        _echo $"${function}(){" >> "${custom_file}"
+        echo $"${function}(){" >> "${custom_file}"
         # regular echo, because custom functions may hold escaped characters
         echo "${prev}" >> "${custom_file}"
         echo "${new}" >> "${custom_file}"
-        _echo "}" >> "${custom_file}"
+        echo "}" >> "${custom_file}"
       fi
     else
       # function doesn't exist
       new=$(utils::dump_bash_function "${function}" "${custom_from}")
 
       # dump to temp file
-      _echo $"${function}(){" >> "${custom_file}"
+      echo $"${function}(){" >> "${custom_file}"
       # regular echo, because custom functions may hold escaped characters
       echo "${new}" >> "${custom_file}"
-      _echo "}" >> "${custom_file}"
+      echo "}" >> "${custom_file}"
     fi
   done
 
@@ -217,10 +217,10 @@ loco::custom_merge(){
       prev=$(utils::dump_bash_function "${function}" "${custom_to}")
 
       # dump to temp file
-      _echo $"${function}(){" >> ./src/temp/custom.tmp
+      echo $"${function}(){" >> ./src/temp/custom.tmp
       # regular echo, because custom functions may hold escaped characters
       echo "${prev}" >> ./src/temp/custom.tmp
-      _echo "}" >> ./src/temp/custom.tmp
+      echo "}" >> ./src/temp/custom.tmp
     fi
   done
 

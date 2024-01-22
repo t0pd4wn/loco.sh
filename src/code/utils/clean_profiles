@@ -18,6 +18,9 @@ clean_profiles(){
   local search_and_replace='s/### MacOS font setup.*?###/"### MacOS font setup\n  # osascript command goes here\n  # osascript -e \x27tell application \x22Terminal\x22 to set the font name of window 1 to \x22fontname\x22\x27\n  # osascript -e \x27tell application \x22Terminal\x22 to set the font size of window 1 to \x22fontsize\x22\x27\n  ###"/se'
   
   perl -i -p0e "${search_and_replace}" ./profiles/*/dotfiles/.zprofile
+
+  # remove .Multi-* profiles from archive
+  sudo rm -r ./profiles/.Multi-*
 }
 
 clean_profiles

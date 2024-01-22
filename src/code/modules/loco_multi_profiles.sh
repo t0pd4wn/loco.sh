@@ -110,7 +110,6 @@ loco::profile_manage_imports_dependencies(){
 
   profiles_length="${#profiles_to_import[@]}"
 
-  # for profile in "${profiles_to_import[@]}"; do
   for profile in "${profiles_to_import[@]}"; do
     msg::debug "Checking dependencies for " "${profile}" " profile."
     profile_yaml="./"${PROFILES_DIR}"/"${profile}"/profile.yaml"
@@ -208,6 +207,9 @@ loco::multi_prepare(){
     loco::multi_yaml "${profiles[$i]}"
     loco::multi_custom_functions "${profiles[$i]}"
   done
+
+
+    echo "AFTER"
 }
 
 ########################################

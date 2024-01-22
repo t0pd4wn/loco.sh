@@ -66,7 +66,7 @@ utils::compare(){
 ########################################
 # Dump a bash function
 # Arguments:
-#   $1 # a function name"
+#   $1 # a function name
 #   $2 # /path/to/a/script.sh
 ########################################
 utils::dump_bash_function(){
@@ -75,27 +75,10 @@ utils::dump_bash_function(){
 
   source "${path}"
 
-  if [[ $(type -t "${name}") == function ]]; then
-    if ! type "${name}" | sed '1,3d;$d'; then
-      _error "Unable to dump ${name} from ${path}"
-    fi
-  fi
-}
+  if [[ $(type "${name}") == *"function"* ]]; then
 
-########################################
-# Dump a bash function name
-# Arguments:
-#   $1 # a function name"
-#   $2 # /path/to/a/script.sh
-########################################
-utils::find_filename(){
-  local name="${1-}"
-  local path="${2-}"
 
-  source "${path}"
-
-  if [[ $(type -t "${name}") == function ]]; then
-    if ! type "${name}" | sed '1,3d;$d'; then
+    if ! declare -f "${name}" | sed '1,2d;$d' ; then
       _error "Unable to dump ${name} from ${path}"
     fi
   fi
@@ -119,13 +102,13 @@ utils::list_bash_functions(){
 # Get the last part of a string
 # Arguments:
 #   $1 # a string
-#   $2 # a delimeter
+#   $2 # a delimiter
 ########################################
 utils::get_string_last(){
   local string="${1-}"
-  local delimeter="${2-}"
+  local delimiter="${2-}"
 
-  if ! echo "${url}" | rev  | cut -d "${delimeter}" -f1 | rev; then
+  if ! echo "${url}" | rev  | cut -d "${delimiter}" -f1 | rev; then
     _error "Can not get ${string} last part"
   fi
 }
@@ -409,14 +392,14 @@ utils::replace_block_in_file(){
 # Cut a string
 # Arguments:
 #   $1 # a string ex: "Hello/world"
-#   $2 # delimeter ex: "/"
+#   $2 # delimiter ex: "/"
 #   $3 # part to be retrieved ex: "1"
 ########################################
 utils::string_cut(){
   local string="${1-}"
-  local delimeter="${2-}"
+  local delimiter="${2-}"
   local part="${3-}"
-  local command="echo "${string}" | cut -d "${delimeter}" -f "${part}""
+  local command="echo "${string}" | cut -d "${delimiter}" -f "${part}""
 
   if ! cmd::run_as_user ${command}; then
     _error "Unable to cut ${string}"
@@ -427,14 +410,14 @@ utils::string_cut(){
 # Cut a string (reverse)
 # Arguments:
 #   $1 # a string ex: "Hello/world"
-#   $2 # delimeter ex: "/"
+#   $2 # delimiter ex: "/"
 #   $3 # part to be retrieved ex: "3"
 ########################################
 utils::string_cut_rev(){
   local string="${1-}"
-  local delimeter="${2-}"
+  local delimiter="${2-}"
   local part="${3-}"
-  local command="echo "${string}" | rev | cut -d "${delimeter}" -f "${part}" | rev"
+  local command="echo "${string}" | rev | cut -d "${delimiter}" -f "${part}" | rev"
 
   if ! cmd::run_as_user ${command}; then
     _error "Unable to reverse cut ${string}"

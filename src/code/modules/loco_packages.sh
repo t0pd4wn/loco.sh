@@ -149,8 +149,7 @@ loco::package_managers(){
 
     for i in "${packagers_array[@]}"; do
       msg::debug "${i}"
-
-
+      
       # prepare variables from package manager descriptor
       if [[ "${ACTION}" == "update" ]]; then
         PACKAGE_ACTION="install"
