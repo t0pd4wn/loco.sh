@@ -75,7 +75,7 @@ cd loco.sh
 **Loco.sh** comes with 6 example profiles :
 - **default**: is an empty example, showcasing custom functions
 - **full-classic**: all *profiles* made into one, with ```start```, ```syle```, ```vim```, ```zsh```, and ```vpn```
-- **full-import**: same as **full** but import only
+<!-- - **full-import**: same as **full** but import only -->
 - **full-yaml**: same as **full** but yaml only
 - **start**: set of scripts used to control terminal startup
 - **style**: custom themed terminal and OS (dock, background)
