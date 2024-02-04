@@ -61,7 +61,7 @@ loco::prompt_background(){
 ########################################
 loco::prompt_overlay(){
   local style_overlay
-  style_overlay=$(yaml::get_child_values '.style.overlay')
+  style_overlay=$(yaml::get "${PROFILE_YAML}" '.style.overlay')
 
   if [ -z "${style_overlay:-"${OVERLAY_PATH}"}" ]; then
     prompt::build "OVERLAY_PATH" "./src/assets/background-overlays/" "Choose an overlay:" false

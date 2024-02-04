@@ -52,7 +52,7 @@ loco::custom_function(){
   local selector=".custom_functions.${custom_function}"
   local yaml_path="./"${PROFILES_DIR}"/"${PROFILE}"/profile.yaml"
 
-  has_selector=$(yaml::has_child_selector "${selector}" "${yaml_path}")
+  has_selector=$(yaml::contains "${yaml_path}" "${selector}")
 
   if [[ ${has_selector} == true ]]; then
     yaml::execute "${yaml_path}" "${selector}"

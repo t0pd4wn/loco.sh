@@ -71,8 +71,8 @@ loco::dotfiles_manager(){
 
       # $ACTION == "remove"
     if [[ "${ACTION}" == "remove" ]]; then  
-        dotfiles_list=$(yaml::get "${INSTANCE_YAML}" ".dotfiles.installed[]") 
-        loco::dotfiles_action_remove "${dotfiles_list}"
+      dotfiles_list=$(yaml::get_array "${INSTANCE_YAML}" ".dotfiles.installed") 
+      loco::dotfiles_action_remove "${dotfiles_list}"
     fi
 
   ;;
@@ -194,10 +194,12 @@ loco::dotfiles_action_remove(){
   msg::print "${EMOJI_YES} Yes, remove " "${PROFILE}" " dotfiles"   
   msg::print "Restoring " "${CURRENT_USER}" " dotfiles"
 
+
   # remove $PROFILE dotfiles and restore backups
   for dotfile in "${dotfiles[@]}"; do
     loco::dotfiles_unset "${dotfile}"
   done
+
 }
 
 ########################################

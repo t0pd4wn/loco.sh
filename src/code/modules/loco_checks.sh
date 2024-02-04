@@ -150,17 +150,11 @@ loco::check_operating_system(){
 #   LOCO_OS_VERSION
 ########################################
 loco::check_dependencies(){
-  if [[ $(command -v yq) ]]; then
-    msg::say "yq is installed."
-  else
-    msg::say "Installing yq."
-    if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
-      snap install yq
-    elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
-      cmd::run_as_user "brew install yq"
-    fi
-  fi
+  # install the YAML parser
+  loco::install_yb
+
   # if OVERLAY flag is set, 
+  # install ImageMagick
   if [[ "${OVERLAY}" == true ]]; then
     if [[ $(command -v convert) ]]; then
       msg::say "imagemagick is installed."
@@ -172,5 +166,18 @@ loco::check_dependencies(){
         cmd::run_as_user "brew install imagemagick"
       fi
     fi
+  fi
+}
+
+########################################
+# Installs yb as a system lib
+########################################
+loco::install_yb(){
+  if [[ $(command -v yb) ]]; then
+    msg::say "yb is installed."
+  else
+    msg::say "Installing yb."
+    chmod +x ./src/code/yb
+    sudo cp ./src/code/yb /usr/local/bin/
   fi
 }

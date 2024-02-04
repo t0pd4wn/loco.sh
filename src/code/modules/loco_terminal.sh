@@ -77,7 +77,7 @@ loco::term_conf_set(){
 
   local colors_theme_file=./src/assets/themes/"${THEME}".conf
 
-  font_name=$(yaml::get_child_values '.style.fonts.name')
+  font_name=$(yaml::get "${PROFILE_YAML}" '.style.fonts.name')
   if [[ "${ACTION}" == "install" ]] || [[ "${ACTION}" == "update" ]]; then
     #statements
     font_name="${font_name}"
@@ -89,7 +89,7 @@ loco::term_conf_set(){
     fi
   fi
 
-  font_size=$(yaml::get_child_values '.style.fonts.size')
+  font_size=$(yaml::get "${PROFILE_YAML}" '.style.fonts.size')
   font_size="${font_size:-"10"}"
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then

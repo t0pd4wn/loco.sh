@@ -134,7 +134,8 @@ loco::package_managers(){
   elif [[ "${ACTION}" == "remove" ]]; then
     local current_yaml="${INSTANCE_YAML}"
   fi
-    packagers=$(yaml::get_keys "${current_yaml}" ".packages.${pkg_type}")
+  
+  packagers=$(yaml::get_keys "${current_yaml}" ".packages.${pkg_type}")
 
   # check if packagers are declared
   if [[ -z "${packagers}" ]]; then
@@ -168,7 +169,7 @@ loco::package_managers(){
 
         # add package manager to the instance yaml
         local yaml_key=".packages.${pkg_type}.${PACKAGE_MANAGER}"
-        yaml::add_key "${INSTANCE_YAML}" "${yaml_key}"
+        yaml::add "${INSTANCE_YAML}" "${yaml_key}"
 
         # expand variable value 
         PACKAGE_ACTION=${!PACKAGE_ACTION}
@@ -182,8 +183,9 @@ loco::package_managers(){
         fi
 
         # parse yaml to get packages names
-        local packages_selector=".packages."${1}"."${i}".[]"
-        packages=$(yaml::get "${current_yaml}" "${packages_selector}")
+        local packages_selector=".packages.${1}.${i}"
+
+        packages=$(yaml::get_array "${current_yaml}" "${packages_selector}")
         packages_array=($packages)
 
         # send packages names to meta_package
