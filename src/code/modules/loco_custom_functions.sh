@@ -42,10 +42,12 @@ loco::custom_action(){
 loco::custom_function(){
   local custom_function=${1-}
 
-  if [[ $(type "${custom_function}") == *"function"* ]]; then
-    "${custom_function}"
-  else
-    msg::debug "No "${custom_function}" function found in custom.sh."
+  if [[ -n $(declare -F "${custom_function}") ]]; then
+    if [[ $(type "${custom_function}")  == *"function"* ]]; then
+      "${custom_function}"
+    else
+      msg::debug "No "${custom_function}" function found in custom.sh."
+    fi
   fi
 
   local has_selector
