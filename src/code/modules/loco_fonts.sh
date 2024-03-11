@@ -18,7 +18,7 @@
 loco::fonts_manager(){
   local font
   local fonts_path
-  local yaml_fonts=$(yaml::get "${PROFILE_YAML}" '.style.fonts.urls.[]')
+  local yaml_fonts=$(yaml::get "${PROFILE_YAML}" ".style.fonts.urls")
   declare -a yaml_fonts_array
   yaml_fonts_array=("${yaml_fonts}")
 
@@ -77,7 +77,7 @@ loco::fonts_action_install_yaml(){
   local font="${2-}"
   _mkdir "${fonts_path}"
   # download the font
-  utils::get_url "${fonts_path}" "${font}"
+  utils::get_url "${fonts_path}" "${font:2}"
   # refresh fonts cache
   loco::fonts_cache_refresh "${fonts_path}"
   # write url in instance yaml
@@ -187,6 +187,8 @@ loco::fonts_cache_refresh(){
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
     return 0
   else
-    cmd::run_as_user "fc-cache -fr ""${fonts_path}"
+    # fc-cache is ran twice to cope with every systems
+    cmd::run_as_user "fc-cache -fr ${fonts_path}"
+    cmd::run_as_user "fc-cache -fr"
   fi
 }
