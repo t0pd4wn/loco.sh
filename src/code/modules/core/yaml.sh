@@ -15,10 +15,15 @@ yaml::add(){
   local yaml="${1-}"
   local selector="${2-}" 
   local value="${3-}"
-  local has_value
 
-  if ! yb -af "${yaml}" -k "${selector}" -v "- ${value}"; then
-    echo "Unable to yb add ${value} in ${selector} in ${yaml}"
+  if [[ -n "${value}" ]]; then
+    if ! yb -af "${yaml}" -k "${selector}" -v "- ${value}"; then
+      echo "Unable to yb add ${value} in ${selector} in ${yaml}"
+    fi
+  else
+    if ! yb -af "${yaml}" -k "${selector}"; then
+      echo "Unable to yb add ${selector} in ${yaml}"
+    fi
   fi
 }
 
@@ -157,6 +162,8 @@ yaml::get_keys(){
   local selector="${2-}"
   declare -a result
   declare -a output
+  result=""
+  output=""
 
   result=($(yaml::get_array "${yaml}" "${selector}"))
   
@@ -166,7 +173,7 @@ yaml::get_keys(){
     fi
   done
 
-  echo "${output}"
+  echo "${output[@]}"
 }
 
 ########################################
