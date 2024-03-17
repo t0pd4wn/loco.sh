@@ -75,9 +75,11 @@ loco::fonts_manager(){
 loco::fonts_action_install_yaml(){
   local fonts_path="${1-}"
   local font="${2-}"
+  local font="${font:2}"
+
   _mkdir "${fonts_path}"
   # download the font
-  utils::get_url "${fonts_path}" "${font:2}"
+  utils::get_url "${fonts_path}" "${font}"
   # refresh fonts cache
   loco::fonts_cache_refresh "${fonts_path}"
   # write url in instance yaml
@@ -187,8 +189,12 @@ loco::fonts_cache_refresh(){
   if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
     return 0
   else
-    # fc-cache is ran twice to cope with every systems
     cmd::run_as_user "fc-cache -fr ${fonts_path}"
-    cmd::run_as_user "fc-cache -fr"
+    # for some reassons Ubuntu 22 needs fc-cache to be ran twice
+    if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+      if [[ "${SHORT_OS_VERSION}" -ge 22 ]]; then
+        cmd::run_as_user "fc-cache -fr"
+      fi
+    fi
   fi
 }
