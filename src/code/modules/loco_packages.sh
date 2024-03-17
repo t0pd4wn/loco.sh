@@ -146,11 +146,11 @@ loco::package_managers(){
     # begin to assign values recursively from descriptors
     packagers_array=($packagers)
     msg::debug "${packagers}"
-    echo "${packagers}"
+    
 
     for i in "${packagers_array[@]}"; do
       msg::debug "${i}"
-      
+      msg::say "Now installing packages from: " "${i}"
       # prepare variables from package manager descriptor
       if [[ "${ACTION}" == "update" ]]; then
         PACKAGE_ACTION="install"
