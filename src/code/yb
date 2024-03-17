@@ -1,8 +1,8 @@
 #!/bin/bash
 #---------------------------------------
-# yb | yaml bash parser | 0.8 | Licensed under GNU GPL V3
+# yb | yaml bash parser | 0.9-20240303191126 | Licensed under GNU GPL V3
 #---------------------------------------
-# Note: this is an automatically built version. The full code is available in 'src/yb_dev'.
+# Note: this is an automatically built version. The full code is available in the 'src/' folder.
 #---------------------------------------
 set -eu
 ########################################
@@ -10,7 +10,7 @@ set -eu
 ########################################
 yb::main::help () 
 { 
-  echo 'yb version 0.8 by t0pd4wn.';
+  echo 'yb version 0.9-20240303191126 by t0pd4wn.';
   echo 'yb [-v|-h|-a|-c|-q|-r|-A-d-F-l-L-R-n-T] [-f <file>|-o <object>] [-k <key>] [-v <value>|-O <object value>]';
   echo '';
   echo '  -a  | Adds key(s), value(s) or both. | yb -f "file.yaml" -a -k "key" -v "value"';
@@ -21,6 +21,7 @@ yb::main::help ()
   echo '  -o  | YAML object. | yb -o "${YAML_object}" | YAML object can be used with all actions. -f and -o are compatible together, only when adding an object to a file.';
   echo '  -O  | YAML object value(s) to be added. | yb -f "file.yaml" -k "key" -O "object value" | YAML object value support raw YAML formatting.';
   echo '  -k  | Key(s) selection path. | yb -f "file.yaml" -k "key" | Support keys in this format :"key", "key.childkey", "- list-key", "pipe-key|". Multiple key(s) can be provided with a "."" as the separator.';
+  echo '  -K  | Prints only child keys. | yb -Kf "file.yaml" -k "key"';
   echo '  -v  | Value(s) to be added, removed, queried or changed. | yb -f "file.yaml" -k "key" -v "value" | Support values in this format : "value", "- list-value", "|> pipe-value".';
   echo '  -A  | Prints the output as a bash array. | yb -f "file.yaml" -A -k "key" | Will provide a different formatting if used with -F or -d.';
   echo '  -d  | Provides the output with the original depth. | yb -f "file.yaml" -d -k "key.childkey" -v "new_value"';
@@ -58,18 +59,28 @@ yb::add(){
 #   $yb_key_length
 #   $yb_key_option
 #   $yb_query_result
+#   $yb_add_query
+#   $yb_add_value_type
 ########################################
 yb::add::manage::object(){
   declare -a keys=("${yb_keys[@]}")
   local sequence_length="${yb_key_length}"
   local counter=$sequence_length
-  local has_key
+  declare -a has_key
+  # set addition type
+  yb_add_value_type="object"
+  # set flag
+  yb_add_query=true
   # query for lines coordinates
   yb::query::search::keys_lines "${yb_key_option}"
   # get result
-  has_key=("${yb_query_result}")
+  has_key=(${yb_query_result[@]})
+  # reset flag
+  yb_add_query=false
   # add values in file
-  yb::add::object::to_YAML "${has_key}"
+  yb::add::object::to_YAML "${has_key[@]}"
+  # reset addition type
+  yb_add_value_type=""
 }
 ########################################
 # Manage value addition
@@ -78,18 +89,88 @@ yb::add::manage::object(){
 #   $yb_key_length
 #   $yb_key_option
 #   $yb_query_result
+#   $yb_add_query
+#   $yb_add_value_type
 ########################################
 yb::add::manage::values(){
   declare -a keys=("${yb_keys[@]}")
   local sequence_length="${yb_key_length}"
   local counter=$sequence_length
-  local has_key
+  declare -a has_key
+  # check input string type
+  if [[ "${yb_value_option}" == "- "* ]]; then
+    yb_add_value_type="list"
+  elif [[ "${yb_value_option}" == "|"* ]]; then
+    yb_add_value_type="pipe"
+  else
+    yb_add_value_type="inline"
+  fi
+  # set flag
+  yb_add_query=true
   # query for lines coordinates
   yb::query::search::keys_lines "${yb_key_option}"
   # get result
-  has_key=("${yb_query_result}")
-  # add values in file
-  yb::add::values::to_file "${has_key}"
+  has_key=(${yb_query_result[@]})
+  # reset flag
+  yb_add_query=false
+  if [[ "${yb_add_value_type}" == "inline" ]]; then
+    yb::add::values::to_file::inline "${has_key[@]}"
+  elif [[ "${yb_add_value_type}" == "list" ]]; then
+    yb::add::values::to_file::list "${has_key[@]}"
+  elif [[ "${yb_add_value_type}" == "pipe" ]]; then
+    yb::add::values::to_file::pipe "${has_key[@]}"
+  fi
+  # reset addition type
+  yb_add_value_type=""
+}
+########################################
+# Build the key coordinates
+# Globals:
+#   $yb_keys
+#   $yb_key_length
+#   $yb_add_query
+########################################
+yb::add::manage::keys(){
+  local sequence_length="${yb_key_length}"
+  local search_key=""
+  local counter=$sequence_length
+  declare -a keys=("${yb_keys[@]}")
+  declare -a reverse_array
+  declare -a has_key
+  # set flag
+  yb_add_query=true
+  yb_add_value_type="keys"
+  for (( rk = ${#keys[@]} - 1; rk >= 0; rk-- )); do
+      reverse_array+=("${keys[rk]}")
+  done
+  for (( s = 0; s < $sequence_length; s++ )); do
+    search_key=""
+    for (( rs = 0; rs < $counter; rs++ )); do
+      # "." is added to delimeter keys
+      search_key+=".${reverse_array[$rs]}"
+    done
+    # strip first "." character
+    # todo : check if usefull
+    # (isn't it stripped out in yb::query::search::keys_lines ?)
+    search_key="${search_key:1}"
+    yb::query::search::keys_lines "${search_key}"
+    # get result
+    has_key=(${yb_query_result[@]})
+    # this gives a behavior where only
+    # the first level of parents are targeted
+    if [[ -n "${has_key[@]}" ]]; then
+      break;
+    fi
+    counter=$(( $counter - 1 ))
+  done
+  # reset flag
+  yb_add_query=false
+  yb_add_value_type=""
+  if [[ -z "${has_key[@]}" ]]; then
+    yb::add::new_keys::to_file "${has_key[@]}"
+  else
+    yb::add::child_keys::to_file "${has_key[@]}"
+  fi
 }
 ########################################
 # Add inline value(s) to file
@@ -98,15 +179,17 @@ yb::add::manage::values(){
 # Globals:
 #   $yb_file
 #   $yb_value_option
+#   $yb_line_copy
 ########################################
 yb::add::values::to_file::inline(){
-  declare -a parents=("${@-}")
+  declare -a parents=(${@-})
   local key_line
   local parent_key_value
   local inline_value
   # iterate over parent keys
   for key in "${parents[@]}"; do
     key_line="${key##*_N}"
+    key_line=$(( $key_line ))
     # get the existing content from the line
     yb::yaml::copy_line "${key_line}"
     parent_key_value="${yb_line_copy}"
@@ -234,6 +317,8 @@ yb::add::keys::to_file(){
   local target_line_number
   local counter=0
   # find the correct line depending on previous additions
+  # 1 is removed to cope with the append logic
+  # wich applies +1 to line count
   target_line_number=$(( $parent_line_number + $yb_added_lines ))
   # referesh keys referential
   yb::sequence::key_to_array "${yb_key_option}"
@@ -306,45 +391,6 @@ yb::add::new_keys::to_file(){
     # increment levels and line numbers for next iteration
     level=$(( $level + 1 ))
   done
-}
-########################################
-# Build the key coordinates
-# Globals:
-#   $yb_keys
-#   $yb_key_length
-########################################
-yb::add::manage::keys(){
-  local has_key
-  local sequence_length="${yb_key_length}"
-  local search_key=""
-  local counter=$sequence_length
-  declare -a keys=("${yb_keys[@]}")
-  declare -a reverse_array
-  for (( rk = ${#keys[@]} - 1; rk >= 0; rk-- )); do
-      reverse_array+=("${keys[rk]}")
-  done
-  for (( s = 0; s < $sequence_length; s++ )); do
-    search_key=""
-    for (( rs = 0; rs < $counter; rs++ )); do
-      search_key+=".${reverse_array[$rs]}"
-    done
-    # strip first "." character
-    search_key="${search_key:1}"
-    yb::query::search::keys_lines "${search_key}"
-    # get result
-    has_key=("${yb_query_result}")
-    # this gives a behavior where only
-    # the first level of parents are targeted
-    if [[ -n "${has_key}" ]]; then
-      break;
-    fi
-    counter=$(( $counter - 1 ))
-  done
-  if [[ -z "${has_key}" ]]; then
-    yb::add::new_keys::to_file
-  else
-    yb::add::child_keys::to_file "${has_key}"
-  fi
 }
 ########################################
 # Add value(s) to file
@@ -569,6 +615,7 @@ yb::file::update_file(){
 yb::main(){
   yb::main::globals
   yb::main::cli "${@}"
+  yb::main::is_terminal
   # check for the existence of the parameter file
   if ! [[ -f "${yb_file}" ]]; then
     if [[ "${yb_file}" == *".yaml" ]]; then
@@ -605,12 +652,26 @@ Use -O to add object value type to YAML file or object."
   fi
 }
 ########################################
+# Check the output type
+# Globals:
+#   $yb_colors
+#   $yb_is_raw
+########################################
+yb::main::is_terminal(){
+  # if not in the terminal print without colors
+  if [[ ! -t 1 ]]; then
+    if [[ "${yb_colors}" == false ]]; then
+      yb_is_raw=true
+    fi
+  fi
+}
+########################################
 # Initialize the cli
 # Attributes:
 #   $@ # script user options
 ########################################
 yb::main::cli(){
-  while getopts "aAcdf:Fhk:lLno:O:qrRTv:V" arg; do
+  while getopts "aAcCdf:Fhk:KlLno:O:qrRTv:V" arg; do
     case $arg in
       a)
         yb_add=true
@@ -620,6 +681,9 @@ yb::main::cli(){
         ;;
       c)
         yb_change=true
+        ;;
+      C)
+        yb_colors=true
         ;;
       d)
         yb_depth=true
@@ -636,6 +700,9 @@ yb::main::cli(){
         ;;
       k)
         yb_key_option="${OPTARG}"
+        ;;
+      K)
+        yb_key_only=true
         ;;
       l)
         yb_show_line=true
@@ -746,6 +813,7 @@ yb::main::globals::cli_options(){
   declare -g yb_format=false
   declare -g yb_is_array=false
   declare -g yb_is_raw=false
+  declare -g yb_colors=false
   declare -g yb_help=false
   declare -g yb_show_level=false
   declare -g yb_show_line=false
@@ -769,9 +837,11 @@ yb::main::globals::flags(){
   declare -g yb_is_colored=false
   declare -g yb_silent_query=false
   declare -g yb_has_key=false
+  declare -g yb_key_only=false
   declare -g yb_inclusive=false
   declare -g yb_YAML_is_modified=false
   declare -g yb_is_output=true
+  declare -g yb_add_query=false
 }
 ########################################
 # Declare globals temp variables
@@ -792,8 +862,10 @@ yb::main::globals::others(){
   declare -g yb_parent_level=""
   declare -g yb_set_level=""
   declare -g yb_line=""
+  declare -g yb_line_copy=""
   declare -g yb_value=""
   declare -g yb_value_type=""
+  declare -g yb_add_value_type=""
   declare -g yb_key_option=""
   declare -g yb_YAML=""
   declare -g yb_YAML_object=""
@@ -802,8 +874,12 @@ yb::main::globals::others(){
   declare -g yb_spacer=""
   declare -g yb_anchor=""
   declare -g yb_color_string=""
+  declare -g yb_line_level_cache=""
+  declare -g yb_line_number_cache=""
   declare -g yb_query_search_result=""
   declare -g yb_query_lines_result=""
+  declare -g yb_query_endlines_result=""
+  declare -g yb_query_type=""
   declare -g yb_query_search_values_result=""
   declare -g yb_query_pipe_result=""
   declare -g yb_query_pipe_first_line=""
@@ -1080,9 +1156,18 @@ yb::parse::print::output(){
     yb_value_type=""
   fi
   if [[ "${yb_is_raw}" == true ]]; then
-    line_["comment"]=""
+    # line_["comment"]=""
     if [[ "${line_["type"]}" == "comment" || "${line_["type"]}" == "empty" ]]; then
       return
+    fi
+  fi
+  # if -K option
+  if [[ "${yb_key_only}" == true ]]; then
+    if [[ "${line_["type"]}" != *"key"* ]]; then
+      return
+    else
+      line_["value"]=""
+      line_["suffix"]=""
     fi
   fi
   # if a *key:value sequence
@@ -1146,17 +1231,25 @@ yb::parse::print::output(){
 yb::parse::search(){
   local query_prefix
   local key="${line_["key"]-}"
-  local new_level
   yb_is_print=false
-  # if the current level is lower than the expected one, reset
+  # in an add action, if the current level is equal or lower
+  # to the searched parent, reset
+  if [[ ( "${yb_add_query}" == true ) && ( -n "${yb_line_level_cache}" ) ]]; then
+    if [[ "${line_["level"]}" -le "${yb_line_level_cache:1}" ]]; then
+      yb::parse::search::is_add_query
+      yb_key_step=0
+      yb_retrieve=false
+    fi
+  fi
+  # if the current level is lower than the expected searched one, reset
   if [[ "${line_["level"]}" -lt "${yb_key_step}" ]]; then
     yb_key_step=0
     yb_retrieve=false
   fi
   # if the current step (base 0) is equal to the total ones (base 1), reset
-  if [[ "${yb_key_step}" -eq "${yb_original_key_length}" ]]; then
-    yb_key_step=0
-  fi
+  # if [[ "${yb_key_step}" -eq "${yb_original_key_length}" ]]; then
+  #   yb_key_step=0
+  # fi
   # if the current key introduces a pipe value
   if [[ "${line_["type"]}" == *"key:pipe" ]]; then
     if [[ ${yb_keys[${yb_key_step}]} == *"|" ]]; then
@@ -1169,7 +1262,7 @@ yb::parse::search(){
     if [[ "${line_["prefix"]}${key}" == "${yb_keys[${yb_key_step}]}" ]]; then
       # if the current level is the expected one
       if [[ "${line_["level"]}" -eq "${yb_key_step}" ]]; then
-        # set new index
+        # set new index to check for child next iteration
         yb_key_step=$(( $yb_key_step + 1 ))
         # check for a nested key pipe
         yb::parse::search::is_nested_pipe
@@ -1206,12 +1299,12 @@ yb::parse::search::retrieve_options(){
   # if a query value, parse specifically
   if [[ "${yb_line_number_query}" == true || "${yb_boolean_query}" == true ]]; then
     yb::parse::search::is_query
-    return 0
+    return
   fi
   # if searched value is *key:value, retrieve only once
   if [[ "${line_["type"]}" == *"key:value" ]]; then
     yb::parse::search::is_key_value
-    return 0
+    return
   fi
 }
 ########################################
@@ -1238,12 +1331,26 @@ yb::parse::search::is_nested_pipe(){
 #   $yb_key_step
 #   $yb_boolean_query
 #   $yb_query_result
-#   yb_add
+#   $yb_add_query
+#   $yb_line_number_cache
 # Inherit:
 #   ${line_[@]}
 ########################################
 yb::parse::search::is_query(){
   local query_prefix
+  # the query is meant for a specific add action
+  # put value in cache until the full selected block is parsed
+  if [[ "${yb_add_query}" == true ]]; then
+    if [[ "${yb_add_value_type}" != "inline" ]]; then
+       # line level is cached separately in case of child tree
+       yb_line_level_cache="L${line_["level"]}"
+       yb_line_number_cache="L${line_["level"]}_N${line_["line_number"]}"
+    else
+      yb_line_number_cache="L${line_["level"]}_N${line_["line_number"]}"
+      yb::parse::search::is_add_query
+    fi
+    return
+  fi
   if [[ "${yb_line_number_query}" == true ]]; then
     # if looking for the key coordinates
     query_prefix="L${line_["level"]}_N${line_["line_number"]}"
@@ -1260,6 +1367,22 @@ yb::parse::search::is_query(){
   # query result found, reset flag and counter
   yb_retrieve=false
   yb_key_step=0
+}
+########################################
+# Check if a query type search
+# Globals:
+#   $yb_line_level_cache
+#   $yb_line_number_cache
+#   $yb_query_lines_result
+#   $yb_line_number_cache
+# Inherit:
+#   ${line_[@]}
+########################################
+yb::parse::search::is_add_query(){
+  yb_query_lines_result+=("${yb_line_number_cache}")
+  # empty cache value
+  yb_line_number_cache=""
+  yb_line_level_cache=""
 }
 ########################################
 # Check if a key:value search
@@ -1293,11 +1416,20 @@ yb::parse::search::is_key_value(){
 #   $yb_is_print
 #   $yb_sequence_retrieved
 #   $yb_is_empty
+#   $yb_line_number_cache
 # Inherit:
 #   ${line_[@]}
 ########################################
 yb::parse::search::is_retrievable(){
+  local query_prefix
+  local line_number
   if  [[ "${line_["level"]}" -gt "${yb_key_base_level}" ]]; then
+    # in this case, results are still retrieved in the selected block
+    if [[ "${yb_add_query}" == true ]]; then
+      query_prefix="${yb_line_level_cache}_N${line_["line_number"]}"
+      # set cache value, to be retrieved if it is the last line
+      yb_line_number_cache=("${query_prefix}")
+    fi
     # if search parameters match with current base level,
     # send a true signal to print the current line
     yb_one_line=false
@@ -1305,7 +1437,16 @@ yb::parse::search::is_retrievable(){
     # assume the value wask filled once
     yb_is_empty=false
   else
-    # if the level is lower or equal the key level
+    # this is when the selected block is over
+    # if in a add action, capture the last line of the searched block
+    if [[ "${yb_add_query}" == true ]]; then
+      # since we are 1 line ahead of result, substract 1
+      line_number="${line_["line_number"]}"
+      line_number=$(( $line_number - 1 ))
+      yb_line_number_cache="${yb_line_level_cache}_N${line_number}"
+      yb::parse::search::is_add_query
+    fi
+    # if the level is lower or equal to the key level
     yb_one_line=false
     yb_is_print=false
     # sequence is over, reset flags
@@ -1398,6 +1539,13 @@ yb::parse::yaml() {
     fi
   else
     yb_file_lines_number="${line_number}"
+    # in case the add search index is the last line of the file
+    if [[ "${yb_add_query}" == true ]]; then
+      if [[ -n "${yb_line_number_cache}" ]]; then
+        yb::parse::search::is_add_query
+        yb_key_step=0
+      fi
+    fi
   fi
 }
 ########################################
@@ -1420,12 +1568,14 @@ yb::parse::yaml::comment(){
 ########################################
 yb::parse::yaml::inline_comment(){
   # check for inline comment and assign it
-  if [[ "${yb_line}" =~ "'"*"#"*"'" ]]; then
-    line_["comment"]=" #${yb_line#*"' #"}"
-  elif [[ "${yb_line}" =~ '"'*'#'*'"' ]]; then
-    line_["comment"]=" #${yb_line#*'" #'}"
-  else
-    line_["comment"]=" #${yb_line#* #}"
+  if [[ "${yb_line}" == *"# "* ]]; then
+    if [[ "${yb_line}" =~ "'"*"#"*"'" ]]; then
+      line_["comment"]=" #${yb_line#*"' #"}"
+    elif [[ "${yb_line}" =~ '"'*'#'*'"' ]]; then
+      line_["comment"]=" #${yb_line#*'" #'}"
+    else
+      line_["comment"]=" #${yb_line#* #}"
+    fi
   fi
   # remove comment value from line
   line_["value"]="${line_["value"]//${line_["comment"]}/}"
@@ -1652,6 +1802,7 @@ yb::query::search::keys_lines(){
   declare -a key=("${1-}")
   # reset temp values
   yb_query_lines_result=()
+  yb_query_endlines_result=()
   yb_query_result=()
   yb_key_step=0
   # set mode flag
@@ -1660,7 +1811,7 @@ yb::query::search::keys_lines(){
   yb::sequence "${key[@]}"
   yb::parse::yaml "${yb_file}"
   # get the result
-  yb_query_result="${yb_query_lines_result[@]}"
+  yb_query_result=("${yb_query_lines_result[@]}")
   # reset flag
   yb_line_number_query=false
 }
@@ -1712,9 +1863,9 @@ yb::remove(){
   local line_counter=0
   # get lines for parents and children
   yb::query::search::keys_lines "${yb_key_option}"
-  parent_lines=(${yb_query_result})
+  parent_lines=(${yb_query_result[@]})
   yb::query::search::values_lines "${yb_key_option}"
-  child_lines=(${yb_query_result})
+  child_lines=(${yb_query_result[@]})
   if [[ -z "${parent_lines[@]}" && -z "${child_lines[@]}" ]]; then
     # nothing to remove
     return 0
@@ -2237,6 +2388,7 @@ yb::yaml::cache(){
 # Globals:
 #   $yb_YAML
 #   $yb_YAML_is_modified
+#   $yb_line_copy
 ########################################
 yb::yaml::copy_line(){
   local line_to_copy="${1-}"
