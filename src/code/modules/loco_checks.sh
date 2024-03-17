@@ -151,7 +151,7 @@ loco::check_operating_system(){
 ########################################
 loco::check_dependencies(){
   # install the YAML parser
-  loco::install_yb
+  loco::check_yb
 
   # if OVERLAY flag is set, 
   # install ImageMagick
@@ -170,14 +170,42 @@ loco::check_dependencies(){
 }
 
 ########################################
-# Installs yb as a system lib
+# Check if yb is installed
+########################################
+loco::check_yb(){
+  if [[ $(command -v yb) ]]; then
+    loco::check_yb_version
+  else
+    loco::install_yb
+  fi
+}
+
+########################################
+# Check yb version if installed
+########################################
+loco::check_yb_version(){
+  local current_ver=""
+  local packaged_ver=""
+  current_ver=$(cat /usr/local/bin/yb | grep -P '# yb | yaml bash parser')
+  current_ver=$(echo "${current_ver}" | cut -d "|" -f3)
+  current_ver=$(echo "${current_ver}" | cut -d "-" -f2)
+  packaged_ver=$(cat src/code/yb | grep -P '# yb | yaml bash parser')
+  packaged_ver=$(echo "${packaged_ver}" | cut -d "|" -f3)
+  packaged_ver=$(echo "${packaged_ver}" | cut -d "-" -f2)
+  if [[ "${packaged_ver}" -gt "${current_ver}" ]]; then
+    msg::say "yb needs an upgrade."
+    loco::install_yb
+  else
+    msg::say "yb is installed."
+  fi
+}
+
+########################################
+# Install yb
 ########################################
 loco::install_yb(){
-  if [[ $(command -v yb) ]]; then
-    msg::say "yb is installed."
-  else
     msg::say "Installing yb."
     chmod +x ./src/code/yb
     sudo cp ./src/code/yb /usr/local/bin/
-  fi
 }
+

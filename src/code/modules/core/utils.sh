@@ -133,7 +133,7 @@ utils::escape_string(){
 utils::encode_URI(){
   local string="${@-}"
   if ! echo "${string}"| perl -MURI::file -e 'print URI::file->new(<STDIN>)'; then
-    _error "Unable to decode ${string}"
+    _error "Unable to encode ${string}"
   fi
 }
 
