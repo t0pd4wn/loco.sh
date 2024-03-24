@@ -86,6 +86,9 @@ set_ubuntu_style(){
   cmd::record "gsettings set org.gnome.nautilus.preferences default-folder-viewer 'list-view';"
   cmd::record "gsettings set org.gnome.nautilus.list-view use-tree-view true;"
   cmd::record "gsettings set org.gnome.nautilus.preferences default-sort-order 'type';"
+  if [[ "${SHORT_OS_VERSION}" -ge 23 ]]; then
+    msg::record 'You may need to reboot your system to refresh fonts.'
+  fi
 }
 
 unset_ubuntu_style(){

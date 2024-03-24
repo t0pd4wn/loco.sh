@@ -87,11 +87,9 @@ loco::fonts_action_install_yaml(){
       # copy new font to URI filename
       local font_URI_name=$(utils::string_cut_rev "${font}" "/" "1")
       local font_clear_name=$(utils::decode_URI "${font_URI_name}")
-      echo "${fonts_path}/${font_clear_name}"
-      echo "${fonts_path}/${font_URI_name}"
       local from="${fonts_path}/${font_clear_name}"
       local to="${fonts_path}/${font_URI_name}"
-      _mv "'""${from}""'" "${to}"
+      _cp "'""${from}""'" "${to}"
     fi
   fi
 
