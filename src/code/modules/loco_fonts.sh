@@ -80,6 +80,21 @@ loco::fonts_action_install_yaml(){
   _mkdir "${fonts_path}"
   # download the font
   utils::get_url "${fonts_path}" "${font}"
+
+  # for some reasons Ubuntu 23.x needs the URI filename
+  if [[ "${LOCO_OSTYPE}" == "ubuntu" ]]; then
+    if [[ "${SHORT_OS_VERSION}" -eq 23 ]]; then
+      # copy new font to URI filename
+      local font_URI_name=$(utils::string_cut_rev "${font}" "/" "1")
+      local font_clear_name=$(utils::decode_URI "${font_URI_name}")
+      echo "${fonts_path}/${font_clear_name}"
+      echo "${fonts_path}/${font_URI_name}"
+      local from="${fonts_path}/${font_clear_name}"
+      local to="${fonts_path}/${font_URI_name}"
+      _mv "'""${from}""'" "${to}"
+    fi
+  fi
+
   # refresh fonts cache
   loco::fonts_cache_refresh "${fonts_path}"
   # write url in instance yaml
