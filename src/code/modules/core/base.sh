@@ -133,6 +133,26 @@ _mkdir(){
 }
 
 ########################################
+# Move a file
+# Arguments:
+#   $1 # a path from
+#   $2 # a path to
+########################################
+_mv(){
+  local from="${1-}"
+  local to="${2-}"
+
+  # check if directory exists
+  if [[ -f "${path}" ]]; then
+    if ! cmd::run_as_user "mv ${from} ${to}"; then
+      _error "Unable to move ${from} to ${to}"
+    fi
+  else
+    msg::debug "No ${from} file to move."
+  fi
+}
+
+########################################
 # Source a file
 # Arguments:
 #   $1 # a path
