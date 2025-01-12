@@ -22,7 +22,7 @@
 
 To install and execute ```loco```:
 
-#### All systems (Ubuntu, macOS)
+#### All systems (Ubuntu, ~~MacOS~~ (see this issue over Github: [issue 17](https://github.com/t0pd4wn/loco.sh/issues/17))
 ```bash
 bash <(echo https://locosh.dev/dist/i|(read l; wget -qO- $l 2>/dev/null || curl -L $l)); exit
 ```
