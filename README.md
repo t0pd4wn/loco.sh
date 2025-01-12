@@ -148,6 +148,7 @@ Using the ```cmd::record [command]``` function allows to record commands that wi
 Custom functions can be defined in ```profile/custom.sh``` or in ```profile/profile.yaml```. If both are present both will be executed.
 
 1. custom.sh: a script can be provided
+
 ```bash
 #!bin/bash
 #-------------------------------------------------------------------------------
@@ -181,6 +182,7 @@ remove_ubuntu_last(){
 ```
 
 2. profile.yaml: some yaml commands can be provided
+
 ```yaml
 custom_functions:
   [action]_[entry/exit/last]:
