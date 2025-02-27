@@ -18,3 +18,8 @@ git filter-branch --index-filter 'git rm --cached --ignore-unmatch [file_path]' 
 ```bash
 git log --diff-filter=A -- [filename]
 ```
+
+- push tags
+```bash
+git push origin --tags
+```
