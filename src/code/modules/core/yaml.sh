@@ -17,11 +17,11 @@ yaml::add(){
   local value="${3-}"
 
   if [[ -n "${value}" ]]; then
-    if ! yb -af "${yaml}" -k "${selector}" -v "- ${value}"; then
+    if ! bash yb -af "${yaml}" -k "${selector}" -v "- ${value}"; then
       echo "Unable to yb add ${value} in ${selector} in ${yaml}"
     fi
   else
-    if ! yb -af "${yaml}" -k "${selector}"; then
+    if ! bash yb -af "${yaml}" -k "${selector}"; then
       echo "Unable to yb add ${selector} in ${yaml}"
     fi
   fi
@@ -39,7 +39,7 @@ yaml::contains(){
   local selector="${2-}" 
   local value="${3-}"
 
-  if ! yb -qf "${yaml}" -k "${selector}" -v "${value}"; then
+  if ! bash yb -qf "${yaml}" -k "${selector}" -v "${value}"; then
     echo "Unable to yb -qf ${yaml} -k ${selector} -v ${value}"
   fi
 }
@@ -55,7 +55,7 @@ yaml::get(){
   local yaml="${1-}"
   local selector="${2-}"
 
-  if ! yb -Rf "${yaml}" -k "${selector}"; then
+  if ! bash yb -Rf "${yaml}" -k "${selector}"; then
     echo "Unable to yb -f ${yaml} ${selector}"
   fi
 }
@@ -71,7 +71,7 @@ yaml::get_array(){
   local yaml="${1-}"
   local selector="${2-}"
 
-  if ! yb -Af "${yaml}" -k "${selector}"; then
+  if ! bash yb -Af "${yaml}" -k "${selector}"; then
     echo "Unable to yb -f ${yaml} ${selector}"
   fi
 }
@@ -88,7 +88,7 @@ yaml::change(){
   local selector="${2-}" 
   local value="${3-}"
   
-  if ! yb -cf "${yaml}" -k "${selector}" -v "${value}"; then
+  if ! bash yb -cf "${yaml}" -k "${selector}" -v "${value}"; then
     echo "Can not change ${selector} with ${value} in ${yaml}."
   fi
 }
@@ -105,7 +105,7 @@ yaml::delete(){
   local selector="${2-}" 
   local value="${3-}"
 
-  if ! yb -rf "${yaml}" -k "${selector}" -v "${value}"; then
+  if ! bash yb -rf "${yaml}" -k "${selector}" -v "${value}"; then
     echo "Can not delete ${value} in ${selector} in ${yaml}"
   fi
 }
@@ -121,7 +121,7 @@ yaml::delete_key(){
   local yaml="${1-}"
   local selector="${2-}"
 
-  if ! yb -rf "${yaml}" -k "${selector}"; then
+  if ! bash yb -rf "${yaml}" -k "${selector}"; then
     echo "Can not delete ${selector} in ${yaml}"
   fi
 }

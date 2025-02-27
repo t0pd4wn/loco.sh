@@ -186,10 +186,10 @@ loco::check_yb(){
 loco::check_yb_version(){
   local current_ver=""
   local packaged_ver=""
-  current_ver=$(cat /usr/local/bin/yb | grep -P '# yb | yaml bash parser')
+  current_ver=$(cat /usr/local/bin/yb | grep -E '# yb | yaml bash parser')
   current_ver=$(echo "${current_ver}" | cut -d "|" -f3)
   current_ver=$(echo "${current_ver}" | cut -d "-" -f2)
-  packaged_ver=$(cat src/code/yb | grep -P '# yb | yaml bash parser')
+  packaged_ver=$(cat src/code/yb | grep -E '# yb | yaml bash parser')
   packaged_ver=$(echo "${packaged_ver}" | cut -d "|" -f3)
   packaged_ver=$(echo "${packaged_ver}" | cut -d "-" -f2)
   if [[ "${packaged_ver}" -gt "${current_ver}" ]]; then

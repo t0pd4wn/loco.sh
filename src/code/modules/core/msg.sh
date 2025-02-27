@@ -172,7 +172,7 @@ msg::authors(){
 # Print an edition date message
 ########################################
 msg::date(){
-  msg::centered "2023"
+  msg::centered "2025"
 }
 
 ########################################
