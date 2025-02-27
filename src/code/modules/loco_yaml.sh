@@ -50,11 +50,8 @@ loco::yaml_merge(){
   to_packages_list=$(yaml::get "${yaml_to}" ".packages")
 
   # msg::debug "${from_packages_list}"
-
-
-  echo "CALLED"
+  # echo "CALLED"
   # echo "${to_packages_list}"
-
 
   from_dotfiles_list=$(yaml::get "${yaml_from}" ".dotfiles")
   to_dotfiles_list=$(yaml::get "${yaml_to}" ".dotfiles")  
@@ -71,8 +68,8 @@ loco::yaml_merge(){
   yaml::add "${yaml_to}" ".funsA" "${from_functions_list}" "raw"
   yaml::add "${yaml_to}" ".funsB" "${to_functions_list}" "raw"
 
-  echo "CAT" ?
-  cat "${yaml_to}"
+  # echo "CAT" ?
+  # cat "${yaml_to}"
 
   # merge values together and keep them in variables
   # check if one or the other value is empty
