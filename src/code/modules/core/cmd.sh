@@ -48,8 +48,12 @@ cmd::run_as_user(){
 cmd::execute(){
   local command="${@-}"
 
-  # create an array on space delimeter
-  IFS=' ' read -r -a command_array <<< "${command}"
-  # expand command array to execute it
-  "${command_array[@]}"
+  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    eval "${command}"
+  else
+    # create an array on space delimeter
+    IFS=' ' read -r -a command_array <<< "${command}"
+    # expand command array to execute it
+    "${command_array[@]}"
+  fi
 }

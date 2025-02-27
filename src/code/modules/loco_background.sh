@@ -251,7 +251,7 @@ loco::get_current_background(){
     elif [[ "${LOCO_OSTYPE}" == "macos" ]]; then
       osascript_opts="tell application \"Finder\" to get posix path of (get desktop picture as alias)"
       msg::debug "${osascript_opts}"
-      background_path=$(cmd::run_as_user osascript -e "${osascript_opts}")
+      background_path=$(osascript -e "${osascript_opts}")
     fi
     # write legacy background path to yaml
     yaml::change "${INSTANCE_YAML}" ".style.legacy_background" "${background_path}"

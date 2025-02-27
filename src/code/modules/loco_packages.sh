@@ -21,7 +21,7 @@ loco::package_action(){
   fi
 
   if [[ "${LOCO_OSTYPE}" == "macos" ]] && [[ "${PACKAGE_MANAGER}" == "brew" ]]; then
-      cmd::run_as_user "cmd::execute "${PACKAGE_ACTION_CMD}""
+    cmd::run_as_user "source ./src/code/modules/core/cmd.sh && LOCO_OSTYPE="macos" && cmd::execute "${PACKAGE_ACTION_CMD}""
   else
     # eval "${PACKAGE_ACTION_CMD}"
     cmd::execute "${PACKAGE_ACTION_CMD}"

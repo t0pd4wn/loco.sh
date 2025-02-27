@@ -43,6 +43,11 @@ msg::play(){
 #   $1, $2, $3 # "This" "is a" "message"
 ########################################
 msg::print(){
+  #meant to suppport nested subshells in MacOS
+  if [[ "${LOCO_OSTYPE}" == "macos" ]]; then
+    source ./src/code/modules/core/base.sh
+  fi
+
   local b=$(tput bold)
   local n=$(tput sgr0)
   _echo "${n}"${1-}"${b}"${2-}"${n}"${3-}

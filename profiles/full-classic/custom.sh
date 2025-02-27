@@ -18,20 +18,12 @@ install_exit(){
   cmd::run_as_user "git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
   
   # set vpn icon for p10k.zsh
-  cmd::run_as_user "sed -i '/# vpn_ip/c\vpn_ip' ~/.p10k.zsh"
+  cmd::run_as_user "perl -pi -e 's/# vpn_ip/vpn_ip/g' ~/.p10k.zsh"
 }
 
 remove_exit(){
-  # remove vim bundles
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/anyfold
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline-themes
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-line-no-indicator
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-minimap
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-monokai
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim  
   # unset vpn icon for p10k.zsh
-  cmd::run_as_user "sed -i '/vpn_ip/c\# vpn_ip' ~/.p10k.zsh"
+  cmd::run_as_user "perl -pi -e 's/vpn_ip/# vpn_ip/g' ~/.p10k.zsh"
 
   # remove powerlevel10K
   utils::remove "/"${OS_PREFIX}"/"${CURRENT_USER}"/.zsh-plugins/powerlevel10k"
@@ -50,6 +42,14 @@ update_macos_exit(){
 
 remove_macos_exit(){
   unset_macos_style
+  # remove vim bundles
+  utils::remove ~/.vim/bundle/anyfold
+  utils::remove ~/.vim/bundle/vim-airline
+  utils::remove ~/.vim/bundle/vim-airline-themes
+  utils::remove ~/.vim/bundle/vim-line-no-indicator
+  utils::remove ~/.vim/bundle/vim-minimap
+  utils::remove ~/.vim/bundle/vim-monokai
+  utils::remove ~/.vim/bundle/Vundle.vim  
 }
 
 #################
@@ -65,6 +65,14 @@ update_ubuntu_exit(){
 
 remove_ubuntu_exit(){
   unset_ubuntu_style
+  # remove vim bundles
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/anyfold
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-airline-themes
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-line-no-indicator
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-minimap
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-monokai
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim  
 }
 
 #################
