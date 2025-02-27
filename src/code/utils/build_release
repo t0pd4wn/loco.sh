@@ -20,6 +20,8 @@ build_release(){
 	-x '/instances/*' \
 	-x '/src/assets/backgrounds/*' \
 	-x '/dist/*'
+	git add ./dist/loco-dist.zip
+	git commit -m "dist: timestamp=$(date +%s)"
 }
 
 build_release
