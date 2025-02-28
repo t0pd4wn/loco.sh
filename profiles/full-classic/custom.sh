@@ -57,6 +57,7 @@ remove_macos_exit(){
 #################
 install_ubuntu_exit(){
   set_ubuntu_style
+  cp ./profiles/full-classic/assets/gnome-terminal.desktop /home/${CURRENT_USER}/.config/autostart/
 }
 
 update_ubuntu_exit(){
@@ -72,7 +73,9 @@ remove_ubuntu_exit(){
   utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-line-no-indicator
   utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-minimap
   utils::remove /home/${CURRENT_USER}/.vim/bundle/vim-monokai
-  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim  
+  utils::remove /home/${CURRENT_USER}/.vim/bundle/Vundle.vim
+  # remove gnome-terminal autostart
+  uils::remove  /home/${CURRENT_USER}/.config/autostart/gnome-terminal.desktop
 }
 
 #################
