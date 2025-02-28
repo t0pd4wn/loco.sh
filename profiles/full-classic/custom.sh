@@ -57,6 +57,7 @@ remove_macos_exit(){
 #################
 install_ubuntu_exit(){
   set_ubuntu_style
+  mkdir /home/${CURRENT_USER}/.config/autostart
   cp ./profiles/full-classic/assets/gnome-terminal.desktop /home/${CURRENT_USER}/.config/autostart/
 }
 
